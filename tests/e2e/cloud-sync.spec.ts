@@ -112,6 +112,27 @@ test('Personal lists make no API calls; shared lists send deltas and recover off
     await b.close();
   }
 });
+test('Installed web shell reopens and edits personal lists offline', async ({ page, context }) => {
+  await onboard(page, 'Ana');
+  await create(page, 'Compra sin Internet');
+  await page.evaluate(async () => {
+    await navigator.serviceWorker.ready;
+    if (!navigator.serviceWorker.controller)
+      await new Promise<void>((resolve) =>
+        navigator.serviceWorker.addEventListener('controllerchange', () => resolve(), { once: true }),
+      );
+  });
+  await context.setOffline(true);
+  await page.reload();
+  await button(page, 'Abrir Compra sin Internet').click();
+  await add(page, 'Guardado offline');
+  await page.reload();
+  await button(page, 'Abrir Compra sin Internet').click();
+  await expect(page.getByRole('checkbox', { name: 'Comprar Guardado offline', exact: true })).toBeVisible();
+  await page.screenshot({ path: 'artifacts/screenshots/cloud-offline-es.png' });
+  await context.setOffline(false);
+});
+
 test('Legacy LAN data migrates to local copies without uploading personal lists', async ({
   page,
 }) => {

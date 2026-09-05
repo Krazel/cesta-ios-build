@@ -2,6 +2,8 @@
 
 Aplicación de listas de la compra para iPhone y web, en castellano e inglés.
 
+Web: https://cesta.krazel-zodiac-daily.workers.dev. `npm run preview` abre esta dirección pública. La versión de TestFlight 1.1 (2) conserva el servicio LAN; la candidata con Internet es 1.2 (3), todavía sin distribuir.
+
 ## Modelo local y sincronización
 
 Las listas personales, catálogo y favoritos se guardan en el dispositivo. Crear, editar, marcar, importar y reutilizar una lista personal no contacta con la API.

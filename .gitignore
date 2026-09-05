@@ -4,6 +4,7 @@
 node_modules/
 
 # Private runtime data and test artefacts
+artifacts/
 data/
 test-results/
 playwright-report/

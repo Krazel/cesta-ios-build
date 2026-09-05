@@ -315,32 +315,51 @@ export class CloudSync {
     else if (this.active) this.connect(id);
   }
   async settle(id: string) {
-    await this.publish(id);
-    // Explicit actions such as sharing must also work before the listener has connected.
-    const snapshot = await this.request(id, 'snapshot', {
-      pendingIds: this.host
-        .get()
-        .pending.filter((op) => op.listId === id)
-        .map((op) => op.id),
-    });
-    this.receive(id, snapshot);
-    while (this.host.get().pending.some((op) => op.listId === id)) {
-      if (this.sockets.get(id)?.flushing) {
-        await new Promise((resolve) => setTimeout(resolve, 50));
-        continue;
+    const closing = this.host
+      .get()
+      .pending.some((op) => op.listId === id && ['list.delete', 'list.leave'].includes(op.type));
+    try {
+      if (!this.host.get().cloud[id]) return;
+      await this.publish(id);
+      // Explicit actions such as sharing must also work before the listener has connected.
+      const snapshot = await this.request(id, 'snapshot', {
+        pendingIds: this.host
+          .get()
+          .pending.filter((op) => op.listId === id)
+          .map((op) => op.id),
+      });
+      this.receive(id, snapshot);
+      while (this.host.get().pending.some((op) => op.listId === id)) {
+        if (this.sockets.get(id)?.flushing) {
+          await new Promise((resolve) => setTimeout(resolve, 50));
+          continue;
+        }
+        const batch = this.host
+          .get()
+          .pending.filter((op) => op.listId === id)
+          .slice(0, 25);
+        const response = await this.request(id, 'ops', { operations: batch });
+        for (const event of response.events) this.receive(id, event);
+        this.host.get().pending = this.host
+          .get()
+          .pending.filter((op) => op.listId !== id || !response.acknowledgedIds.includes(op.id));
+        await this.host.save();
       }
-      const batch = this.host
-        .get()
-        .pending.filter((op) => op.listId === id)
-        .slice(0, 25);
-      const response = await this.request(id, 'ops', { operations: batch });
-      for (const event of response.events) this.receive(id, event);
-      this.host.get().pending = this.host
-        .get()
-        .pending.filter((op) => op.listId !== id || !response.acknowledgedIds.includes(op.id));
-      await this.host.save();
+      this.host.change();
+      this.connect(id);
+    } catch (error) {
+      // The event stream may confirm removal before this explicit request finishes.
+      // A subsequent 403/404 is then confirmation, not a failed local-copy action.
+      if (
+        error instanceof CloudError &&
+        [403, 404].includes(error.status) &&
+        (closing || !this.host.get().cloud[id])
+      ) {
+        this.receive(id, { type: 'removed' });
+        await this.host.save();
+        return;
+      }
+      throw error;
     }
-    this.host.change();
-    this.connect(id);
   }
 }

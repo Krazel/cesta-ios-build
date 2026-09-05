@@ -56,7 +56,7 @@
     "test:text-import": "node --test tests/textImport.test.mjs",
     "cloud:dev": "wrangler dev --port 8788 --local",
     "cloud:build": "wrangler deploy --dry-run --outdir artifacts/cloud-bundle",
-    "test:cloud": "npm run cloud:build && node --test tests/cloud.test.mjs",
+    "test:cloud": "npm run cloud:build && node --test tests/cloud.test.mjs tests/syncEngine.test.mjs",
     "test:cloud-ui": "playwright test --config playwright.cloud.config.ts tests/e2e/cloud-sync.spec.ts"
   },
   "private": true,

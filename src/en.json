@@ -678,5 +678,7 @@
   "Añadiendo a {0}": "Adding to {0}",
   "Volver a {0}": "Back to {0}",
   "Añadir {0} a {1}": "Add {0} to {1}",
-  "{0} añadido a {1}": "{0} added to {1}"
+  "{0} añadido a {1}": "{0} added to {1}",
+  "Productos coincidentes · {0}": "Matching products · {0}",
+  "No hay coincidencias. Pulsa + para añadirlo.": "No matches. Tap + to add it."
 }

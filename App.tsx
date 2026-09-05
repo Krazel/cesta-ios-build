@@ -672,6 +672,12 @@ function AppContent() {
               }}
               onMenu={() => open('list-menu')}
               onAdd={openAdd}
+              catalog={catalog}
+              onSelectProduct={(product) => {
+                addProduct(openedList.id, product);
+                feedback();
+                notify(tr('{0} añadido', productLabel(product)));
+              }}
               onQuickAdd={(name) => {
                 const product = catalog.find(
                   (p) =>

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
-import type { Item, ShoppingList } from './domain';
-import { normalize } from './domain';
-import { categories } from './catalog';
+import type { Item, Product, ShoppingList } from './domain';
+import { normalize, productIdentity } from './domain';
+import { categories, matchesProductSearch } from './catalog';
+import { ProductVisual } from './ProductsScreen';
 import { productLabel, t } from './i18n';
 import { Icon, IconButton, s, theme } from './ui';
 
@@ -15,6 +16,8 @@ export function CompactList({
   onMenu,
   onAdd,
   onQuickAdd,
+  catalog,
+  onSelectProduct,
   renderItem,
   pinned,
   onActivate,
@@ -28,6 +31,8 @@ export function CompactList({
   onMenu: () => void;
   onAdd: () => void;
   onQuickAdd: (name: string) => void;
+  catalog: Product[];
+  onSelectProduct: (product: Product) => void;
   renderItem: (item: Item) => React.ReactNode;
   pinned: boolean;
   onActivate: () => void;
@@ -36,6 +41,9 @@ export function CompactList({
   const [draft, setDraft] = useState('');
   const [search, setSearch] = useState('');
   const [searching, setSearching] = useState(false);
+  const suggestions = draft.trim()
+    ? catalog.filter((product) => matchesProductSearch(product, draft))
+    : [];
   const bought = list.items.filter((item) => item.checked).length;
   const complete = list.items.length > 0 && bought === list.items.length;
   const visible = list.items.filter((item) =>
@@ -167,6 +175,49 @@ export function CompactList({
           ordered.map(renderItem)
         )}
       </ScrollView>
+      {!!draft.trim() && (
+        <View style={c.suggestions}>
+          <Text style={c.suggestionHeading} accessibilityLiveRegion="polite">
+            {suggestions.length
+              ? t('Productos coincidentes · {0}', suggestions.length)
+              : t('No hay coincidencias. Pulsa + para añadirlo.')}
+          </Text>
+          <ScrollView
+            style={{ flexShrink: 1 }}
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="on-drag"
+          >
+            {suggestions.map((product) => (
+              <Pressable
+                key={productIdentity(product)}
+                accessibilityRole="button"
+                accessibilityLabel={t('Añadir {0}', productLabel(product))}
+                onPress={() => {
+                  onSelectProduct(product);
+                  setDraft('');
+                }}
+                style={c.suggestion}
+              >
+                <ProductVisual product={product} size={32} />
+                <View style={{ flex: 1, minWidth: 0 }}>
+                  <Text style={c.suggestionName} numberOfLines={1}>
+                    {productLabel(product)}
+                  </Text>
+                  <Text style={c.caption} numberOfLines={1}>
+                    {t(
+                      categories.find((category) => category.id === product.category)?.name ||
+                        'Otros',
+                    )}
+                    {' · '}
+                    {t(product.unit)}
+                  </Text>
+                </View>
+                <Icon name="plus" size={18} color={theme.green} />
+              </Pressable>
+            ))}
+          </ScrollView>
+        </View>
+      )}
       <View style={c.composer}>
         <TextInput
           accessibilityLabel={t('Añadir producto')}
@@ -253,6 +304,33 @@ const c = StyleSheet.create({
   },
   empty: { paddingVertical: 28, gap: 10 },
   emptyTitle: { fontFamily: theme.serif, fontSize: 25, color: theme.ink },
+  suggestions: {
+    maxHeight: 204,
+    flexShrink: 1,
+    marginHorizontal: 16,
+    borderWidth: 1,
+    borderColor: theme.line,
+    borderRadius: 15,
+    backgroundColor: '#fff',
+    overflow: 'hidden',
+  },
+  suggestionHeading: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    fontSize: 12,
+    color: theme.muted,
+  },
+  suggestion: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    minHeight: 54,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: theme.line,
+  },
+  suggestionName: { fontSize: 16, color: theme.ink, fontWeight: '500' },
   composer: {
     flexDirection: 'row',
     alignItems: 'center',

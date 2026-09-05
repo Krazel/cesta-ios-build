@@ -26,7 +26,8 @@ const betaLocs=(await asc('GET',`/v1/apps/${cfg.appId}/betaAppLocalizations`)).d
 for(const [locale,content]of Object.entries(locales)){
  assert(content.name.length<=30&&content.subtitle.length<=30&&content.keywords.length<=100);
  await upsert('appInfoLocalizations',infoLocs.find(x=>x.attributes.locale===locale),{locale,name:content.name,subtitle:content.subtitle,privacyPolicyUrl},'appInfo','appInfos',info.id);
- await upsert('appStoreVersionLocalizations',versionLocs.find(x=>x.attributes.locale===locale),{locale,description:content.description,keywords:content.keywords,supportUrl},'appStoreVersion','appStoreVersions',version.id);
+ const freshVersionLocs=(await asc('GET',"/v1/appStoreVersions/"+version.id+"/appStoreVersionLocalizations" )).data;
+ await upsert('appStoreVersionLocalizations',freshVersionLocs.find(x=>x.attributes.locale===locale),{locale,description:content.description,keywords:content.keywords,supportUrl},'appStoreVersion','appStoreVersions',version.id);
  await upsert('betaAppLocalizations',betaLocs.find(x=>x.attributes.locale===locale),{locale,description:content.description,feedbackEmail:'coderappskrazel@gmail.com',privacyPolicyUrl},'app','apps',cfg.appId);
 }
 await asc('PATCH',`/v1/betaAppReviewDetails/${cfg.appId}`,{data:{type:'betaAppReviewDetails',id:cfg.appId,attributes:{demoAccountRequired:false,notes:'Internal beta. No account or password is needed: enter a display name to start. Offline lists and catalogue work without a server. Sharing/sync require the local test server at 192.168.1.35:8787 and the same network. No public backend is deployed. This build is intended for internal testing; it is not submitted for external Beta App Review or public App Store review.'}}});
@@ -36,4 +37,5 @@ if(!group)group=(await asc('POST','/v1/betaGroups',{data:{type:'betaGroups',attr
 const verification={appId:cfg.appId,version:(await asc('GET',`/v1/appStoreVersions/${version.id}`)).data.attributes,infoLocalizations:(await asc('GET',`/v1/appInfos/${info.id}/appInfoLocalizations`)).data.map(x=>x.attributes),versionLocalizations:(await asc('GET',`/v1/appStoreVersions/${version.id}/appStoreVersionLocalizations`)).data.map(x=>x.attributes),betaLocalizations:(await asc('GET',`/v1/apps/${cfg.appId}/betaAppLocalizations`)).data.map(x=>x.attributes),internalGroupId:group.id};
 fs.writeFileSync('artifacts/APP-STORE-PREPARACION.json',JSON.stringify(verification,null,2)+'\n');
 console.log(JSON.stringify({appId:cfg.appId,version:verification.version.versionString,locales:verification.infoLocalizations.map(x=>x.locale),internalGroupId:group.id}));
+
 

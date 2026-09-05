@@ -40,6 +40,9 @@ export const matchesProductSearch = (product: Product, query: string) =>
   ).includes(normalize(query));
 export const products: Product[] = [
   ...group('fresh', [
+    ['Fruta', '🍎', 'kg'],
+    ['Verdura', '🥦', 'kg'],
+    ['Setas', '🍄', 'bandeja'],
     ['Aguacate', '🥑'],
     ['Tomates', '🍅', 'kg'],
     ['Plátanos', '🍌'],
@@ -92,6 +95,8 @@ export const products: Product[] = [
     ['Albahaca', '🌿', 'manojo'],
   ]),
   ...group('dairy', [
+    ['Yogur', '🥣', 'pack'],
+    ['Bebida vegetal', '🥛', 'L'],
     ['Leche', '🥛', 'L'],
     ['Huevos', '🥚', 'docena'],
     ['Yogur natural', '🥣', 'pack'],
@@ -116,6 +121,7 @@ export const products: Product[] = [
     ['Margarina', '🧈', 'ud'],
   ]),
   ...group('bakery', [
+    ['Bollería', '🥐', 'paquete'],
     ['Pan', '🥖'],
     ['Pan de molde', '🍞', 'paquete'],
     ['Croissant', '🥐'],
@@ -131,6 +137,12 @@ export const products: Product[] = [
     ['Magdalenas', '🧁', 'paquete'],
   ]),
   ...group('pantry', [
+    ['Aceite', '🫒', 'L'],
+    ['Legumbres', '🫘', 'paquete'],
+    ['Conservas', '🥫', 'lata'],
+    ['Salsa', '🫙', 'bote'],
+    ['Especias', '🧂', 'bote'],
+    ['Caldo', '🥣', 'brik'],
     ['Arroz', '🍚', 'kg'],
     ['Pasta', '🍝', 'paquete'],
     ...pastaTypes.map((name): [string, string, string] => [name, '🍝', 'paquete']),
@@ -196,6 +208,10 @@ export const products: Product[] = [
     ['Semillas de chía', '🌱', 'bolsa'],
   ]),
   ...group('protein', [
+    ['Carne', '🥩', 'kg'],
+    ['Pescado', '🐟', 'kg'],
+    ['Marisco', '🦐', 'kg'],
+    ['Embutido', '🥓', 'paquete'],
     ['Pollo', '🍗', 'kg'],
     ['Salmón', '🐟', 'bandeja'],
     ['Carne picada', '🥩', 'bandeja'],
@@ -237,6 +253,8 @@ export const products: Product[] = [
     ['Hielo', '🧊', 'bolsa'],
   ]),
   ...group('drinks', [
+    ['Refresco', '🥤', 'botella'],
+    ['Vino', '🍷', 'botella'],
     ['Agua', '💧', 'L'],
     ['Zumo', '🧃', 'L'],
     ['Té', '🍵', 'caja'],

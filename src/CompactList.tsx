@@ -9,6 +9,7 @@ import { Icon, IconButton, s, theme } from './ui';
 
 export function CompactList({
   list,
+  shopping,
   grouped,
   onGroup,
   onBack,
@@ -24,6 +25,7 @@ export function CompactList({
   onStore,
 }: {
   list: ShoppingList;
+  shopping: boolean;
   grouped: boolean;
   onGroup: () => void;
   onBack: () => void;
@@ -49,10 +51,9 @@ export function CompactList({
   const visible = list.items.filter((item) =>
     normalize(productLabel(item) + ' ' + item.note).includes(normalize(search)),
   );
-  const ordered = [
-    ...visible.filter((item) => !item.checked),
-    ...visible.filter((item) => item.checked),
-  ];
+  const ordered = shopping
+    ? [...visible.filter((item) => !item.checked), ...visible.filter((item) => item.checked)]
+    : visible;
   const submit = () => {
     if (!draft.trim()) {
       onAdd();
@@ -68,12 +69,33 @@ export function CompactList({
         <Text style={c.title} numberOfLines={1} accessibilityRole="header">
           {list.emoji} {list.name}
         </Text>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={
+            pinned ? t('Quitar del inicio') : complete ? t('Volver a usar') : t('Añadir al inicio')
+          }
+          onPress={pinned ? onStore : onActivate}
+          style={{
+            minHeight: 44,
+            paddingHorizontal: 8,
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 4,
+          }}
+        >
+          <Icon name={pinned ? 'close' : 'plus'} size={14} color={theme.green} />
+          <Text style={{ fontSize: 12, color: theme.green }}>{t('Inicio')}</Text>
+        </Pressable>
         <IconButton name="more" label={t('Opciones de la lista')} onPress={onMenu} />
       </View>
       <View style={c.meta}>
         <Text style={c.caption} accessibilityLiveRegion="polite">
-          {t('{0} de {1} comprados', bought, list.items.length)}
-          {` · ${list.items.length ? Math.round((bought / list.items.length) * 100) : 0}%`}
+          {shopping
+            ? t('{0} de {1} comprados', bought, list.items.length)
+            : t('{0} productos', list.items.length)}
+          {shopping
+            ? ` · ${list.items.length ? Math.round((bought / list.items.length) * 100) : 0}%`
+            : ` · ${t(pinned ? 'En inicio' : 'Guardada')}`}
         </Text>
         <View style={s.row}>
           <Pressable
@@ -97,19 +119,21 @@ export function CompactList({
           )}
         </View>
       </View>
-      <View
-        style={c.track}
-        accessibilityRole="progressbar"
-        accessibilityLabel={t('Progreso de la compra')}
-        accessibilityValue={{ min: 0, max: list.items.length || 1, now: bought }}
-      >
+      {shopping && (
         <View
-          style={[
-            c.fill,
-            { width: `${list.items.length ? (bought / list.items.length) * 100 : 0}%` },
-          ]}
-        />
-      </View>
+          style={c.track}
+          accessibilityRole="progressbar"
+          accessibilityLabel={t('Progreso de la compra')}
+          accessibilityValue={{ min: 0, max: list.items.length || 1, now: bought }}
+        >
+          <View
+            style={[
+              c.fill,
+              { width: `${list.items.length ? (bought / list.items.length) * 100 : 0}%` },
+            ]}
+          />
+        </View>
+      )}
       {searching && (
         <TextInput
           accessibilityLabel={t('Buscar en esta lista')}
@@ -128,26 +152,15 @@ export function CompactList({
         keyboardDismissMode="on-drag"
         showsVerticalScrollIndicator={false}
       >
-        {!pinned && (
+        {!shopping && pinned && (
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={complete ? t('Volver a usar') : t('Añadir al inicio')}
+            accessibilityLabel={complete ? t('Volver a usar') : t('Abrir compra')}
             onPress={onActivate}
             style={c.listAction}
           >
-            <Icon name="plus" size={17} />
-            <Text style={c.caption}>{complete ? t('Volver a usar') : t('Añadir al inicio')}</Text>
-          </Pressable>
-        )}
-        {complete && pinned && (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={t('Guardar y quitar del inicio')}
-            onPress={onStore}
-            style={c.listAction}
-          >
-            <Icon name="check" size={17} />
-            <Text style={c.caption}>{t('Guardar y quitar del inicio')}</Text>
+            <Icon name="basket" size={17} />
+            <Text style={c.caption}>{complete ? t('Volver a usar') : t('Abrir compra')}</Text>
           </Pressable>
         )}
         {!list.items.length ? (

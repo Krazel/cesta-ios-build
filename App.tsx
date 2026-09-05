@@ -294,7 +294,6 @@ function AppContent() {
   function removeFromHome(list: ShoppingList) {
     setListActive(list.id, false);
     setSheet(null);
-    if (list.id === openedId) setDetail(false);
     notify(tr('Lista guardada. Puedes volver a usarla desde Listas.'));
   }
   function activateList(list: ShoppingList) {
@@ -403,17 +402,25 @@ function AppContent() {
       <Text style={[s.body, { textAlign: 'center', maxWidth: 330 }]}>{body}</Text>
     </View>
   );
-  function row(item: Item, listId = active?.id) {
+  function row(item: Item, listId = active?.id, shopping = true) {
     const stackedQuantity =
       state.productSize === 'large' || (width < 360 && state.productSize === 'comfortable');
     return (
-      <View key={item.id} style={[a.item, item.checked && { opacity: 0.62 }]}>
+      <View key={item.id} style={[a.item, shopping && item.checked && { opacity: 0.62 }]}>
         <Pressable
-          accessibilityRole="checkbox"
-          accessibilityState={{ checked: item.checked }}
-          aria-checked={item.checked}
-          accessibilityLabel={`${item.checked ? tr('Desmarcar') : tr('Comprar')} ${productLabel(item)}`}
+          accessibilityRole={shopping ? 'checkbox' : 'button'}
+          accessibilityState={shopping ? { checked: item.checked } : {}}
+          aria-checked={shopping ? item.checked : undefined}
+          accessibilityLabel={
+            shopping
+              ? `${item.checked ? tr('Desmarcar') : tr('Comprar')} ${productLabel(item)}`
+              : tr('Producto {0}', productLabel(item))
+          }
           onPress={() => {
+            if (!shopping) {
+              openEdit(item);
+              return;
+            }
             if (listId) {
               enqueue('item.check', listId, { id: item.id, checked: !item.checked });
               feedback();
@@ -424,21 +431,24 @@ function AppContent() {
             { minHeight: productSize.row, opacity: pressed ? 0.65 : 1 },
           ]}
         >
-          <View
-            style={[
-              a.checkbox,
-              item.checked && { backgroundColor: theme.green, borderColor: theme.green },
-            ]}
-          >
-            {item.checked && <Icon name="check" size={15} color="#fff" />}
-          </View>
+          {shopping && (
+            <View
+              style={[
+                a.checkbox,
+                item.checked && { backgroundColor: theme.green, borderColor: theme.green },
+              ]}
+            >
+              {item.checked && <Icon name="check" size={15} color="#fff" />}
+            </View>
+          )}
           <ProductVisual product={item} size={productSize.image} />
           <View style={{ flex: 1, minWidth: 0, gap: 2 }}>
             <Text
               style={[
                 a.itemName,
                 { fontSize: productSize.font },
-                item.checked && { textDecorationLine: 'line-through', color: theme.muted },
+                shopping &&
+                  item.checked && { textDecorationLine: 'line-through', color: theme.muted },
               ]}
             >
               {productLabel(item)}
@@ -663,6 +673,7 @@ function AppContent() {
             <CompactList
               key={openedList.id}
               list={openedList}
+              shopping={detailTab === 'home' && state.activeListIds.includes(openedList.id)}
               grouped={grouped}
               onGroup={() => setGrouped(!grouped)}
               backLabel={detailTab === 'lists' ? tr('Volver a listas') : tr('Volver al inicio')}
@@ -686,7 +697,13 @@ function AppContent() {
                 );
                 quickAdd(product || { name, emoji: '🛍️', category: 'other', unit: tr('ud') });
               }}
-              renderItem={(item) => row(item, openedList.id)}
+              renderItem={(item) =>
+                row(
+                  item,
+                  openedList.id,
+                  detailTab === 'home' && state.activeListIds.includes(openedList.id),
+                )
+              }
               pinned={state.activeListIds.includes(openedList.id)}
               onActivate={() => activateList(openedList)}
               onStore={() => removeFromHome(openedList)}

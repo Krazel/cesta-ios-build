@@ -173,11 +173,7 @@ export function HomeScreen({
                   <View style={{ flex: 1, gap: 5 }}>
                     <Text style={h.name}>{list.name}</Text>
                     <Text style={h.caption}>
-                      {complete
-                        ? t('¡Compra completa!')
-                        : count
-                          ? t('{0} pendientes · {1} productos', count - done, count)
-                          : t('Sin productos todavía')}
+                      {count ? t('{0} productos', count) : t('Sin productos todavía')}
                     </Text>
                   </View>
                 </Pressable>
@@ -190,21 +186,23 @@ export function HomeScreen({
                 </View>
               </View>
               <View style={{ paddingHorizontal: 18, paddingBottom: 15 }}>
-                <View style={[s.row, { gap: 12, marginBottom: 12 }]}>
-                  <View style={h.track}>
-                    <View
-                      style={{
-                        height: 5,
-                        width: `${count ? (done / count) * 100 : 0}%`,
-                        backgroundColor: p.dark,
-                        borderRadius: 5,
-                      }}
-                    />
+                {!library && (
+                  <View style={[s.row, { gap: 12, marginBottom: 12 }]}>
+                    <View style={h.track}>
+                      <View
+                        style={{
+                          height: 5,
+                          width: `${count ? (done / count) * 100 : 0}%`,
+                          backgroundColor: p.dark,
+                          borderRadius: 5,
+                        }}
+                      />
+                    </View>
+                    <Text style={h.caption}>
+                      {done}/{count}
+                    </Text>
                   </View>
-                  <Text style={h.caption}>
-                    {done}/{count}
-                  </Text>
-                </View>
+                )}
                 <View style={[s.row, { gap: 6 }]}>
                   <Icon
                     name={list.members.length > 1 ? 'people' : 'heart'}
@@ -243,9 +241,7 @@ export function HomeScreen({
                               : t('Añadir {0} al inicio', list.name)
                         }
                         icon={complete ? 'refresh' : pinned ? 'arrow' : 'plus'}
-                        onPress={() =>
-                          complete ? onReuse(list) : pinned ? onOpen(list) : onActivate(list)
-                        }
+                        onPress={() => (complete ? onReuse(list) : onActivate(list))}
                       />
                     </View>
                     <IconButton

@@ -62,6 +62,23 @@ if (!appName) throw new Error('Xcode no ha generado la aplicación para iPhone.'
 const app = join(products, appName);
 if (!existsSync(join(app, 'main.jsbundle')))
   throw new Error('Falta el código JavaScript incluido en la app.');
+// iOS 17+ supports an explicit exception for the local API's IP address.
+// The IPA is unsigned here; Sideloadly signs the final configuration at install time.
+if (api.protocol === 'http:') {
+  const plist = join(app, 'Info.plist');
+  const read = spawnSync(
+    'plutil',
+    ['-extract', 'NSAppTransportSecurity', 'json', '-o', '-', plist],
+    { encoding: 'utf8' },
+  );
+  if (read.status !== 0) throw new Error('No se ha podido leer la configuración de red de iOS.');
+  const transport = JSON.parse(read.stdout);
+  transport.NSExceptionDomains = {
+    ...transport.NSExceptionDomains,
+    [api.hostname]: { NSExceptionAllowsInsecureHTTPLoads: true },
+  };
+  run('plutil', ['-replace', 'NSAppTransportSecurity', '-json', JSON.stringify(transport), plist]);
+}
 run('plutil', ['-extract', 'DTPlatformName', 'raw', '-o', '-', join(app, 'Info.plist')]);
 run('xcrun', ['lipo', '-archs', join(app, scheme)]);
 const payload = join(staging, 'Payload');

@@ -1,3 +1,4 @@
+import { PurchaseScope } from './PurchaseScope';
 import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import type { Item, Product, ShoppingList } from './domain';
@@ -10,6 +11,8 @@ import { Icon, IconButton, s, theme } from './ui';
 export function CompactList({
   list,
   shopping,
+  oneTime,
+  onScopeChange,
   grouped,
   onGroup,
   onBack,
@@ -26,6 +29,8 @@ export function CompactList({
 }: {
   list: ShoppingList;
   shopping: boolean;
+  oneTime: boolean;
+  onScopeChange: (value: boolean) => void;
   grouped: boolean;
   onGroup: () => void;
   onBack: () => void;
@@ -48,7 +53,8 @@ export function CompactList({
     : [];
   const bought = list.items.filter((item) => item.checked).length;
   const complete = list.items.length > 0 && bought === list.items.length;
-  const visible = list.items.filter((item) =>
+  const displayed = shopping ? list.items : list.items.filter((item) => !item.oneTime);
+  const visible = displayed.filter((item) =>
     normalize(productLabel(item) + ' ' + item.note).includes(normalize(search)),
   );
   const ordered = shopping
@@ -92,7 +98,7 @@ export function CompactList({
         <Text style={c.caption} accessibilityLiveRegion="polite">
           {shopping
             ? t('{0} de {1} comprados', bought, list.items.length)
-            : t('{0} productos', list.items.length)}
+            : t('{0} productos', displayed.length)}
           {shopping
             ? ` · ${list.items.length ? Math.round((bought / list.items.length) * 100) : 0}%`
             : ` · ${t(pinned ? 'En inicio' : 'Guardada')}`}
@@ -163,7 +169,7 @@ export function CompactList({
             <Text style={c.caption}>{complete ? t('Volver a usar') : t('Abrir compra')}</Text>
           </Pressable>
         )}
-        {!list.items.length ? (
+        {!displayed.length ? (
           <View style={c.empty}>
             <Text style={c.emptyTitle}>{t('¿Qué hace falta?')}</Text>
             <Text style={s.body}>{t('Escribe un producto abajo o abre el catálogo con +.')}</Text>
@@ -231,6 +237,7 @@ export function CompactList({
           </ScrollView>
         </View>
       )}
+      {shopping && !!draft.trim() && <PurchaseScope value={oneTime} onChange={onScopeChange} />}
       <View style={c.composer}>
         <TextInput
           accessibilityLabel={t('Añadir producto')}

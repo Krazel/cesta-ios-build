@@ -123,6 +123,33 @@ test('Cloud list: invitation, deltas, retries, concurrent edits, revocation and 
       before,
       'Invalid batch rolls back all writes',
     );
+    const extra = { ...item('Solo hoy'), oneTime: true };
+    const promoted = { ...item('Ahora habitual'), oneTime: true };
+    const later = { ...item('Añadido después'), oneTime: true };
+    const send = async (type, data) => {
+      const result = await call(owner, 'ops', {
+        operations: [{ id: uid(), seq: 10, listId, type, data }],
+      });
+      assert.equal(result.status, 200);
+    };
+    await send('item.add', extra);
+    await send('item.add', promoted);
+    await send('item.edit', { ...promoted, oneTime: false });
+    await send('item.add', later);
+    await send('items.reset', { ids: [product.id], removeIds: [extra.id, promoted.id] });
+    const round = (await call(other, 'snapshot')).data.list.items;
+    assert(!round.some((i) => i.id === extra.id), 'One-time extra does not enter the next shop');
+    assert(
+      round.some((i) => i.id === promoted.id && !i.oneTime),
+      'Concurrent promotion to regular survives a delayed reset',
+    );
+    assert(
+      round.some((i) => i.id === later.id),
+      'Unseen later additions survive',
+    );
+    assert.equal(round.find((i) => i.id === product.id).checked, false);
+    await new Promise((r) => setTimeout(r, 40));
+    assert(messages.some((m) => m.type === 'change' && m.op.type === 'items.reset'));
     assert.equal((await call(owner, 'members/' + other.id, undefined, 'DELETE')).status, 200);
     await new Promise((r) => setTimeout(r, 40));
     assert(messages.some((m) => m.type === 'removed'));

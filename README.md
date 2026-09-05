@@ -14,7 +14,13 @@ Las invitaciones caducan a los siete días y una nueva sustituye la anterior. Lo
 
 Las listas de la beta LAN anterior se conservan localmente, incluidos cambios pendientes. No se suben automáticamente a otro proveedor. Necesitan invitaciones nuevas. El registro local v1 se conserva para recuperación hasta borrar los datos de Cesta. La base del antiguo servidor sigue en data/ y no se modifica por esta migración.
 
-## Desarrollo
+## Listas habituales y compra actual
+
+El inicio usa el idioma del dispositivo (castellano o inglés, con inglés para otros idiomas); el selector permanece en Ajustes. Las preferencias de idioma ya guardadas se respetan.
+
+En Inicio, los productos nuevos son **Solo esta compra** por defecto. Se puede elegir **Guardar como habitual**, también desde el catálogo o al editar el producto. La sección Listas muestra únicamente los habituales. Quitar una lista de Inicio y volver a abrirla conserva la compra en curso, incluidos sus extras. **Volver a usar** pide confirmación si hay compras marcadas o extras: retira los extras y desmarca los habituales. En listas compartidas esta acción se aplica a todos; respeta las adiciones posteriores y los productos que otra persona acaba de convertir en habituales. Los productos anteriores a esta mejora siguen siendo habituales.
+
+## Desarrollo local
 
 Node 24. Instalación: `npm ci`.
 

@@ -717,5 +717,9 @@
   "Se ha cerrado el acceso compartido. Tus cambios pendientes se han conservado en una copia local.": "Shared access has ended. Your pending changes have been kept in a local copy.",
   "Esta lista tiene demasiadas fotos para sincronizar. Reduce las fotos o conserva la lista local.": "This list has too many photos to sync. Reduce the photos or keep the list local.",
   "Esta lista admite hasta 32 participantes.": "This list supports up to 32 participants.",
-  "Demasiadas conexiones para esta lista.": "Too many connections to this list."
+  "Demasiadas conexiones para esta lista.": "Too many connections to this list.",
+  "Solo esta compra": "This shop only",
+  "Guardar como habitual": "Keep on saved list",
+  "Se retirarán los productos de solo esta compra y se desmarcarán los habituales para todos los participantes.": "One-time items will be removed and regular items unchecked for everyone.",
+  "Se retirarán los productos de solo esta compra. Tus productos habituales quedarán listos para volver a comprar.": "One-time items will be removed. Your regular items will be ready for your next shop."
 }

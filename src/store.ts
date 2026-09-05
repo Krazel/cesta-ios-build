@@ -20,7 +20,7 @@ const host =
     : Constants.expoConfig?.hostUri?.split(':')[0] || 'localhost';
 export const API =
   process.env.EXPO_PUBLIC_API_URL ||
-  (Platform.OS === 'web' ? location.origin : "https://cesta.krazel-zodiac-daily.workers.dev");
+  (Platform.OS === 'web' ? location.origin : 'https://cesta.krazel-zodiac-daily.workers.dev');
 export const WEB_URL = process.env.EXPO_PUBLIC_SHARE_URL || API;
 const KEY = 'cesta-state-v2';
 const SECRET = 'cesta-device-v1';
@@ -54,7 +54,7 @@ let state: State = {
   error: '',
   favorites: [],
   customProducts: [],
-  language: getLocales()[0]?.languageCode === 'en' ? 'en' : 'es',
+  language: getLocales()[0]?.languageCode === 'es' ? 'es' : 'en',
   productSize: 'comfortable',
   selectedId: null,
   activeListIds: [],
@@ -317,12 +317,21 @@ export function setListActive(listId: string, active: boolean) {
 export function reuseList(list: ShoppingList) {
   // Reset only the items seen when starting this round; preserve simultaneous additions.
   state.activeListIds = Array.from(new Set([...state.activeListIds, list.id]));
-  enqueue('items.reset', list.id, { ids: list.items.map((item) => item.id) });
+  enqueue('items.reset', list.id, {
+    ids: list.items.filter((item) => !item.oneTime).map((item) => item.id),
+    removeIds: list.items.filter((item) => item.oneTime).map((item) => item.id),
+  });
 }
-export function addProduct(listId: string, product: Product, quantity = 1, note = '') {
-  enqueue('item.add', listId, { ...product, id: uid(), quantity, note });
+export function addProduct(
+  listId: string,
+  product: Product,
+  quantity = 1,
+  note = '',
+  oneTime = state.activeListIds.includes(listId),
+) {
+  enqueue('item.add', listId, { ...product, id: uid(), quantity, note, oneTime });
 }
-export function addTextProducts(listId: string, items: TextProduct[]) {
+export function addTextProducts(listId: string, items: TextProduct[], oneTime = false) {
   const list = currentLists().find((entry) => entry.id === listId);
   if (!list) throw new Error(t('La lista ya no está disponible.'));
   if (list.items.length + items.length > 1000)
@@ -334,7 +343,7 @@ export function addTextProducts(listId: string, items: TextProduct[]) {
       id: uid(),
       type: 'item.add',
       listId,
-      data: { ...item.product, id: uid(), quantity: item.quantity, note: item.note },
+      data: { ...item.product, id: uid(), quantity: item.quantity, note: item.note, oneTime },
     })),
   );
 }
@@ -554,6 +563,7 @@ export function importData(raw: string) {
     for (const i of l.items)
       if (
         !i ||
+        (i.oneTime !== undefined && typeof i.oneTime !== 'boolean') ||
         typeof i.name !== 'string' ||
         (i.image !== undefined &&
           (typeof i.image !== 'string' ||

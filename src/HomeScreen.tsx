@@ -124,9 +124,9 @@ export function HomeScreen({
           </View>
         }
         renderItem={({ item: list }) => {
-          const count = list.items.length,
+          const count = (library ? list.items.filter((item) => !item.oneTime) : list.items).length,
             done = list.items.filter((item) => item.checked).length,
-            complete = count > 0 && done === count,
+            complete = list.items.length > 0 && done === list.items.length,
             pinned = state.activeListIds.includes(list.id),
             p = palette[list.color];
           if (!library)

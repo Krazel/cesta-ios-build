@@ -1,3 +1,4 @@
+import { PurchaseScope } from './PurchaseScope';
 import React, { useMemo, useState } from 'react';
 import {
   FlatList,
@@ -55,10 +56,16 @@ export function ProductVisual({ product, size = 49 }: { product: Product; size?:
 export function ProductsScreen({
   onNewList,
   activeList,
+  purchaseOnly,
+  oneTime,
+  onScopeChange,
   onReturnToList,
 }: {
   onNewList: () => void;
   activeList?: ShoppingList;
+  purchaseOnly: boolean;
+  oneTime: boolean;
+  onScopeChange: (value: boolean) => void;
   onReturnToList: () => void;
 }) {
   const state = useCesta(),
@@ -168,6 +175,7 @@ export function ProductsScreen({
             onPress={() => edit()}
           />
         </View>
+        {activeList && purchaseOnly && <PurchaseScope value={oneTime} onChange={onScopeChange} />}
         {activeList && (
           <Pressable
             accessibilityRole="button"
@@ -276,7 +284,7 @@ export function ProductsScreen({
                   openTarget(product);
                   return;
                 }
-                addProduct(activeList.id, product);
+                addProduct(activeList.id, product, 1, '', purchaseOnly && oneTime);
                 setMessage(t('{0} añadido a {1}', productLabel(product), activeList.name));
               }}
             />

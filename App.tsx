@@ -27,6 +27,7 @@ import { categories, products, matchesProductSearch } from './src/catalog';
 import { KeyboardScreen, dismissOutsideInput } from './src/KeyboardScreen';
 import { ProductSizeSettings } from './src/ProductSizeSettings';
 import { productSizes } from './src/appearance';
+import { PurchaseScope } from './src/PurchaseScope';
 import { CompactList } from './src/CompactList';
 import { HomeScreen } from './src/HomeScreen';
 import { CategoryStrip } from './src/CategoryStrip';
@@ -113,6 +114,8 @@ function AppContent() {
   const [productQuantity, setProductQuantity] = useState('1');
   const [unit, setUnit] = useState(tr('ud'));
   const [note, setNote] = useState('');
+  const [onlyThisPurchase, setOnlyThisPurchase] = useState(true);
+  const [editOneTime, setEditOneTime] = useState(false);
   const [productEmoji, setProductEmoji] = useState('🛍️');
   const [productImage, setProductImage] = useState<string | undefined>();
   const [productCategory, setProductCategory] = useState<Category>('other');
@@ -132,6 +135,9 @@ function AppContent() {
   const lists = currentLists();
   const active = lists.find((l) => l.id === state.selectedId);
   const openedList = detail ? lists.find((l) => l.id === openedId) : undefined;
+  const purchaseContext =
+    detailTab === 'home' && !!active && state.activeListIds.includes(active.id);
+  const addingOneTime = purchaseContext && onlyThisPurchase;
   const showingList = detail && !!openedList && tab === detailTab;
   const productSize = productSizes[state.productSize];
   const bought = active?.items.filter((i) => i.checked) || [];
@@ -192,6 +198,7 @@ function AppContent() {
   };
   const openList = (l: ShoppingList, destination: 'home' | 'lists' = 'home') => {
     selectList(l.id);
+    setOnlyThisPurchase(true);
     setOpenedId(l.id);
     setDetailTab(destination);
     setSearch('');
@@ -222,6 +229,7 @@ function AppContent() {
   };
   const openEdit = (item?: Item) => {
     setEditingItem(item || null);
+    setEditOneTime(item ? !!item.oneTime : addingOneTime);
     setEditingSource(item || null);
     setProductName(item ? productLabel(item) : productName.trim());
     setProductQuantity(String(item?.quantity || 1));
@@ -245,7 +253,7 @@ function AppContent() {
   }
   function quickAdd(p: Product) {
     if (!active) return;
-    addProduct(active.id, p);
+    addProduct(active.id, p, 1, '', addingOneTime);
     feedback();
     notify(tr('{0} añadido', productLabel(p)));
   }
@@ -259,6 +267,7 @@ function AppContent() {
     const preserveName = editingSource && productLabel(editingSource) === productName.trim();
     const data = {
       id: editingItem?.id || uid(),
+      oneTime: editOneTime,
       name: preserveName ? editingSource.name : productName.trim(),
       quantity: qty,
       unit: unit.trim() || tr('ud'),
@@ -285,6 +294,7 @@ function AppContent() {
       setDetailTab(tab === 'lists' ? 'lists' : 'home');
     } else {
       const id = createList(name.trim(), emoji, color, newListPinned);
+      setOnlyThisPurchase(true);
       setOpenedId(id);
       setDetailTab(newListPinned ? 'home' : 'lists');
     }
@@ -318,7 +328,7 @@ function AppContent() {
       openList(list);
       notify(tr('Lista preparada para otra compra'));
     };
-    if (!list.items.some((item) => item.checked)) {
+    if (!list.items.some((item) => item.checked || item.oneTime)) {
       begin();
       return;
     }
@@ -327,9 +337,11 @@ function AppContent() {
       body:
         list.members.length > 1
           ? tr(
-              'Se desmarcarán los productos para todos los participantes. Se conservarán los productos, cantidades, notas y fotos.',
+              'Se retirarán los productos de solo esta compra y se desmarcarán los habituales para todos los participantes.',
             )
-          : tr('Se desmarcarán los productos. Se conservarán sus cantidades, notas y fotos.'),
+          : tr(
+              'Se retirarán los productos de solo esta compra. Tus productos habituales quedarán listos para volver a comprar.',
+            ),
       label: tr('Empezar de nuevo'),
       action: begin,
     });
@@ -464,6 +476,7 @@ function AppContent() {
                 {quantityLabel(item)}
               </Text>
             )}
+            {shopping && item.oneTime && <Text style={a.itemMeta}>{tr('Solo esta compra')}</Text>}
             {!!item.note && <Text style={a.itemMeta}>{item.note}</Text>}
           </View>
           {!stackedQuantity && (
@@ -569,23 +582,6 @@ function AppContent() {
             {tr('Para ti o para hacerla juntos.')}{' '}
           </Text>
           <View style={{ width: '100%', maxWidth: 350, gap: 15, marginTop: 14 }}>
-            <View style={[s.row, { gap: 10, marginVertical: 14 }]}>
-              <Text style={[s.label, { flex: 1 }]}>{tr('Idioma')}</Text>
-              {(['es', 'en'] as const).map((language) => (
-                <Pressable
-                  key={language}
-                  accessibilityRole="button"
-                  accessibilityLabel={language === 'es' ? tr('Español') : tr('English')}
-                  aria-pressed={state.language === language}
-                  onPress={() => setLanguage(language)}
-                  style={[a.chip, state.language === language && a.chipSelected]}
-                >
-                  <Text style={{ color: state.language === language ? '#fff' : theme.ink }}>
-                    {language === 'es' ? tr('Español') : tr('English')}
-                  </Text>
-                </Pressable>
-              ))}
-            </View>
             <Field
               accessibilityLabel={tr('Tu nombre')}
               label={tr('Tu nombre, para reconocerte en las listas')}
@@ -594,9 +590,7 @@ function AppContent() {
               onChangeText={setIntroName}
               maxLength={30}
             />
-            <Text style={s.body}>
-              {tr('Empiezas con cuatro listas guardadas que puedes cambiar o eliminar.')}
-            </Text>
+
             <Button
               title={busy ? tr('Preparando…') : tr('Empezar mi cesta')}
               icon="arrow"
@@ -610,11 +604,6 @@ function AppContent() {
               }
             />
             {sheetError && <Text style={a.error}>{sheetError}</Text>}
-            <Text style={[a.caption, { textAlign: 'center' }]}>
-              {tr('Sin anuncios. Sin contraseñas.')}
-              {`\n`}
-              {tr('También puedes comprar sin conexión.')}{' '}
-            </Text>
           </View>
         </ScrollView>
       </KeyboardScreen>
@@ -661,6 +650,9 @@ function AppContent() {
           <ProductsScreen
             onNewList={openNew}
             activeList={openedList}
+            purchaseOnly={purchaseContext}
+            oneTime={onlyThisPurchase}
+            onScopeChange={setOnlyThisPurchase}
             onReturnToList={() => {
               if (openedList) {
                 selectList(openedList.id);
@@ -679,6 +671,8 @@ function AppContent() {
             <CompactList
               key={openedList.id}
               list={openedList}
+              oneTime={onlyThisPurchase}
+              onScopeChange={setOnlyThisPurchase}
               shopping={detailTab === 'home' && state.activeListIds.includes(openedList.id)}
               grouped={grouped}
               onGroup={() => setGrouped(!grouped)}
@@ -691,7 +685,7 @@ function AppContent() {
               onAdd={openAdd}
               catalog={catalog}
               onSelectProduct={(product) => {
-                addProduct(openedList.id, product);
+                addProduct(openedList.id, product, 1, '', addingOneTime);
                 feedback();
                 notify(tr('{0} añadido', productLabel(product)));
               }}
@@ -984,7 +978,13 @@ function AppContent() {
                         importTarget === 'new'
                           ? createList(importName.trim(), '🧺', 'sage', true)
                           : importTarget;
-                      addTextProducts(id, items);
+                      addTextProducts(
+                        id,
+                        items,
+                        importTarget !== 'new' &&
+                          state.activeListIds.includes(id) &&
+                          (chooseImportTarget || detailTab === 'home'),
+                      );
                       selectList(id);
                       setOpenedId(id);
                       setDetailTab('home');
@@ -1102,6 +1102,9 @@ function AppContent() {
               )}
               {sheet === 'add' && (
                 <>
+                  {purchaseContext && (
+                    <PurchaseScope value={onlyThisPurchase} onChange={setOnlyThisPurchase} />
+                  )}
                   <Text style={s.body}>
                     {tr('Un toque y a la lista. Los básicos, siempre a mano.')}
                   </Text>
@@ -1350,6 +1353,9 @@ function AppContent() {
                     maxLength={300}
                     multiline
                   />
+                  {(purchaseContext || editingItem?.oneTime) && (
+                    <PurchaseScope value={editOneTime} onChange={setEditOneTime} />
+                  )}
                   <Button
                     title={editingItem ? tr('Guardar producto') : tr('Añadir a la lista')}
                     icon="check"
@@ -1756,7 +1762,9 @@ function AppContent() {
                           active.color,
                           false,
                         );
-                        active.items.forEach((i) => addProduct(id, i, i.quantity, i.note));
+                        active.items
+                          .filter((i) => !i.oneTime)
+                          .forEach((i) => addProduct(id, i, i.quantity, i.note, false));
                         setOpenedId(id);
                         setDetailTab('lists');
                         setDetail(true);

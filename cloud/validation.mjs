@@ -13,6 +13,7 @@ export const id = (v) => {
   return v;
 };
 export function product(d) {
+  if (d.oneTime !== undefined && typeof d.oneTime !== 'boolean') fail(400, 'Producto no válido.');
   id(d.id);
   text(d.name);
   text(d.emoji, 16);
@@ -89,6 +90,11 @@ export function validateOperation(op, listId) {
     case 'items.reset':
       if (!Array.isArray(d.ids) || d.ids.length > 1000) fail(400, 'Selección no válida.');
       d.ids.forEach(id);
+      if (d.removeIds !== undefined) {
+        if (!Array.isArray(d.removeIds) || d.removeIds.length > 1000)
+          fail(400, 'Selección no válida.');
+        d.removeIds.forEach(id);
+      }
       break;
     case 'list.delete':
     case 'list.leave':

@@ -12,6 +12,7 @@ export interface Product {
   unit: string;
 }
 export interface Item extends Product {
+  oneTime?: boolean;
   id: string;
   quantity: number;
   checked: boolean;
@@ -105,6 +106,7 @@ export function reduceLists(
           unit: d.unit,
           quantity: d.quantity,
           checked: false,
+          oneTime: d.oneTime === true,
           note: d.note || '',
           addedBy: name,
         });
@@ -127,6 +129,7 @@ export function reduceLists(
                 catalogId: d.catalogId,
                 image: d.image,
                 note: d.note,
+                oneTime: d.oneTime === undefined ? i.oneTime : d.oneTime === true,
               }
             : i,
         );
@@ -153,7 +156,9 @@ export function reduceLists(
         next.items = next.items.filter((i) => !d.ids.includes(i.id));
         break;
       case 'items.reset':
-        next.items = next.items.map((i) => (d.ids.includes(i.id) ? { ...i, checked: false } : i));
+        next.items = next.items
+          .filter((i) => !(i.oneTime && d.removeIds?.includes(i.id)))
+          .map((i) => (d.ids.includes(i.id) ? { ...i, checked: false } : i));
         break;
     }
     return next;

@@ -10,6 +10,7 @@ permissions:
   contents: read
 jobs:
   build:
+    if: github.event.repository.private == false
     runs-on: macos-26
     timeout-minutes: 45
     env:
@@ -20,7 +21,7 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: '24'
-          cache: npm
+          package-manager-cache: false
       - name: Check Xcode
         run: xcodebuild -version
       - run: npm ci
@@ -33,4 +34,4 @@ jobs:
           name: Cesta-Sideloadly
           path: artifacts/Cesta-Sideloadly.ipa
           if-no-files-found: error
-          retention-days: 7
+          retention-days: 1

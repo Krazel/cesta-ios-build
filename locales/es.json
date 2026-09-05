@@ -1,0 +1,6 @@
+{
+  "ios": {
+    "NSPhotoLibraryUsageDescription": "Elige una foto para identificar tus productos.",
+    "NSLocalNetworkUsageDescription": "Cesta se conecta al servicio de listas de tu red para sincronizar la compra entre tus dispositivos."
+  }
+}

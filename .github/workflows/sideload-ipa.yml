@@ -1,0 +1,36 @@
+name: Build iPhone IPA for Sideloadly
+on:
+  workflow_dispatch:
+    inputs:
+      api_url:
+        description: API URL accessible from the iPhone
+        type: string
+        required: true
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: macos-26
+    timeout-minutes: 45
+    env:
+      EXPO_PUBLIC_API_URL: ${{ inputs.api_url }}
+      EXPO_PUBLIC_SHARE_URL: ${{ inputs.api_url }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Check Xcode
+        run: xcodebuild -version
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run test:text-import
+      - name: Build unsigned iPhone application
+        run: node scripts/build-sideload-ipa.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Cesta-Sideloadly
+          path: artifacts/Cesta-Sideloadly.ipa
+          if-no-files-found: error
+          retention-days: 7

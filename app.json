@@ -1,0 +1,50 @@
+{
+  "expo": {
+    "name": "Cesta",
+    "slug": "cesta",
+    "scheme": "cesta",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.dmkr.cesta",
+      "infoPlist": {
+        "NSLocalNetworkUsageDescription": "Cesta se conecta al servicio de listas de tu red para sincronizar la compra entre tus dispositivos.",
+        "NSAppTransportSecurity": {
+          "NSAllowsLocalNetworking": true
+        },
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.dmkr.cesta",
+      "adaptiveIcon": {
+        "backgroundColor": "#E9EFDF",
+        "foregroundImage": "./assets/icon.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-secure-store",
+      "expo-sharing",
+      "expo-localization",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Cesta uses the photo you choose for a product. Cesta utiliza la foto que eliges para un producto.",
+          "cameraPermission": false,
+          "microphonePermission": false
+        }
+      ]
+    ],
+    "locales": {
+      "es": "./locales/es.json",
+      "en": "./locales/en.json"
+    }
+  }
+}

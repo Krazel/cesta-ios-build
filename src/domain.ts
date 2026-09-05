@@ -40,6 +40,7 @@ export interface Snapshot {
   lists: ShoppingList[];
 }
 export interface Operation {
+  seq?: number;
   id: string;
   type: string;
   listId: string;
@@ -83,6 +84,11 @@ export function reduceLists(
     if (list.id !== op.listId) return list;
     let next = { ...list, items: [...list.items] };
     switch (op.type) {
+      case 'member.rename':
+        next.members = next.members.map((member) =>
+          member.id === deviceId ? { ...member, name: d.name } : member,
+        );
+        break;
       case 'list.update':
         next = { ...next, name: d.name, emoji: d.emoji, color: d.color };
         break;

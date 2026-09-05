@@ -51,6 +51,7 @@ import {
   importData,
   initialize,
   invite,
+  makeLocal,
   join,
   onboard,
   removeMember,
@@ -177,7 +178,12 @@ function AppContent() {
       if (url) accept(url);
     });
     const sub = Linking.addEventListener('url', (e) => accept(e.url));
-    return () => sub.remove();
+    const hashChanged = () => accept(window.location.href);
+    if (Platform.OS === 'web') window.addEventListener('hashchange', hashChanged);
+    return () => {
+      sub.remove();
+      if (Platform.OS === 'web') window.removeEventListener('hashchange', hashChanged);
+    };
   }, []);
   const open = (next: Sheet) => {
     Keyboard.dismiss();
@@ -794,7 +800,10 @@ function AppContent() {
                       ? tr('Tus cambios están al día')
                       : tr('Trabajando sin conexión'),
                   action: () =>
-                    void synchronize().then(() => notify(tr('Sincronización comprobada.'))),
+                    void run(async () => {
+                      await synchronize();
+                      notify(tr('Sincronización comprobada.'));
+                    }),
                 },
                 {
                   icon: 'heart',
@@ -1362,6 +1371,20 @@ function AppContent() {
               )}
               {sheet === 'share' && active && (
                 <>
+                  <Text style={a.smallHeading}>
+                    {state.cloud[active.id]
+                      ? tr('Sincronización activada')
+                      : tr('Solo en este dispositivo')}
+                  </Text>
+                  <Text style={s.body}>
+                    {state.cloud[active.id]
+                      ? tr(
+                          'Solo se envían los cambios. Al volver a abrir la lista se recuperan las novedades.',
+                        )
+                      : tr(
+                          'Esta lista es privada y local. Al crear una invitación, se guardará en la nube para poder compartirla.',
+                        )}
+                  </Text>
                   <View style={a.shareHero}>
                     <View style={[s.row, { justifyContent: 'center', marginBottom: 12 }]}>
                       {active.members.slice(0, 5).map((m, i) => (
@@ -1435,17 +1458,31 @@ function AppContent() {
                   {active.ownerId === state.snapshot.device.id ? (
                     <>
                       {!inviteCode ? (
-                        <Button
-                          title={busy ? tr('Preparando enlace…') : tr('Crear invitación')}
-                          icon="link"
-                          disabled={busy}
-                          onPress={() => void shareInvitation()}
-                        />
+                        <View style={{ gap: 12 }}>
+                          <Button
+                            title={busy ? tr('Preparando enlace…') : tr('Crear invitación')}
+                            icon="link"
+                            disabled={busy}
+                            onPress={() => void shareInvitation()}
+                          />
+                          <Button
+                            secondary
+                            title={tr('Usar en mis dispositivos')}
+                            icon="link"
+                            disabled={busy}
+                            onPress={() => void shareInvitation()}
+                          />
+                          <Text style={a.caption}>
+                            {tr(
+                              'Abre el enlace en tu otro móvil u ordenador. Solo se sincroniza esta lista.',
+                            )}
+                          </Text>
+                        </View>
                       ) : (
                         <View style={{ gap: 12 }}>
                           <View style={a.codeBox}>
-                            <Text selectable style={a.codeText}>
-                              {inviteCode}
+                            <Text selectable style={[a.codeText, { fontSize: 14 }]}>
+                              {inviteCode.match(/.{1,24}/g)?.join('\n')}
                             </Text>
                           </View>
                           <Button
@@ -1538,6 +1575,12 @@ function AppContent() {
                     onPress={() =>
                       void run(async () => {
                         const joinedId = await join(joinCode);
+                        if (Platform.OS === 'web')
+                          window.history.replaceState(
+                            null,
+                            '',
+                            window.location.pathname + window.location.search,
+                          );
                         setOpenedId(joinedId);
                         setDetailTab('home');
                         setGrouped(false);
@@ -1584,7 +1627,7 @@ function AppContent() {
                 <>
                   <Text style={s.body}>
                     {tr(
-                      'Cesta guarda una copia de tus listas y favoritos en este dispositivo. Cuando hay conexión, las listas, los productos y tu nombre se guardan también en el servicio de sincronización configurado.',
+                      'Tus listas personales, catálogo y favoritos se guardan en este dispositivo. Solo las listas que eliges compartir o usar en otros dispositivos se guardan en Cloudflare, junto con sus fotos y nombres de participantes. Se envían cambios y se recuperan novedades al conectar.',
                     )}{' '}
                   </Text>
                   <Text style={s.body}>
@@ -1611,6 +1654,11 @@ function AppContent() {
               )}
               {sheet === 'list-menu' && active && (
                 <>
+                  <Text style={a.caption}>
+                    {state.cloud[active.id]
+                      ? tr('Sincronización activada')
+                      : tr('Solo en este dispositivo')}
+                  </Text>
                   {[
                     {
                       title: tr('Tamaño de los productos'),
@@ -1626,6 +1674,35 @@ function AppContent() {
                         open('share');
                       },
                     },
+                    ...(state.cloud[active.id]
+                      ? [
+                          {
+                            title: tr('Guardar solo en este dispositivo'),
+                            icon: 'download',
+                            fn: () =>
+                              setConfirm({
+                                title: tr('¿Guardar una copia local?'),
+                                body:
+                                  active.ownerId === state.snapshot.device.id
+                                    ? tr(
+                                        'Se conservará una copia aquí y se eliminará la lista de la nube para todos los participantes. Las invitaciones dejarán de funcionar.',
+                                      )
+                                    : tr(
+                                        'Se conservará una copia aquí y saldrás de la lista compartida. Los demás podrán seguir utilizándola.',
+                                      ),
+                                label: tr('Guardar copia local'),
+                                action: async () => {
+                                  const id = await makeLocal(active.id);
+                                  if (id) {
+                                    setOpenedId(id);
+                                    selectList(id);
+                                  }
+                                  setSheet(null);
+                                },
+                              }),
+                          },
+                        ]
+                      : []),
                     ...(bought.length
                       ? [
                           {

@@ -1,15 +1,38 @@
-# Cesta — iPhone para Sideloadly
+# Cesta
 
-Copia del cliente de Cesta para generar un IPA de iPhone sin firmar. Incluye la interfaz en español e inglés, listas compartidas, catálogo de productos y conversión local de texto en productos.
+Aplicación de listas de la compra para iPhone y web, en castellano e inglés.
 
-## Compilar
+## Modelo local y sincronización
 
-En Actions, ejecuta manualmente **Build iPhone IPA for Sideloadly** e introduce una URL de API accesible desde el teléfono. El flujo usa el runner estándar `macos-26` en este repositorio público y se bloquea si el repositorio pasa a ser privado. No utiliza certificados de Apple ni publica en TestFlight o App Store.
+Las listas personales, catálogo y favoritos se guardan en el dispositivo. Crear, editar, marcar, importar y reutilizar una lista personal no contacta con la API.
 
-El resultado se llama `Cesta-Sideloadly.ipa` y se adjunta a la ejecución durante un día. Descárgalo y cárgalo en Sideloadly para firmarlo e instalarlo con tu Apple ID.
+Al elegir **Compartir lista** o **Usar en mis dispositivos**, solo esa lista se publica en el servicio. Cada lista compartida tiene su propio Durable Object de Cloudflare con almacenamiento SQLite y conexiones WebSocket con hibernación. No hay consultas periódicas: al conectar se recupera la lista y las confirmaciones de operaciones pendientes; después se envían cambios. Los identificadores únicos evitan duplicados al reintentar una operación. Las operaciones de un lote se guardan de forma atómica.
 
-El servidor de sincronización se ejecuta por separado. Esta copia de compilación no contiene listas personales, datos SQLite, fotos de usuarios ni credenciales. La URL de la API queda incorporada en el cliente al compilar. Para usar una API de la red local, el teléfono debe estar en esa red y el servidor debe permanecer accesible.
+Las invitaciones caducan a los siete días y una nueva sustituye la anterior. Los participantes editan; el propietario gestiona invitaciones y expulsiones. El propietario puede volver a una copia local retirando la lista de la nube para todos. Un participante puede salir y guardar su copia. El borrado de datos compartidos necesita conexión y confirmación del servidor.
 
-También se puede ejecutar `node scripts/build-sideload-ipa.mjs` en un Mac con Xcode, CocoaPods, Node 24, las dependencias instaladas y `EXPO_PUBLIC_API_URL` configurada.
+Las listas de la beta LAN anterior se conservan localmente, incluidos cambios pendientes. No se suben automáticamente a otro proveedor. Necesitan invitaciones nuevas. El registro local v1 se conserva para recuperación hasta borrar los datos de Cesta. La base del antiguo servidor sigue en data/ y no se modifica por esta migración.
 
-Documentación de instalación: https://sideloadly.io/
+## Desarrollo
+
+Node 24. Instalación: `npm ci`.
+
+- `npm run build:web`: genera la web y su caché sin conexión.
+- `npm run cloud:dev`: ejecuta el Worker local en http://localhost:8788.
+- `npm run typecheck`: comprueba TypeScript.
+- `npm run test:cloud`: prueba permisos, operaciones simultáneas, reintentos, eventos, expulsiones y borrado en el runtime de Cloudflare.
+- `npm run test:cloud-ui`: prueba dos navegadores, ausencia de API para listas locales, recuperación offline y migración LAN.
+- `npm run test:text-import`: comprueba la conversión local de texto a productos.
+
+El primer acceso a la web requiere Internet. Después puede reabrirse sin conexión mientras el navegador conserve sus archivos y datos. Las API y las invitaciones no se almacenan en la caché del service worker.
+
+## Despliegue
+
+`wrangler.jsonc` identifica el Worker cesta en la cuenta existente de Studio. El plan Workers Free se verificó en el panel el 2026-09-05. No se activó ningún plan de pago. Las cuotas se comparten con otros servicios de esa cuenta. Las listas sincronizadas se limitan a 32 participantes, 1000 productos y unos 750 KB para mantener las fotos y el estado dentro del tamaño admitido por la conexión.
+
+Compilar y verificar antes de `npx wrangler deploy`. El despliegue publica la web y la API; no equivale a una entrega de iPhone. Los archivos de estado local, logs y credenciales no pertenecen al repositorio público.
+
+## iPhone
+
+El código mantiene Expo SDK 57 / React Native 0.86. La app nativa debe compilarse con la URL HTTPS publicada. Las builds previas de TestFlight conservan la URL LAN incluida en su binario. Una prueba web no valida teclado, fotos ni instalación física de iOS. Las entregas y la autorización vigente constan en AGENTS.md, ESTADO.md y store/TESTFLIGHT-ESTADO.md.
+
+Privacidad: [docs/privacy.md](docs/privacy.md). Soporte: [docs/support.md](docs/support.md).

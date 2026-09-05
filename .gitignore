@@ -50,5 +50,7 @@ yarn-error.*
 /ios
 /android
 
-artifacts/
-
+# Cloudflare local development state
+.wrangler/
+.dev.vars*
+artifacts/cloud-bundle/

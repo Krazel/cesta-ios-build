@@ -11,8 +11,8 @@ jobs:
     timeout-minutes: 45
     env:
       CESTA_DISTRIBUTION: testflight
-      EXPO_PUBLIC_API_URL: http://192.168.1.35:8787
-      EXPO_PUBLIC_SHARE_URL: http://192.168.1.35:8787
+      EXPO_PUBLIC_API_URL: https://cesta.krazel-zodiac-daily.workers.dev
+      EXPO_PUBLIC_SHARE_URL: https://cesta.krazel-zodiac-daily.workers.dev
       ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
       ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
       ASC_PRIVATE_KEY_BASE64: ${{ secrets.ASC_PRIVATE_KEY_BASE64 }}
@@ -33,9 +33,9 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: Cesta-1.1-build2-TestFlight
+          name: Cesta-1.2-build3-TestFlight
           path: |
-            artifacts/Cesta-1.1-build2-TestFlight.ipa
+            artifacts/Cesta-1.2-build3-TestFlight.ipa
             artifacts/testflight-build.json
           if-no-files-found: ignore
           retention-days: 1

@@ -10,6 +10,7 @@ import { Operation, Product, ShoppingList, Snapshot, reduceLists, normalize } fr
 import { products, starterLists } from './catalog';
 import type { TextProduct } from './textImport';
 import { productSizes, type ProductSize } from './appearance';
+import { CloudSync, CloudError, type CloudRef } from './syncEngine';
 
 export const uid = () =>
   Array.from(Crypto.getRandomBytes(16), (b) => b.toString(16).padStart(2, '0')).join('');
@@ -17,9 +18,11 @@ const host =
   Platform.OS === 'web' && typeof location !== 'undefined'
     ? location.hostname
     : Constants.expoConfig?.hostUri?.split(':')[0] || 'localhost';
-export const API = process.env.EXPO_PUBLIC_API_URL || `http://${host}:8787`;
-export const WEB_URL = process.env.EXPO_PUBLIC_SHARE_URL || `http://${host}:8787`;
-const KEY = 'cesta-state-v1';
+export const API =
+  process.env.EXPO_PUBLIC_API_URL ||
+  (Platform.OS === 'web' ? location.origin : "https://cesta.krazel-zodiac-daily.workers.dev");
+export const WEB_URL = process.env.EXPO_PUBLIC_SHARE_URL || API;
+const KEY = 'cesta-state-v2';
 const SECRET = 'cesta-device-v1';
 type State = {
   ready: boolean;
@@ -38,6 +41,8 @@ type State = {
   lastSync: number;
   pendingName?: string | null;
   starterListsVersion?: number;
+  cloud: Record<string, CloudRef>;
+  sequence: number;
 };
 let state: State = {
   ready: false,
@@ -54,11 +59,11 @@ let state: State = {
   selectedId: null,
   activeListIds: [],
   lastSync: 0,
+  cloud: {},
+  sequence: 0,
 };
 let token = '';
 setCurrentLanguage(state.language);
-let registered = false;
-let syncPromise: Promise<void> | null = null;
 let storageQueue = Promise.resolve();
 const listeners = new Set<() => void>();
 const emit = () => {
@@ -91,6 +96,8 @@ const save = () => {
     activeListIds: state.activeListIds,
     pendingName: state.pendingName,
     starterListsVersion: state.starterListsVersion,
+    cloud: state.cloud,
+    sequence: state.sequence,
   });
   const job = storageQueue.then(() => AsyncStorage.setItem(KEY, payload));
   storageQueue = job.catch(() => {
@@ -99,50 +106,42 @@ const save = () => {
   });
   return job;
 };
-export class ApiError extends Error {
-  constructor(
-    message: string,
-    public status: number,
-  ) {
-    super(message);
-  }
-}
-async function request(path: string, body?: unknown, method = body === undefined ? 'GET' : 'POST') {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 8000);
-  try {
-    const response = await fetch(API + path, {
-      method,
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
-      body: body === undefined ? undefined : JSON.stringify(body),
-      signal: controller.signal,
-    });
-    const data = await response.json();
-    if (!response.ok)
-      throw new ApiError(t(data.message || 'No se ha podido conectar.'), response.status);
-    return data;
-  } finally {
-    clearTimeout(timer);
-  }
-}
+const cloudSync = new CloudSync({
+  get: () => state,
+  token: () => token,
+  api: () => API,
+  save,
+  change: emit,
+  uid,
+  error: (message) => {
+    state.error = t(message);
+    emit();
+  },
+  status: (online) => {
+    state.online = online;
+    if (online) state.lastSync = Date.now();
+    emit();
+  },
+});
+let started = false;
 export async function initialize() {
   try {
     const cached = await AsyncStorage.getItem(KEY);
-    if (cached) {
-      const data = JSON.parse(cached);
+    const legacy = cached ? null : await AsyncStorage.getItem('cesta-state-v1');
+    const raw = cached || legacy;
+    if (raw) {
+      const data = JSON.parse(raw);
       if (
         data.snapshot?.device &&
         Array.isArray(data.snapshot.lists) &&
         Array.isArray(data.pending)
       ) {
         state = { ...state, ...data };
+        state.cloud = data.cloud || {};
+        state.sequence = data.sequence || 0;
         state.productSize = Object.hasOwn(productSizes, data.productSize)
           ? data.productSize
           : 'comfortable';
-        // Keep previously visible lists on the home screen when upgrading.
         state.activeListIds = Array.isArray(data.activeListIds)
           ? data.activeListIds
           : currentLists().map((list) => list.id);
@@ -157,102 +156,101 @@ export async function initialize() {
       if (Platform.OS === 'web') await AsyncStorage.setItem(SECRET, token);
       else await SecureStore.setItemAsync(SECRET, token);
     }
+    const deviceId = (
+      await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, token)
+    ).slice(0, 32);
+    if (legacy) {
+      // Keep the v1 record untouched for recovery. Old LAN lists become private copies;
+      // never silently upload an existing device's personal data to a new provider.
+      const lists = currentLists();
+      state.snapshot.lists = lists.map((list) => ({
+        ...list,
+        ownerId: deviceId,
+        members: [{ id: deviceId, name: state.snapshot.device.name, role: 'owner' }],
+      }));
+      state.pending = [];
+      state.cloud = {};
+      state.sequence = 0;
+      if (lists.some((list) => list.members.length > 1))
+        state.error = t(
+          'Tus listas anteriores se han conservado aquí. Crea una invitación nueva para compartirlas por Internet.',
+        );
+    }
+    state.snapshot.device.id = deviceId;
     setCurrentLanguage(state.language);
-    if (state.onboarded && ensureStarterLists()) await save();
+    if (state.onboarded) ensureStarterLists();
+    await save();
     state.ready = true;
     emit();
-    void synchronize();
+    if (started) cloudSync.start();
   } catch {
     state.error = t('No se han podido abrir tus datos. Cierra y vuelve a abrir la aplicación.');
     state.ready = true;
     emit();
   }
 }
-export function synchronize(): Promise<void> {
-  if (syncPromise) return syncPromise;
-  syncPromise = (async () => {
-    state.syncing = true;
-    emit();
-    try {
-      await storageQueue;
-      if (!registered) {
-        const remote = await request('/api/register', { token, name: state.snapshot.device.name });
-        state.snapshot = remote;
-        registered = true;
-      }
-      if (state.pendingName) {
-        const name = state.pendingName;
-        state.snapshot = await request('/api/profile', { name });
-        if (state.pendingName === name) state.pendingName = null;
-        await save();
-      }
-      while (state.pending.length) {
-        const op = state.pending[0];
-        try {
-          await request('/api/ops', op);
-          state.snapshot = {
-            ...state.snapshot,
-            lists: reduceLists(
-              state.snapshot.lists,
-              op,
-              state.snapshot.device.id,
-              state.snapshot.device.name,
-            ),
-          };
-          state.pending = state.pending.filter((o) => o.id !== op.id);
-          await save();
-          emit();
-        } catch (error) {
-          if (error instanceof ApiError && [400, 403, 404, 409].includes(error.status)) {
-            state.error = error.message;
-            state.pending = state.pending.filter((o) => o.id !== op.id);
-            await save();
-          } else throw error;
-        }
-      }
-      state.snapshot = await request('/api/snapshot');
-      state.online = true;
-      state.lastSync = Date.now();
-      await save();
-    } catch (error) {
-      state.online = false;
-      if (error instanceof ApiError && error.status === 401) registered = false;
-    } finally {
-      state.syncing = false;
-      syncPromise = null;
-      emit();
-    }
-  })();
-  return syncPromise;
+export async function synchronize() {
+  for (const id of Object.keys(state.cloud)) await cloudSync.settle(id);
 }
 export function startSync() {
-  const timer = setInterval(() => {
-    if (AppState.currentState === 'active' || Platform.OS === 'web') void synchronize();
-  }, 2500);
+  started = true;
+  if (state.ready) cloudSync.start();
+  const resume = () => {
+    if (state.ready) cloudSync.start();
+  };
   const subscription = AppState.addEventListener('change', (s) => {
-    if (s === 'active') void synchronize();
+    if (s === 'active') resume();
+    else cloudSync.stop();
   });
+  const visibility = () => {
+    if (document.hidden) cloudSync.stop();
+    else resume();
+  };
+  if (Platform.OS === 'web') {
+    window.addEventListener('online', resume);
+    document.addEventListener('visibilitychange', visibility);
+  }
   return () => {
-    clearInterval(timer);
+    started = false;
+    cloudSync.stop();
     subscription.remove();
+    if (Platform.OS === 'web') {
+      window.removeEventListener('online', resume);
+      document.removeEventListener('visibilitychange', visibility);
+    }
   };
 }
-export function enqueue(type: string, listId: string, data: Record<string, any>) {
-  state.pending = [...state.pending, { id: uid(), type, listId, data }];
+function applyOperations(operations: Operation[]) {
+  for (const op of operations) {
+    if (state.cloud[op.listId]) state.pending.push({ ...op, seq: ++state.sequence });
+    else
+      state.snapshot.lists = reduceLists(
+        state.snapshot.lists,
+        op,
+        state.snapshot.device.id,
+        state.snapshot.device.name,
+      );
+  }
+}
+function persistOperations(operations: Operation[]) {
+  applyOperations(operations);
   emit();
   void save()
-    .then(() => synchronize())
+    .then(() => {
+      for (const id of new Set(operations.map((op) => op.listId)))
+        if (state.cloud[id]) cloudSync.kick(id);
+    })
     .catch(() => {});
 }
+export function enqueue(type: string, listId: string, data: Record<string, any>) {
+  persistOperations([{ id: uid(), type, listId, data }]);
+}
 export async function onboard(name: string) {
-  const chosenName = name.trim() || t('Mi móvil');
-  state.pendingName = chosenName;
-  state.snapshot = { ...state.snapshot, device: { ...state.snapshot.device, name: chosenName } };
+  state.snapshot.device.name = name.trim() || t('Mi móvil');
   state.onboarded = true;
   ensureStarterLists();
   emit();
   await save();
-  await synchronize();
 }
 function ensureStarterLists(): boolean {
   if ((state.starterListsVersion || 0) >= 1) return false;
@@ -289,7 +287,7 @@ function ensureStarterLists(): boolean {
     }
   }
   // The marker and queued operations are persisted together, including offline.
-  state.pending = [...state.pending, ...operations];
+  applyOperations(operations);
   state.starterListsVersion = 1;
   return true;
 }
@@ -331,19 +329,14 @@ export function addTextProducts(listId: string, items: TextProduct[]) {
     throw new Error(
       t('Esta lista admite hasta 1000 productos. Quita algunos antes de añadir más.'),
     );
-  state.pending = [
-    ...state.pending,
-    ...items.map((item) => ({
+  persistOperations(
+    items.map((item) => ({
       id: uid(),
       type: 'item.add',
       listId,
       data: { ...item.product, id: uid(), quantity: item.quantity, note: item.note },
     })),
-  ];
-  emit();
-  void save()
-    .then(() => synchronize())
-    .catch(() => {});
+  );
 }
 export function favorite(product: Product) {
   state.favorites = state.favorites.some(
@@ -392,56 +385,94 @@ export function deleteCustomProduct(productId: string) {
   emit();
   void save().catch(() => {});
 }
-export async function connected() {
-  await synchronize();
-  if (!state.online || state.pending.length)
+export async function enableCloud(listId: string) {
+  const list = currentLists().find((list) => list.id === listId);
+  if (!list) throw new Error(t('La lista ya no está disponible.'));
+  if (!state.cloud[listId]) {
+    state.cloud[listId] = { published: false, version: 0, seed: JSON.parse(JSON.stringify(list)) };
+    await save();
+    emit();
+  }
+  try {
+    await cloudSync.settle(listId);
+  } catch (error) {
+    if (error instanceof CloudError) throw new Error(t(error.message));
     throw new Error(
       t('Necesitas conexión para compartir. Tus cambios siguen guardados en este dispositivo.'),
     );
+  }
 }
 export async function invite(listId: string) {
-  await connected();
-  return request(`/api/lists/${listId}/invite`, {});
+  await enableCloud(listId);
+  return cloudSync.request(listId, 'invite', {});
 }
 export async function revoke(listId: string) {
-  await connected();
-  return request(`/api/lists/${listId}/invite`, undefined, 'DELETE');
+  if (!state.cloud[listId]?.published) return;
+  return cloudSync.request(listId, 'invite', undefined, 'DELETE');
 }
 export async function join(input: string) {
-  const value = input.trim();
-  let code = value;
-  if (value.includes('://')) {
+  let code = input.trim();
+  if (code.includes('://')) {
     try {
-      const url = new URL(value);
+      const url = new URL(code);
       code =
         url.searchParams.get('code') || new URLSearchParams(url.hash.slice(1)).get('join') || '';
     } catch {
       throw new Error(t('Pega un código o enlace de invitación válido.'));
     }
   }
-  if (!/^[a-zA-Z0-9_-]{24}$/.test(code))
-    throw new Error(t('El código tiene 24 caracteres. También puedes pegar el enlace completo.'));
-  await connected();
-  const remote = await request('/api/join', { code });
-  state.snapshot = { device: remote.device, lists: remote.lists };
-  state.selectedId = remote.joinedListId;
-  state.activeListIds = Array.from(new Set([...state.activeListIds, remote.joinedListId]));
+  const parts = code.replace(/\s/g, '').match(/^([a-f0-9]{32})\.([a-zA-Z0-9_-]{24})$/);
+  if (!parts) throw new Error(t('Pega el enlace o código de la nueva invitación de Cesta.'));
+  if (currentLists().length >= 100 && !state.cloud[parts[1]])
+    throw new Error(t('Puedes guardar hasta 100 listas.'));
+  const remote = await cloudSync.request(parts[1], 'join', {
+    code: parts[2],
+    name: state.snapshot.device.name,
+  });
+  const listId = parts[1];
+  state.cloud[listId] ??= { published: true, version: 0 };
+  cloudSync.receive(listId, remote);
+  state.selectedId = listId;
+  state.activeListIds = Array.from(new Set([...state.activeListIds, listId]));
   await save();
   emit();
-  return remote.joinedListId;
+  cloudSync.kick(listId);
+  return listId;
 }
 export async function removeMember(listId: string, memberId: string) {
-  await connected();
-  state.snapshot = await request(`/api/lists/${listId}/members/${memberId}`, undefined, 'DELETE');
+  const remote = await cloudSync.request(listId, 'members/' + memberId, undefined, 'DELETE');
+  cloudSync.receive(listId, remote);
   await save();
-  emit();
+}
+export async function makeLocal(listId: string) {
+  await cloudSync.settle(listId);
+  const copy = currentLists().find((list) => list.id === listId);
+  if (!copy) return;
+  const nextId = uid();
+  // Persist the private replacement before removing the shared copy.
+  state.snapshot.lists.push({
+    ...copy,
+    id: nextId,
+    ownerId: state.snapshot.device.id,
+    members: [{ ...state.snapshot.device, role: 'owner' }],
+  });
+  if (state.activeListIds.includes(listId)) state.activeListIds.push(nextId);
+  state.selectedId = nextId;
+  await save();
+  enqueue(copy.ownerId === state.snapshot.device.id ? 'list.delete' : 'list.leave', listId, {});
+  await cloudSync.settle(listId);
+  return nextId;
 }
 export async function updateName(name: string) {
-  state.pendingName = name;
-  state.snapshot = { ...state.snapshot, device: { ...state.snapshot.device, name } };
+  state.snapshot.device.name = name;
+  for (const list of state.snapshot.lists)
+    if (!state.cloud[list.id])
+      list.members = list.members.map((member) =>
+        member.id === state.snapshot.device.id ? { ...member, name } : member,
+      );
   emit();
   await save();
-  void synchronize();
+  for (const listId of Object.keys(state.cloud)) enqueue('member.rename', listId, { name });
 }
 export function exportData() {
   return JSON.stringify(
@@ -598,36 +629,42 @@ export function importData(raw: string) {
   );
   state.favorites = Array.from(favoritesByName.values());
   state.customProducts = Array.from(customs.values());
-  state.pending = [...state.pending, ...operations];
-  emit();
-  void save()
-    .then(() => synchronize())
-    .catch(() => {});
+  persistOperations(operations);
   return validLists.length;
 }
 export async function eraseDevice() {
-  await connected();
-  await request('/api/device', undefined, 'DELETE');
+  // Cloud deletion requires a confirmed server response; never pretend an offline
+  // deletion removed a remotely shared list.
+  for (const id of Object.keys(state.cloud)) {
+    await cloudSync.settle(id);
+    const list = currentLists().find((list) => list.id === id);
+    if (list) {
+      enqueue(list.ownerId === state.snapshot.device.id ? 'list.delete' : 'list.leave', id, {});
+      await cloudSync.settle(id);
+    }
+  }
+  cloudSync.stop();
   await storageQueue;
-  await AsyncStorage.removeItem(KEY);
+  await AsyncStorage.multiRemove([KEY, 'cesta-state-v1']);
   if (Platform.OS === 'web') await AsyncStorage.removeItem(SECRET);
   else await SecureStore.deleteItemAsync(SECRET);
-  registered = false;
   state = {
+    ...state,
     ready: false,
     onboarded: false,
     snapshot: { device: { id: 'local-device', name: t('Mi móvil') }, lists: [] },
     pending: [],
+    cloud: {},
+    sequence: 0,
+    favorites: [],
+    customProducts: [],
+    activeListIds: [],
+    selectedId: null,
     online: false,
     syncing: false,
     error: '',
-    favorites: [],
-    customProducts: [],
-    language: state.language,
-    productSize: state.productSize,
-    selectedId: null,
-    activeListIds: [],
     lastSync: 0,
+    starterListsVersion: 0,
   };
   emit();
   await initialize();

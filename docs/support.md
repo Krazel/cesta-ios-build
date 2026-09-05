@@ -1,19 +1,31 @@
 # Cesta — soporte / support
 
-Contacto / Contact: **coderappskrazel@gmail.com**.
+Contacto / Contact: coderappskrazel@gmail.com
 
-## Español
+## Castellano
 
-Puedes crear y preparar listas desde Listas, llevarlas a Inicio para comprar y marcar cada producto. El botón +/× Inicio de la cabecera permite guardarlas o volver a utilizarlas. En Productos puedes buscar, crear productos con foto y añadirlos a una lista. Al escribir en una lista aparecen coincidencias del catálogo.
+Cesta funciona en iPhone y navegador. Las listas nuevas son locales. Para compartir una lista o abrirla en otro dispositivo: abre sus opciones, pulsa Compartir lista y crea una invitación o elige Usar en mis dispositivos. Abre ese enlace en el otro dispositivo. Solo esa lista se activa en la nube.
 
-La beta permite trabajar sin conexión. Para compartir y sincronizar, el dispositivo debe estar en la misma red que el servidor de pruebas y este debe estar encendido. Fuera de esa red puedes seguir usando los datos locales; la sincronización se reanudará cuando recuperes acceso al servicio.
+Los cambios se envían mientras hay conexión. Al recuperar Internet o volver a abrir la app se recogen las novedades. Las listas personales no hacen peticiones a la API. La web necesita una primera visita con conexión para guardar sus archivos; después puede reabrirse sin conexión mientras el navegador conserve esos archivos.
 
-Para informar de un problema, indica la versión de Cesta, la versión de iOS y los pasos para reproducirlo. No incluyas contraseñas, códigos de invitación o contenido privado de tus listas. También puedes enviar comentarios mediante TestFlight.
+En las opciones de una lista sincronizada puedes guardarla solo en este dispositivo. Si eres propietario, esto elimina la copia compartida para todos; si eres participante, sales de ella conservando una copia. La operación necesita Internet. Exporta copias desde Ajustes antes de borrar datos del navegador o desinstalar.
+
+Las invitaciones nuevas caducan a los siete días; crear otra sustituye la anterior. Una lista admite 32 participantes, 1000 productos y hasta aproximadamente 750 KB de contenido para sincronización. Si hay demasiadas fotos se conserva localmente y puedes reducirlas. La capacidad del alojamiento gratuito está sujeta a cuotas; no se activan pagos automáticos.
+
+Las listas de la beta 1.1 se conservan como copias locales y necesitan invitaciones nuevas para compartir por Internet. Esa beta antigua sigue usando el servidor LAN hasta instalar una versión actualizada.
+
+Al comunicar un problema incluye versión, dispositivo, idioma y pasos; nunca envíes credenciales, enlaces privados ni códigos de invitación a incidencias públicas. La ficha TestFlight creada no significa publicación pública en App Store.
 
 ## English
 
-Prepare reusable lists in Lists, move them to Home to shop and tick off products. Use +/× Home in the list header to save or reactivate a list. Products lets you search, create products with a photo and add them to a list. Typing inside a list shows catalogue suggestions.
+Cesta works on iPhone and in a browser. New lists are local. Open a list's options, choose Share list and create an invitation or select Use on my devices. Open that link on the other device. Only that list is uploaded.
 
-The beta supports offline shopping. Sharing and synchronization require the device and the running test server to be on the same local network. You can continue using local data elsewhere; synchronization resumes when the service becomes reachable.
+Edits synchronize while connected. Reopening the app or reconnecting retrieves updates. Personal lists make no API requests. The website needs an initial online visit to cache its files; offline reopening works while the browser retains them.
 
-For support, include the Cesta version, iOS version and reproduction steps. Do not send passwords, invitation codes or private shopping-list content. You can also send feedback through TestFlight.
+A synchronized list can be kept only on this device. Owners remove the shared copy for everyone; other participants leave it and keep their own copy. Internet is required to confirm this. Export backups before clearing browser data or uninstalling.
+
+Invitations expire after seven days and a new one replaces the previous link. Shared lists allow 32 participants, 1000 products and approximately 750 KB of content. Reduce photos if a list is too large to share; the local data is kept. Free hosting has quotas and no automatic paid upgrade is enabled.
+
+Cached version 1.1 lists remain as local copies and need new invitations for internet sharing. That older beta continues to use its LAN server until an updated app is installed.
+
+For support include version, device, language and reproduction steps. Do not post credentials or private invitations. A TestFlight record does not mean a public App Store release.

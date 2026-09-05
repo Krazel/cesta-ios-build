@@ -5,12 +5,12 @@
   "bundleId": "com.dmkr.cesta.B2X6D3A9J9",
   "bundleResourceId": "4HDFQQFNBQ",
   "teamId": "B2X6D3A9J9",
-  "marketingVersion": "1.1",
-  "buildNumber": "2",
+  "marketingVersion": "1.2",
+  "buildNumber": "3",
   "purpose": "TestFlight",
   "betaAudience": "internal",
-  "apiUrl": "http://192.168.1.35:8787",
-  "backendScope": "Local network beta; offline shopping available without the server",
+  "apiUrl": "https://cesta.krazel-zodiac-daily.workers.dev",
+  "backendScope": "Internet sync only for opted-in lists; local-only personal lists; Cloudflare Workers Free",
   "sourceLocalBundleId": "com.dmkr.cesta",
   "appId": "6808982515"
 }

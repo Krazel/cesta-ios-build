@@ -1,0 +1,16 @@
+{
+  "name": "Cesta: Lista de la compra",
+  "primaryLocale": "es-ES",
+  "sku": "krazel-cesta-ios",
+  "bundleId": "com.dmkr.cesta.B2X6D3A9J9",
+  "bundleResourceId": "4HDFQQFNBQ",
+  "teamId": "B2X6D3A9J9",
+  "marketingVersion": "1.1",
+  "buildNumber": "2",
+  "purpose": "TestFlight",
+  "betaAudience": "internal",
+  "apiUrl": "http://192.168.1.35:8787",
+  "backendScope": "Local network beta; offline shopping available without the server",
+  "sourceLocalBundleId": "com.dmkr.cesta",
+  "appId": "6808982515"
+}

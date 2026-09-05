@@ -9,6 +9,7 @@ import { Language, setCurrentLanguage, t } from './i18n';
 import { Operation, Product, ShoppingList, Snapshot, reduceLists, normalize } from './domain';
 import { products, starterLists } from './catalog';
 import type { TextProduct } from './textImport';
+import { productSizes, type ProductSize } from './appearance';
 
 export const uid = () =>
   Array.from(Crypto.getRandomBytes(16), (b) => b.toString(16).padStart(2, '0')).join('');
@@ -31,6 +32,7 @@ type State = {
   favorites: Product[];
   customProducts: Product[];
   language: Language;
+  productSize: ProductSize;
   selectedId: string | null;
   activeListIds: string[];
   lastSync: number;
@@ -48,6 +50,7 @@ let state: State = {
   favorites: [],
   customProducts: [],
   language: getLocales()[0]?.languageCode === 'en' ? 'en' : 'es',
+  productSize: 'comfortable',
   selectedId: null,
   activeListIds: [],
   lastSync: 0,
@@ -83,6 +86,7 @@ const save = () => {
     favorites: state.favorites,
     customProducts: state.customProducts,
     language: state.language,
+    productSize: state.productSize,
     selectedId: state.selectedId,
     activeListIds: state.activeListIds,
     pendingName: state.pendingName,
@@ -135,6 +139,9 @@ export async function initialize() {
         Array.isArray(data.pending)
       ) {
         state = { ...state, ...data };
+        state.productSize = Object.hasOwn(productSizes, data.productSize)
+          ? data.productSize
+          : 'comfortable';
         // Keep previously visible lists on the home screen when upgrading.
         state.activeListIds = Array.isArray(data.activeListIds)
           ? data.activeListIds
@@ -356,6 +363,11 @@ export function favorite(product: Product) {
 export function setLanguage(language: Language) {
   state.language = language;
   setCurrentLanguage(language);
+  emit();
+  void save().catch(() => {});
+}
+export function setProductSize(size: ProductSize) {
+  state.productSize = size;
   emit();
   void save().catch(() => {});
 }
@@ -612,6 +624,7 @@ export async function eraseDevice() {
     favorites: [],
     customProducts: [],
     language: state.language,
+    productSize: state.productSize,
     selectedId: null,
     activeListIds: [],
     lastSync: 0,

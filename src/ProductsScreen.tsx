@@ -12,7 +12,9 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Category, Product } from './domain';
+import { Category, Product, ShoppingList } from './domain';
+import { productSizes } from './appearance';
+import { dismissOutsideInput } from './KeyboardScreen';
 import { categories, products, matchesProductSearch } from './catalog';
 import {
   addProduct,
@@ -50,10 +52,19 @@ export function ProductVisual({ product, size = 49 }: { product: Product; size?:
     </View>
   );
 }
-export function ProductsScreen({ onNewList }: { onNewList: () => void }) {
+export function ProductsScreen({
+  onNewList,
+  activeList,
+  onReturnToList,
+}: {
+  onNewList: () => void;
+  activeList?: ShoppingList;
+  onReturnToList: () => void;
+}) {
   const state = useCesta(),
     insets = useSafeAreaInsets();
   const lists = currentLists();
+  const productSize = productSizes[state.productSize];
   const [query, setQuery] = useState(''),
     [filter, setFilter] = useState('all');
   const [editing, setEditing] = useState<Product | null>(null),
@@ -157,6 +168,27 @@ export function ProductsScreen({ onNewList }: { onNewList: () => void }) {
             onPress={() => edit()}
           />
         </View>
+        {activeList && (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t('Volver a {0}', activeList.name)}
+            onPress={onReturnToList}
+            style={[
+              s.row,
+              {
+                gap: 8,
+                minHeight: 44,
+                marginBottom: 8,
+                paddingHorizontal: 10,
+                backgroundColor: '#E5EDDE',
+                borderRadius: 12,
+              },
+            ]}
+          >
+            <Icon name="back" size={17} />
+            <Text style={[s.label, { flex: 1 }]}>{t('Añadiendo a {0}', activeList.name)}</Text>
+          </Pressable>
+        )}
         <Field
           accessibilityLabel={t('Buscar productos')}
           placeholder={t('Buscar productos')}
@@ -182,6 +214,8 @@ export function ProductsScreen({ onNewList }: { onNewList: () => void }) {
         </Text>
       )}
       <FlatList
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
         aria-hidden={modal}
         data={filtered}
         keyExtractor={favoriteKey}
@@ -201,9 +235,11 @@ export function ProductsScreen({ onNewList }: { onNewList: () => void }) {
               onPress={() => openTarget(product)}
               style={[s.row, { flex: 1, gap: 12, paddingVertical: 12 }]}
             >
-              <ProductVisual product={product} />
+              <ProductVisual product={product} size={productSize.image} />
               <View style={{ flex: 1, gap: 5 }}>
-                <Text style={p.name}>{productLabel(product)}</Text>
+                <Text style={[p.name, { fontSize: productSize.font }]}>
+                  {productLabel(product)}
+                </Text>
                 <Text style={p.caption}>
                   {t(categories.find((c) => c.id === product.category)?.name || 'Otros')} ·{' '}
                   {t(product.unit)}
@@ -229,8 +265,20 @@ export function ProductsScreen({ onNewList }: { onNewList: () => void }) {
             )}
             <IconButton
               name="plus"
-              label={t('Elegir listas para {0}', productLabel(product))}
-              onPress={() => openTarget(product)}
+              label={
+                activeList
+                  ? t('Añadir {0} a {1}', productLabel(product), activeList.name)
+                  : t('Elegir listas para {0}', productLabel(product))
+              }
+              color={activeList ? theme.green : theme.ink}
+              onPress={() => {
+                if (!activeList) {
+                  openTarget(product);
+                  return;
+                }
+                addProduct(activeList.id, product);
+                setMessage(t('{0} añadido a {1}', productLabel(product), activeList.name));
+              }}
             />
           </View>
         )}
@@ -239,6 +287,7 @@ export function ProductsScreen({ onNewList }: { onNewList: () => void }) {
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           style={p.overlay}
+          onStartShouldSetResponderCapture={dismissOutsideInput}
         >
           <View style={[p.sheet, { paddingBottom: Math.max(20, insets.bottom) }]}>
             <View

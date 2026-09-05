@@ -24,6 +24,9 @@ import * as Sharing from 'expo-sharing';
 import * as DocumentPicker from 'expo-document-picker';
 import { Category, Item, Product, ShoppingList, normalize, productIdentity } from './src/domain';
 import { categories, products, matchesProductSearch } from './src/catalog';
+import { KeyboardScreen, dismissOutsideInput } from './src/KeyboardScreen';
+import { ProductSizeSettings } from './src/ProductSizeSettings';
+import { productSizes } from './src/appearance';
 import { CompactList } from './src/CompactList';
 import { HomeScreen } from './src/HomeScreen';
 import { CategoryStrip } from './src/CategoryStrip';
@@ -69,6 +72,7 @@ type Sheet =
   | 'share'
   | 'join'
   | 'list-menu'
+  | 'display'
   | 'profile'
   | 'privacy'
   | null;
@@ -92,6 +96,8 @@ function AppContent() {
   const wide = width > 700;
   const [tab, setTab] = useState<'home' | 'lists' | 'products' | 'settings'>('home');
   const [detail, setDetail] = useState(false);
+  const [openedId, setOpenedId] = useState<string | null>(null);
+  const [detailTab, setDetailTab] = useState<'home' | 'lists'>('home');
   const [sheet, setSheet] = useState<Sheet>(null);
   const [confirm, setConfirm] = useState<Confirm>(null);
   const [toast, setToast] = useState('');
@@ -124,6 +130,9 @@ function AppContent() {
   const [targetPickerOpen, setTargetPickerOpen] = useState(false);
   const lists = currentLists();
   const active = lists.find((l) => l.id === state.selectedId);
+  const openedList = detail ? lists.find((l) => l.id === openedId) : undefined;
+  const showingList = detail && !!openedList && tab === detailTab;
+  const productSize = productSizes[state.productSize];
   const bought = active?.items.filter((i) => i.checked) || [];
   const catalog = useMemo(() => {
     const merged = [...state.customProducts, ...state.favorites, ...products];
@@ -177,6 +186,8 @@ function AppContent() {
   };
   const openList = (l: ShoppingList, destination: 'home' | 'lists' = 'home') => {
     selectList(l.id);
+    setOpenedId(l.id);
+    setDetailTab(destination);
     setSearch('');
     setGrouped(false);
     setDetail(true);
@@ -262,9 +273,15 @@ function AppContent() {
       setSheetError(tr('Ponle un nombre a tu lista.'));
       return;
     }
-    if (editingList && active)
+    if (editingList && active) {
       enqueue('list.update', active.id, { name: name.trim(), emoji, color });
-    else createList(name.trim(), emoji, color, newListPinned);
+      setOpenedId(active.id);
+      setDetailTab(tab === 'lists' ? 'lists' : 'home');
+    } else {
+      const id = createList(name.trim(), emoji, color, newListPinned);
+      setOpenedId(id);
+      setDetailTab(newListPinned ? 'home' : 'lists');
+    }
     setSheet(null);
     if (!editingList) {
       setTab(newListPinned ? 'home' : 'lists');
@@ -277,7 +294,7 @@ function AppContent() {
   function removeFromHome(list: ShoppingList) {
     setListActive(list.id, false);
     setSheet(null);
-    setDetail(false);
+    if (list.id === openedId) setDetail(false);
     notify(tr('Lista guardada. Puedes volver a usarla desde Listas.'));
   }
   function activateList(list: ShoppingList) {
@@ -326,7 +343,7 @@ function AppContent() {
         enqueue(owner ? 'list.delete' : 'list.leave', list.id, {});
         setListActive(list.id, false);
         setSheet(null);
-        setDetail(false);
+        if (list.id === openedId) setDetail(false);
         selectList(null);
       },
     });
@@ -386,7 +403,9 @@ function AppContent() {
       <Text style={[s.body, { textAlign: 'center', maxWidth: 330 }]}>{body}</Text>
     </View>
   );
-  function row(item: Item) {
+  function row(item: Item, listId = active?.id) {
+    const stackedQuantity =
+      state.productSize === 'large' || (width < 360 && state.productSize === 'comfortable');
     return (
       <View key={item.id} style={[a.item, item.checked && { opacity: 0.62 }]}>
         <Pressable
@@ -395,12 +414,15 @@ function AppContent() {
           aria-checked={item.checked}
           accessibilityLabel={`${item.checked ? tr('Desmarcar') : tr('Comprar')} ${productLabel(item)}`}
           onPress={() => {
-            if (active) {
-              enqueue('item.check', active.id, { id: item.id, checked: !item.checked });
+            if (listId) {
+              enqueue('item.check', listId, { id: item.id, checked: !item.checked });
               feedback();
             }
           }}
-          style={({ pressed }) => [a.itemMain, { opacity: pressed ? 0.65 : 1 }]}
+          style={({ pressed }) => [
+            a.itemMain,
+            { minHeight: productSize.row, opacity: pressed ? 0.65 : 1 },
+          ]}
         >
           <View
             style={[
@@ -410,19 +432,31 @@ function AppContent() {
           >
             {item.checked && <Icon name="check" size={15} color="#fff" />}
           </View>
-          <ProductVisual product={item} size={30} />
+          <ProductVisual product={item} size={productSize.image} />
           <View style={{ flex: 1, minWidth: 0, gap: 2 }}>
             <Text
               style={[
                 a.itemName,
+                { fontSize: productSize.font },
                 item.checked && { textDecorationLine: 'line-through', color: theme.muted },
               ]}
             >
               {productLabel(item)}
             </Text>
+            {stackedQuantity && (
+              <Text style={[a.itemMeta, { fontSize: productSize.meta }]}>
+                {quantityLabel(item)}
+              </Text>
+            )}
             {!!item.note && <Text style={a.itemMeta}>{item.note}</Text>}
           </View>
-          <Text style={a.itemMeta}>{quantityLabel(item)}</Text>
+          {!stackedQuantity && (
+            <Text
+              style={[a.itemMeta, { fontSize: productSize.meta, maxWidth: 85, textAlign: 'right' }]}
+            >
+              {quantityLabel(item)}
+            </Text>
+          )}
         </Pressable>
         <IconButton
           name="more"
@@ -453,8 +487,10 @@ function AppContent() {
           aria-selected={tab === n.id}
           accessibilityLabel={n.title}
           onPress={() => {
+            Keyboard.dismiss();
+            if (n.id === detailTab && tab === n.id) setDetail(false);
+            else if (n.id === detailTab && openedList) selectList(openedList.id);
             setTab(n.id);
-            setDetail(false);
             feedback();
           }}
           style={a.navItem}
@@ -486,7 +522,7 @@ function AppContent() {
     );
   if (!state.onboarded)
     return (
-      <View style={[a.root, { paddingTop: insets.top }]}>
+      <KeyboardScreen style={[a.root, { paddingTop: insets.top }]}>
         <ScrollView
           contentContainerStyle={[a.intro, { minHeight: '100%' }]}
           keyboardShouldPersistTaps="handled"
@@ -565,18 +601,18 @@ function AppContent() {
             </Text>
           </View>
         </ScrollView>
-      </View>
+      </KeyboardScreen>
     );
 
   return (
-    <View style={[a.root, { paddingTop: insets.top }]}>
+    <KeyboardScreen style={[a.root, { paddingTop: insets.top }]}>
       <StatusBar style="dark" />
       <View
         style={a.appWidth}
         aria-hidden={!!sheet || !!confirm}
         accessibilityElementsHidden={!!sheet || !!confirm}
       >
-        {(tab === 'home' || tab === 'lists') && (!detail || !active) && (
+        {(tab === 'home' || tab === 'lists') && !showingList && (
           <HomeScreen
             key={tab}
             mode={tab === 'lists' ? 'library' : 'home'}
@@ -593,7 +629,7 @@ function AppContent() {
             onOpen={(list) => openList(list, tab === 'lists' ? 'lists' : 'home')}
             onLibrary={() => {
               setTab('lists');
-              setDetail(false);
+              if (detailTab === 'lists') setDetail(false);
             }}
             onActivate={activateList}
             onRemove={removeFromHome}
@@ -605,34 +641,51 @@ function AppContent() {
             }}
           />
         )}
-        {tab === 'products' && <ProductsScreen onNewList={openNew} />}
-
-        {(tab === 'home' || tab === 'lists') && detail && active ? (
-          <CompactList
-            key={active.id}
-            list={active}
-            grouped={grouped}
-            onGroup={() => setGrouped(!grouped)}
-            backLabel={tab === 'lists' ? tr('Volver a listas') : tr('Volver al inicio')}
-            onBack={() => {
-              setDetail(false);
-              setSearch('');
+        {tab === 'products' && (
+          <ProductsScreen
+            onNewList={openNew}
+            activeList={openedList}
+            onReturnToList={() => {
+              if (openedList) {
+                selectList(openedList.id);
+                setTab(detailTab);
+              }
             }}
-            onMenu={() => open('list-menu')}
-            onAdd={openAdd}
-            onQuickAdd={(name) => {
-              const product = catalog.find(
-                (p) =>
-                  normalize(productLabel(p)) === normalize(name) ||
-                  normalize(p.name) === normalize(name),
-              );
-              quickAdd(product || { name, emoji: '🛍️', category: 'other', unit: tr('ud') });
-            }}
-            renderItem={row}
-            pinned={state.activeListIds.includes(active.id)}
-            onActivate={() => activateList(active)}
-            onStore={() => removeFromHome(active)}
           />
+        )}
+
+        {openedList ? (
+          <View
+            style={{ flex: 1, display: showingList ? 'flex' : 'none' }}
+            aria-hidden={!showingList}
+            accessibilityElementsHidden={!showingList}
+          >
+            <CompactList
+              key={openedList.id}
+              list={openedList}
+              grouped={grouped}
+              onGroup={() => setGrouped(!grouped)}
+              backLabel={detailTab === 'lists' ? tr('Volver a listas') : tr('Volver al inicio')}
+              onBack={() => {
+                setDetail(false);
+                setSearch('');
+              }}
+              onMenu={() => open('list-menu')}
+              onAdd={openAdd}
+              onQuickAdd={(name) => {
+                const product = catalog.find(
+                  (p) =>
+                    normalize(productLabel(p)) === normalize(name) ||
+                    normalize(p.name) === normalize(name),
+                );
+                quickAdd(product || { name, emoji: '🛍️', category: 'other', unit: tr('ud') });
+              }}
+              renderItem={(item) => row(item, openedList.id)}
+              pinned={state.activeListIds.includes(openedList.id)}
+              onActivate={() => activateList(openedList)}
+              onStore={() => removeFromHome(openedList)}
+            />
+          </View>
         ) : null}
 
         {tab === 'settings' && (
@@ -653,6 +706,9 @@ function AppContent() {
                   </Text>
                 </Pressable>
               ))}
+            </View>
+            <View style={{ marginVertical: 16 }}>
+              <ProductSizeSettings />
             </View>
             <Text style={a.eyebrow}>{tr('TODO A TU GUSTO')}</Text>
             <Text style={[s.title, { marginTop: 10, marginBottom: 24 }]}>
@@ -782,6 +838,7 @@ function AppContent() {
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           style={a.modalOverlay}
+          onStartShouldSetResponderCapture={dismissOutsideInput}
         >
           <Pressable
             accessibilityLabel={tr('Cerrar ventana')}
@@ -797,27 +854,29 @@ function AppContent() {
               ]}
             >
               <Text style={[a.sectionTitle, { flex: 1 }]}>
-                {sheet === 'new'
-                  ? editingList
-                    ? tr('Un nuevo aire')
-                    : tr('Una nueva lista')
-                  : sheet === 'text-import'
-                    ? tr('Del texto a tu compra')
-                    : sheet === 'add'
-                      ? tr('¿Qué añadimos?')
-                      : sheet === 'edit'
-                        ? editingItem
-                          ? tr('A tu gusto')
-                          : tr('Tu propio producto')
-                        : sheet === 'share'
-                          ? tr('Una cesta compartida')
-                          : sheet === 'join'
-                            ? tr('La compra, juntos')
-                            : sheet === 'profile'
-                              ? tr('Así te llamamos')
-                              : sheet === 'privacy'
-                                ? tr('Tu privacidad')
-                                : tr('Tu lista, a tu manera')}
+                {sheet === 'display'
+                  ? tr('Tamaño de los productos')
+                  : sheet === 'new'
+                    ? editingList
+                      ? tr('Un nuevo aire')
+                      : tr('Una nueva lista')
+                    : sheet === 'text-import'
+                      ? tr('Del texto a tu compra')
+                      : sheet === 'add'
+                        ? tr('¿Qué añadimos?')
+                        : sheet === 'edit'
+                          ? editingItem
+                            ? tr('A tu gusto')
+                            : tr('Tu propio producto')
+                          : sheet === 'share'
+                            ? tr('Una cesta compartida')
+                            : sheet === 'join'
+                              ? tr('La compra, juntos')
+                              : sheet === 'profile'
+                                ? tr('Así te llamamos')
+                                : sheet === 'privacy'
+                                  ? tr('Tu privacidad')
+                                  : tr('Tu lista, a tu manera')}
               </Text>
               <IconButton
                 name="close"
@@ -835,6 +894,7 @@ function AppContent() {
                   {sheetError}
                 </Text>
               )}
+              {sheet === 'display' && <ProductSizeSettings />}
               {sheet === 'text-import' && (
                 <>
                   {chooseImportTarget && (
@@ -894,6 +954,8 @@ function AppContent() {
                           : importTarget;
                       addTextProducts(id, items);
                       selectList(id);
+                      setOpenedId(id);
+                      setDetailTab('home');
                       if (chooseImportTarget) setListActive(id, true);
                       setSearch('');
                       setGrouped(false);
@@ -1452,7 +1514,9 @@ function AppContent() {
                     disabled={busy || !joinCode.trim()}
                     onPress={() =>
                       void run(async () => {
-                        await join(joinCode);
+                        const joinedId = await join(joinCode);
+                        setOpenedId(joinedId);
+                        setDetailTab('home');
                         setGrouped(false);
                         setSheet(null);
                         setDetail(true);
@@ -1525,6 +1589,11 @@ function AppContent() {
               {sheet === 'list-menu' && active && (
                 <>
                   {[
+                    {
+                      title: tr('Tamaño de los productos'),
+                      icon: 'grid',
+                      fn: () => open('display'),
+                    },
                     { title: tr('Pegar lista'), icon: 'copy', fn: () => openTextImport() },
                     {
                       title: tr('Compartir lista'),
@@ -1588,6 +1657,9 @@ function AppContent() {
                           false,
                         );
                         active.items.forEach((i) => addProduct(id, i, i.quantity, i.note));
+                        setOpenedId(id);
+                        setDetailTab('lists');
+                        setDetail(true);
                         setSheet(null);
                         setTab('lists');
                         notify(tr('Copia privada creada'));
@@ -1683,7 +1755,7 @@ function AppContent() {
           </Text>
         </View>
       )}
-    </View>
+    </KeyboardScreen>
   );
 }
 

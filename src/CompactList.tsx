@@ -1,14 +1,5 @@
 import React, { useState } from 'react';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import type { Item, ShoppingList } from './domain';
 import { normalize } from './domain';
 import { categories } from './catalog';
@@ -63,10 +54,7 @@ export function CompactList({
     setDraft('');
   };
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
+    <View style={{ flex: 1 }}>
       <View style={c.header}>
         <IconButton name="back" label={backLabel} onPress={onBack} />
         <Text style={c.title} numberOfLines={1} accessibilityRole="header">
@@ -77,6 +65,7 @@ export function CompactList({
       <View style={c.meta}>
         <Text style={c.caption} accessibilityLiveRegion="polite">
           {t('{0} de {1} comprados', bought, list.items.length)}
+          {` · ${list.items.length ? Math.round((bought / list.items.length) * 100) : 0}%`}
         </Text>
         <View style={s.row}>
           <Pressable
@@ -128,6 +117,7 @@ export function CompactList({
         style={{ flex: 1 }}
         contentContainerStyle={c.products}
         keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
         showsVerticalScrollIndicator={false}
       >
         {!pinned && (
@@ -199,7 +189,7 @@ export function CompactList({
           <Icon name="plus" size={21} color="#fff" />
         </Pressable>
       </View>
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 const c = StyleSheet.create({

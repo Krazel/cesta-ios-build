@@ -657,5 +657,18 @@
   "Revisa el texto: cada nombre admite 80 caracteres y cada nota, 300.": "Check the text: names allow 80 characters and notes allow 300.",
   "Revisa las cantidades: deben estar entre 0,1 y 9999.": "Check the quantities: they must be between 0.1 and 9999.",
   "Escribe al menos un producto para preparar la lista.": "Enter at least one product to prepare the list.",
-  "Añadir 1 producto": "Add 1 product"
+  "Añadir 1 producto": "Add 1 product",
+  "{0} de {1} comprados": "{0} of {1} bought",
+  "Progreso de la compra": "Shopping progress",
+  "Escribe un producto abajo o abre el catálogo con +.": "Type a product below or open the catalog with +.",
+  "Añadir producto": "Add product",
+  "Añadir producto…": "Add a product…",
+  "Añadir producto escrito": "Add typed product",
+  "Mi nueva compra": "My new shopping list",
+  "Añadir a": "Add to",
+  "Crear nueva lista": "Create a new list",
+  "Ver todas mis listas": "View all my lists",
+  "{0} pendientes": "{0} remaining",
+  "Compartida": "Shared",
+  "Elegir destino": "Choose destination"
 }

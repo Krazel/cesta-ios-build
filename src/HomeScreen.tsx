@@ -8,6 +8,7 @@ import { Button, Field, Icon, IconButton, palette, s, theme } from './ui';
 type Props = {
   mode?: 'home' | 'library';
   onNew: () => void;
+  onPaste: () => void;
   onJoin: () => void;
   onProfile: () => void;
   onOpen: (list: ShoppingList) => void;
@@ -21,6 +22,7 @@ type Props = {
 export function HomeScreen({
   mode = 'home',
   onNew,
+  onPaste,
   onJoin,
   onProfile,
   onOpen,
@@ -44,7 +46,7 @@ export function HomeScreen({
   return (
     <View style={{ flex: 1 }}>
       <View style={h.header}>
-        <View style={[s.row, { justifyContent: 'space-between', marginBottom: 15 }]}>
+        <View style={[s.row, { justifyContent: 'space-between', marginBottom: 10 }]}>
           {library ? (
             <View style={{ flex: 1, gap: 4 }}>
               <Text style={h.heading}>{t('Listas')}</Text>
@@ -58,35 +60,39 @@ export function HomeScreen({
               </Text>
             </View>
           )}
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={t('Editar perfil')}
-            onPress={onProfile}
-            style={h.avatar}
-          >
-            <Text style={{ color: theme.ink, fontWeight: '600' }}>
-              {state.snapshot.device.name.charAt(0).toUpperCase()}
-            </Text>
-          </Pressable>
+          <View style={[s.row, { gap: 4 }]}>
+            {!library && (
+              <IconButton name="people" label={t('Unirme a una lista')} onPress={onJoin} />
+            )}
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t('Editar perfil')}
+              onPress={onProfile}
+              style={h.avatar}
+            >
+              <Text style={{ color: theme.ink, fontWeight: '600' }}>
+                {state.snapshot.device.name.charAt(0).toUpperCase()}
+              </Text>
+            </Pressable>
+          </View>
         </View>
         <View style={[s.row, { gap: 10 }]}>
           <View style={{ flex: 1 }}>
             <Button
               small
-              title={library ? t('Nueva lista') : t('Añadir lista')}
-              label={library ? t('Nueva lista') : t('Elegir una lista')}
-              icon="plus"
-              onPress={library ? onNew : onLibrary}
+              title={library ? t('Nueva lista') : t('Pegar lista')}
+              icon={library ? 'plus' : 'copy'}
+              onPress={library ? onNew : onPaste}
             />
           </View>
           <View style={{ flex: 1 }}>
             <Button
               small
               secondary
-              title={t('Unirme')}
-              label={t('Unirme a una lista')}
-              icon="people"
-              onPress={onJoin}
+              title={library ? t('Unirme') : t('Nueva lista')}
+              label={library ? t('Unirme a una lista') : t('Nueva lista')}
+              icon={library ? 'people' : 'plus'}
+              onPress={library ? onJoin : onNew}
             />
           </View>
         </View>
@@ -110,8 +116,10 @@ export function HomeScreen({
         showsVerticalScrollIndicator={false}
         contentContainerStyle={h.content}
         ListHeaderComponent={
-          <View style={[s.row, { gap: 10, marginBottom: 17 }]}>
-            <Text style={h.heading}>{library ? t('Tus listas guardadas') : t('En compra')}</Text>
+          <View style={[s.row, { gap: 10, marginBottom: 8 }]}>
+            <Text style={library ? h.heading : s.label}>
+              {library ? t('Tus listas guardadas') : t('En compra')}
+            </Text>
             <Text style={h.count}>{lists.length}</Text>
           </View>
         }
@@ -121,6 +129,35 @@ export function HomeScreen({
             complete = count > 0 && done === count,
             pinned = state.activeListIds.includes(list.id),
             p = palette[list.color];
+          if (!library)
+            return (
+              <View style={[h.compactCard, wide && { flex: 1, maxWidth: '49%' }]}>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={t('Abrir {0}', list.name)}
+                  onPress={() => onOpen(list)}
+                  style={h.compactOpen}
+                >
+                  <View style={[h.compactEmoji, { backgroundColor: p.bg }]}>
+                    <Text style={{ fontSize: 24 }}>{list.emoji}</Text>
+                  </View>
+                  <View style={{ flex: 1, gap: 4 }}>
+                    <Text style={[h.name, { fontSize: 15 }]} numberOfLines={2}>
+                      {list.name}
+                    </Text>
+                    <Text style={h.caption}>
+                      {complete ? t('¡Compra completa!') : t('{0} pendientes', count - done)}
+                      {list.members.length > 1 ? ` · ${t('Compartida')}` : ''}
+                    </Text>
+                  </View>
+                </Pressable>
+                <IconButton
+                  name="more"
+                  label={t('Opciones de {0}', list.name)}
+                  onPress={() => onMenu(list)}
+                />
+              </View>
+            );
           return (
             <View style={[h.card, wide && { flex: 1, maxWidth: '49%' }]}>
               <View style={[s.row, { alignItems: 'flex-start' }]}>
@@ -274,13 +311,17 @@ export function HomeScreen({
           </View>
         }
         ListFooterComponent={
-          <Text style={[h.caption, { textAlign: 'center', marginTop: 24 }]}>
-            {state.pending.length
-              ? t('Guardando tus cambios…')
-              : state.online
-                ? t('Todo al día')
-                : t('Guardado en este dispositivo')}
-          </Text>
+          !library && lists.length > 0 ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t('Elegir una lista')}
+              onPress={onLibrary}
+              style={[s.row, { gap: 8, minHeight: 44, marginTop: 12 }]}
+            >
+              <Icon name="lists" size={17} color={theme.muted} />
+              <Text style={h.caption}>{t('Ver todas mis listas')}</Text>
+            </Pressable>
+          ) : null
         }
       />
     </View>
@@ -288,17 +329,15 @@ export function HomeScreen({
 }
 const h = StyleSheet.create({
   header: {
-    paddingHorizontal: 24,
-    paddingTop: 18,
-    paddingBottom: 16,
-    borderBottomColor: theme.line,
-    borderBottomWidth: 1,
+    paddingHorizontal: 18,
+    paddingTop: 8,
+    paddingBottom: 14,
     backgroundColor: theme.bg,
   },
   brand: {
     fontFamily: theme.serif,
     fontWeight: '700',
-    fontSize: 35,
+    fontSize: 29,
     letterSpacing: -1.5,
     color: theme.ink,
   },
@@ -310,7 +349,27 @@ const h = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  content: { padding: 24, paddingTop: 20, paddingBottom: 30 },
+  content: { padding: 18, paddingTop: 4, paddingBottom: 20 },
+  compactCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: theme.line,
+  },
+  compactOpen: {
+    flex: 1,
+    flexDirection: 'row',
+    gap: 12,
+    alignItems: 'center',
+    paddingVertical: 12,
+  },
+  compactEmoji: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   heading: { fontFamily: theme.serif, fontSize: 25, color: theme.ink },
   count: {
     borderRadius: 15,

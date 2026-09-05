@@ -24,6 +24,7 @@ import * as Sharing from 'expo-sharing';
 import * as DocumentPicker from 'expo-document-picker';
 import { Category, Item, Product, ShoppingList, normalize, productIdentity } from './src/domain';
 import { categories, products, matchesProductSearch } from './src/catalog';
+import { CompactList } from './src/CompactList';
 import { HomeScreen } from './src/HomeScreen';
 import { CategoryStrip } from './src/CategoryStrip';
 import { TextImportForm } from './src/TextImportForm';
@@ -97,8 +98,7 @@ function AppContent() {
   const [busy, setBusy] = useState(false);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState<Category | 'all'>('all');
-  const [grouped, setGrouped] = useState(true);
-  const [showBought, setShowBought] = useState(true);
+  const [grouped, setGrouped] = useState(false);
   const [name, setName] = useState('');
   const [emoji, setEmoji] = useState('🛒');
   const [color, setColor] = useState('sage');
@@ -118,14 +118,13 @@ function AppContent() {
   const [joinCode, setJoinCode] = useState('');
   const [sheetError, setSheetError] = useState('');
   const [introName, setIntroName] = useState('');
+  const [importTarget, setImportTarget] = useState('new');
+  const [importName, setImportName] = useState('');
+  const [chooseImportTarget, setChooseImportTarget] = useState(false);
+  const [targetPickerOpen, setTargetPickerOpen] = useState(false);
   const lists = currentLists();
   const active = lists.find((l) => l.id === state.selectedId);
-  const activePending = active?.items.filter((i) => !i.checked) || [];
   const bought = active?.items.filter((i) => i.checked) || [];
-  const query = normalize(search);
-  const shown = activePending.filter((i) =>
-    normalize(productLabel(i) + ' ' + i.note).includes(query),
-  );
   const catalog = useMemo(() => {
     const merged = [...state.customProducts, ...state.favorites, ...products];
     const seen = new Set<string>();
@@ -179,6 +178,7 @@ function AppContent() {
   const openList = (l: ShoppingList, destination: 'home' | 'lists' = 'home') => {
     selectList(l.id);
     setSearch('');
+    setGrouped(false);
     setDetail(true);
     setTab(destination);
   };
@@ -189,6 +189,13 @@ function AppContent() {
     setColor(palette.sage ? 'sage' : 'peach');
     setEditingList(false);
     open('new');
+  };
+  const openTextImport = (fromHome = false) => {
+    setChooseImportTarget(fromHome);
+    setTargetPickerOpen(false);
+    setImportTarget(fromHome ? 'new' : active?.id || 'new');
+    setImportName(tr('Mi nueva compra'));
+    open('text-import');
   };
   const openAdd = () => {
     setProductName('');
@@ -259,7 +266,10 @@ function AppContent() {
       enqueue('list.update', active.id, { name: name.trim(), emoji, color });
     else createList(name.trim(), emoji, color, newListPinned);
     setSheet(null);
-    if (!editingList) setTab(newListPinned ? 'home' : 'lists');
+    if (!editingList) {
+      setTab(newListPinned ? 'home' : 'lists');
+      setGrouped(false);
+    }
     setDetail(true);
     setSearch('');
     feedback();
@@ -377,7 +387,6 @@ function AppContent() {
     </View>
   );
   function row(item: Item) {
-    const cat = categories.find((c) => c.id === item.category)!;
     return (
       <View key={item.id} style={[a.item, item.checked && { opacity: 0.62 }]}>
         <Pressable
@@ -394,11 +403,15 @@ function AppContent() {
           style={({ pressed }) => [a.itemMain, { opacity: pressed ? 0.65 : 1 }]}
         >
           <View
-            style={[a.productVisual, { backgroundColor: item.checked ? '#EDEFE7' : cat.color }]}
+            style={[
+              a.checkbox,
+              item.checked && { backgroundColor: theme.green, borderColor: theme.green },
+            ]}
           >
-            <ProductVisual product={item} />
+            {item.checked && <Icon name="check" size={15} color="#fff" />}
           </View>
-          <View style={{ flex: 1, gap: 4 }}>
+          <ProductVisual product={item} size={30} />
+          <View style={{ flex: 1, minWidth: 0, gap: 2 }}>
             <Text
               style={[
                 a.itemName,
@@ -407,19 +420,9 @@ function AppContent() {
             >
               {productLabel(item)}
             </Text>
-            <Text style={a.itemMeta}>
-              {quantityLabel(item)}
-              {item.note ? ` · ${item.note}` : ''}
-            </Text>
+            {!!item.note && <Text style={a.itemMeta}>{item.note}</Text>}
           </View>
-          <View
-            style={[
-              a.checkbox,
-              item.checked && { backgroundColor: theme.green, borderColor: theme.green },
-            ]}
-          >
-            {item.checked && <Icon name="check" size={17} color="#fff" />}
-          </View>
+          <Text style={a.itemMeta}>{quantityLabel(item)}</Text>
         </Pressable>
         <IconButton
           name="more"
@@ -568,21 +571,6 @@ function AppContent() {
   return (
     <View style={[a.root, { paddingTop: insets.top }]}>
       <StatusBar style="dark" />
-      {!state.online && (
-        <Pressable
-          onPress={() => void synchronize()}
-          accessibilityRole="button"
-          accessibilityLabel={tr('Reintentar conexión')}
-          style={a.offline}
-        >
-          <Icon name="wifi" size={14} color="#846D34" />
-          <Text style={{ fontSize: 12, color: '#846D34', flexShrink: 1 }}>
-            {state.pending.length
-              ? tr('Sin conexión · {0} cambios guardados por enviar', state.pending.length)
-              : tr('Sin conexión · tus listas siguen aquí')}
-          </Text>
-        </Pressable>
-      )}
       <View
         style={a.appWidth}
         aria-hidden={!!sheet || !!confirm}
@@ -593,6 +581,7 @@ function AppContent() {
             key={tab}
             mode={tab === 'lists' ? 'library' : 'home'}
             onNew={openNew}
+            onPaste={() => openTextImport(true)}
             onJoin={() => {
               setJoinCode('');
               open('join');
@@ -619,248 +608,31 @@ function AppContent() {
         {tab === 'products' && <ProductsScreen onNewList={openNew} />}
 
         {(tab === 'home' || tab === 'lists') && detail && active ? (
-          <View style={{ flex: 1 }}>
-            <View style={a.detailHeader}>
-              <IconButton
-                name="back"
-                label={tab === 'lists' ? tr('Volver a listas') : tr('Volver al inicio')}
-                onPress={() => {
-                  setDetail(false);
-                  setSearch('');
-                }}
-              />
-              <Text style={a.eyebrow}>{tr('TU LISTA DE LA COMPRA')}</Text>
-              <IconButton
-                name="more"
-                label={tr('Opciones de la lista')}
-                onPress={() => open('list-menu')}
-              />
-            </View>
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={[a.page, { paddingTop: 8, paddingBottom: 160 }]}
-              keyboardShouldPersistTaps="handled"
-            >
-              {!state.activeListIds.includes(active.id) && (
-                <View style={{ gap: 10, marginBottom: 18 }}>
-                  <Text style={s.body}>
-                    {tr('Esta lista está guardada. Añádela al inicio cuando quieras comprar.')}
-                  </Text>
-                  <Button
-                    small
-                    title={
-                      active.items.length && active.items.every((item) => item.checked)
-                        ? tr('Volver a usar')
-                        : tr('Añadir al inicio')
-                    }
-                    icon="plus"
-                    onPress={() => activateList(active)}
-                  />
-                </View>
-              )}
-              {!!active.items.length &&
-                active.items.every((item) => item.checked) &&
-                state.activeListIds.includes(active.id) && (
-                  <View style={{ gap: 10, marginBottom: 18 }}>
-                    <Text style={s.body}>
-                      {tr('Compra terminada. Guarda esta lista para la próxima vez.')}
-                    </Text>
-                    <Button
-                      small
-                      title={tr('Guardar y quitar del inicio')}
-                      icon="check"
-                      onPress={() => removeFromHome(active)}
-                    />
-                  </View>
-                )}
-              <View style={[s.row, { gap: 14, marginBottom: 20 }]}>
-                <View style={[a.listEmoji, { backgroundColor: palette[active.color].bg }]}>
-                  <Text style={{ fontSize: 33 }}>{active.emoji}</Text>
-                </View>
-                <View style={{ flex: 1, gap: 6 }}>
-                  <Text style={[s.title, { fontSize: 31 }]}>{active.name}</Text>
-                  <Text style={a.caption}>
-                    {active.members.length > 1
-                      ? `${active.members.map((m) => (m.id === state.snapshot.device.id ? tr('Tú') : m.name)).join(', ')}`
-                      : tr('Un pequeño plan para tu día')}
-                  </Text>
-                </View>
-              </View>
-              <View style={[a.detailProgress, { backgroundColor: palette[active.color].bg }]}>
-                <View style={[s.row, { justifyContent: 'space-between' }]}>
-                  <View>
-                    <Text style={[a.eyebrow, { color: palette[active.color].dark }]}>
-                      {tr('ASÍ VA TU COMPRA')}{' '}
-                    </Text>
-                    <Text style={[a.progressTitle, { color: palette[active.color].dark }]}>
-                      {active.items.length && bought.length === active.items.length
-                        ? tr('¡Todo en la cesta!')
-                        : `${activePending.length} ${activePending.length === 1 ? tr('producto pendiente') : tr('productos pendientes')}`}
-                    </Text>
-                  </View>
-                  <View style={[a.progressCircle, { borderColor: palette[active.color].dark }]}>
-                    <Text
-                      style={{ fontSize: 15, fontWeight: '700', color: palette[active.color].dark }}
-                    >
-                      {active.items.length
-                        ? Math.round((bought.length / active.items.length) * 100)
-                        : 0}
-                      %
-                    </Text>
-                  </View>
-                </View>
-                <View style={[a.progressTrack, { marginTop: 17, backgroundColor: '#FFFFFF88' }]}>
-                  <View
-                    style={[
-                      a.progressFill,
-                      {
-                        width: `${active.items.length ? (bought.length / active.items.length) * 100 : 0}%`,
-                        backgroundColor: palette[active.color].dark,
-                      },
-                    ]}
-                  />
-                </View>
-              </View>
-              <View
-                style={[
-                  s.row,
-                  { justifyContent: 'space-between', marginTop: 12, marginBottom: 12 },
-                ]}
-              >
-                <Pressable
-                  accessibilityRole="button"
-                  accessibilityLabel={tr('Compartir lista')}
-                  onPress={() => {
-                    setInviteCode('');
-                    open('share');
-                  }}
-                  style={[s.row, { gap: 7, paddingVertical: 12 }]}
-                >
-                  <Icon name="people" size={18} />
-                  <Text style={a.textLink}>
-                    {active.members.length > 1 ? tr('Ver participantes') : tr('Compartir lista')}
-                  </Text>
-                </Pressable>
-                <Pressable
-                  accessibilityRole="button"
-                  accessibilityLabel={
-                    grouped ? tr('Mostrar sin categorías') : tr('Agrupar por pasillos')
-                  }
-                  onPress={() => setGrouped(!grouped)}
-                  style={[s.row, { gap: 6, paddingVertical: 12 }]}
-                >
-                  <Icon name="lists" size={17} color={theme.muted} />
-                  <Text style={a.caption}>{grouped ? tr('Por pasillos') : tr('Todos juntos')}</Text>
-                </Pressable>
-              </View>
-              {active.items.length > 5 && (
-                <View style={[a.searchBox, { marginBottom: 12 }]}>
-                  <Icon name="search" size={18} color={theme.muted} />
-                  <TextInput
-                    accessibilityLabel={tr('Buscar en esta lista')}
-                    placeholder={tr('Encontrar en esta lista')}
-                    placeholderTextColor={theme.muted}
-                    value={search}
-                    onChangeText={setSearch}
-                    style={a.searchInput}
-                  />
-                  {search && (
-                    <IconButton
-                      name="close"
-                      label={tr('Borrar búsqueda')}
-                      onPress={() => setSearch('')}
-                    />
-                  )}
-                </View>
-              )}
-              {!active.items.length ? (
-                empty(
-                  tr('¿Qué hace falta?'),
-                  tr(
-                    'Añade lo que necesitas. Lo agruparemos por pasillos para que la compra sea más fácil.',
-                  ),
-                )
-              ) : !activePending.length ? (
-                empty(
-                  tr('Ya está todo. ¡Buen provecho!'),
-                  tr('Puedes desmarcar un producto o reutilizar esta lista la próxima vez.'),
-                  'check',
-                )
-              ) : !shown.length ? (
-                empty(tr('No está por aquí'), tr('Prueba con otro nombre.'), 'search')
-              ) : grouped ? (
-                categories.map((c) => {
-                  const entries = shown.filter((i) => i.category === c.id);
-                  if (!entries.length) return null;
-                  return (
-                    <View key={c.id}>
-                      <View style={a.categoryHeading}>
-                        <Text style={a.categoryTitle}>{tr(c.name).toUpperCase()}</Text>
-                        <Text style={a.caption}>{entries.length}</Text>
-                      </View>
-                      <View style={a.itemsGroup}>{entries.map(row)}</View>
-                    </View>
-                  );
-                })
-              ) : (
-                <View style={a.itemsGroup}>{shown.map(row)}</View>
-              )}
-              {bought.length > 0 && (
-                <View style={{ marginTop: 24 }}>
-                  <View style={[s.row, { justifyContent: 'space-between', marginBottom: 10 }]}>
-                    <Pressable
-                      accessibilityRole="button"
-                      accessibilityLabel={tr('Mostrar u ocultar comprados')}
-                      onPress={() => setShowBought(!showBought)}
-                      style={[s.row, { gap: 7, minHeight: 44 }]}
-                    >
-                      <Icon name={showBought ? 'down' : 'chevron'} size={17} />
-                      <Text style={a.smallHeading}>{tr('En la cesta')}</Text>
-                      <Text style={a.caption}>{bought.length}</Text>
-                    </Pressable>
-                    <Pressable
-                      accessibilityRole="button"
-                      accessibilityLabel={tr('Eliminar productos comprados')}
-                      onPress={() =>
-                        setConfirm({
-                          title: tr('¿Vaciar lo comprado?'),
-                          body: tr(
-                            'Se eliminarán los productos que ya has marcado. El resto de la lista sigue igual.',
-                          ),
-                          label: tr('Vaciar comprados'),
-                          action: () =>
-                            enqueue('items.clear', active.id, { ids: bought.map((i) => i.id) }),
-                        })
-                      }
-                      style={{ padding: 12 }}
-                    >
-                      <Text style={[a.caption, { color: theme.accent }]}>{tr('Vaciar')}</Text>
-                    </Pressable>
-                  </View>
-                  {showBought && (
-                    <View style={a.itemsGroup}>
-                      {bought.filter((i) => normalize(productLabel(i)).includes(query)).map(row)}
-                    </View>
-                  )}
-                </View>
-              )}
-            </ScrollView>
-            <View style={[a.addDock, { bottom: 0 }]}>
-              <Button title={tr('Añadir productos')} icon="plus" onPress={openAdd} />
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel={tr('Pegar lista')}
-                onPress={() => {
-                  setSheetError('');
-                  setSheet('text-import');
-                }}
-                style={[s.row, { justifyContent: 'center', gap: 8, minHeight: 40 }]}
-              >
-                <Icon name="lists" size={18} />
-                <Text style={s.label}>{tr('Pegar lista')}</Text>
-              </Pressable>
-            </View>
-          </View>
+          <CompactList
+            key={active.id}
+            list={active}
+            grouped={grouped}
+            onGroup={() => setGrouped(!grouped)}
+            backLabel={tab === 'lists' ? tr('Volver a listas') : tr('Volver al inicio')}
+            onBack={() => {
+              setDetail(false);
+              setSearch('');
+            }}
+            onMenu={() => open('list-menu')}
+            onAdd={openAdd}
+            onQuickAdd={(name) => {
+              const product = catalog.find(
+                (p) =>
+                  normalize(productLabel(p)) === normalize(name) ||
+                  normalize(p.name) === normalize(name),
+              );
+              quickAdd(product || { name, emoji: '🛍️', category: 'other', unit: tr('ud') });
+            }}
+            renderItem={row}
+            pinned={state.activeListIds.includes(active.id)}
+            onActivate={() => activateList(active)}
+            onStore={() => removeFromHome(active)}
+          />
         ) : null}
 
         {tab === 'settings' && (
@@ -1063,16 +835,75 @@ function AppContent() {
                   {sheetError}
                 </Text>
               )}
-              {sheet === 'text-import' && active && (
-                <TextImportForm
-                  catalog={catalog}
-                  onAdd={(items) => {
-                    addTextProducts(active.id, items);
-                    setSearch('');
-                    setSheet(null);
-                    notify(tr('{0} productos añadidos a la lista', items.length));
-                  }}
-                />
+              {sheet === 'text-import' && (
+                <>
+                  {chooseImportTarget && (
+                    <View style={{ gap: 8 }}>
+                      <Text style={s.label}>{tr('Añadir a')}</Text>
+                      <Pressable
+                        accessibilityRole="button"
+                        accessibilityLabel={tr('Elegir destino')}
+                        accessibilityState={{ expanded: targetPickerOpen }}
+                        onPress={() => setTargetPickerOpen(!targetPickerOpen)}
+                        style={[s.row, { minHeight: 44, gap: 8 }]}
+                      >
+                        <Icon name="down" size={17} />
+                        <Text style={s.label}>
+                          {importTarget === 'new'
+                            ? tr('Crear nueva lista')
+                            : lists.find((list) => list.id === importTarget)?.name}
+                        </Text>
+                      </Pressable>
+                      {targetPickerOpen &&
+                        [{ id: 'new', name: tr('Crear nueva lista') }, ...lists].map((list) => (
+                          <Pressable
+                            key={list.id}
+                            accessibilityRole="radio"
+                            accessibilityState={{ checked: importTarget === list.id }}
+                            aria-checked={importTarget === list.id}
+                            accessibilityLabel={list.name}
+                            onPress={() => {
+                              setImportTarget(list.id);
+                              setTargetPickerOpen(false);
+                            }}
+                            style={[s.row, { minHeight: 44, gap: 9 }]}
+                          >
+                            <Icon name={importTarget === list.id ? 'check' : 'plus'} size={18} />
+                            <Text style={s.label}>{list.name}</Text>
+                          </Pressable>
+                        ))}
+                      {importTarget === 'new' && (
+                        <Field
+                          label={tr('Nombre de la lista')}
+                          accessibilityLabel={tr('Nombre de la lista')}
+                          value={importName}
+                          onChangeText={setImportName}
+                          maxLength={80}
+                        />
+                      )}
+                    </View>
+                  )}
+                  <TextImportForm
+                    catalog={catalog}
+                    onAdd={(items) => {
+                      if (importTarget === 'new' && !importName.trim())
+                        throw new Error(tr('Ponle un nombre a tu lista.'));
+                      const id =
+                        importTarget === 'new'
+                          ? createList(importName.trim(), '🧺', 'sage', true)
+                          : importTarget;
+                      addTextProducts(id, items);
+                      selectList(id);
+                      if (chooseImportTarget) setListActive(id, true);
+                      setSearch('');
+                      setGrouped(false);
+                      setDetail(true);
+                      setTab('home');
+                      setSheet(null);
+                      notify(tr('{0} productos añadidos a la lista', items.length));
+                    }}
+                  />
+                </>
               )}
               {sheet === 'new' && (
                 <>
@@ -1622,6 +1453,7 @@ function AppContent() {
                     onPress={() =>
                       void run(async () => {
                         await join(joinCode);
+                        setGrouped(false);
                         setSheet(null);
                         setDetail(true);
                         setTab('home');
@@ -1693,6 +1525,37 @@ function AppContent() {
               {sheet === 'list-menu' && active && (
                 <>
                   {[
+                    { title: tr('Pegar lista'), icon: 'copy', fn: () => openTextImport() },
+                    {
+                      title: tr('Compartir lista'),
+                      icon: 'people',
+                      fn: () => {
+                        setInviteCode('');
+                        open('share');
+                      },
+                    },
+                    ...(bought.length
+                      ? [
+                          {
+                            title: tr('Eliminar productos comprados'),
+                            icon: 'check',
+                            fn: () =>
+                              setConfirm({
+                                title: tr('¿Vaciar lo comprado?'),
+                                body: tr(
+                                  'Se eliminarán los productos que ya has marcado. El resto de la lista sigue igual.',
+                                ),
+                                label: tr('Vaciar comprados'),
+                                action: () => {
+                                  enqueue('items.clear', active.id, {
+                                    ids: bought.map((item) => item.id),
+                                  });
+                                  setSheet(null);
+                                },
+                              }),
+                          },
+                        ]
+                      : []),
                     {
                       title: state.activeListIds.includes(active.id)
                         ? tr('Quitar del inicio')
@@ -1950,10 +1813,10 @@ const a = StyleSheet.create({
     borderTopColor: theme.line,
     borderTopWidth: 1,
     backgroundColor: theme.bg,
-    paddingTop: 9,
+    paddingTop: 4,
   },
-  navItem: { alignItems: 'center', gap: 5, flex: 1, maxWidth: 120, minWidth: 0, minHeight: 54 },
-  navIcon: { paddingVertical: 5, paddingHorizontal: 19, borderRadius: 18 },
+  navItem: { alignItems: 'center', gap: 3, flex: 1, maxWidth: 120, minWidth: 0, minHeight: 48 },
+  navIcon: { paddingVertical: 3, paddingHorizontal: 19, borderRadius: 18 },
   offline: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -2016,10 +1879,10 @@ const a = StyleSheet.create({
   },
   itemMain: {
     flexDirection: 'row',
-    gap: 13,
+    gap: 8,
     alignItems: 'center',
-    paddingVertical: 13,
-    paddingLeft: 13,
+    paddingVertical: 6,
+    minHeight: 49,
     flex: 1,
   },
   productVisual: {
@@ -2029,12 +1892,13 @@ const a = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  itemName: { fontSize: 16, fontWeight: '500', color: theme.ink },
+  itemName: { fontSize: 15, fontWeight: '400', color: theme.ink },
   itemMeta: { fontSize: 12, color: theme.muted, lineHeight: 17 },
   checkbox: {
-    width: 25,
-    height: 25,
-    borderRadius: 9,
+    width: 23,
+    height: 23,
+    borderRadius: 12,
+    flexShrink: 0,
     borderWidth: 1.5,
     borderColor: '#C9D1C1',
     alignItems: 'center',

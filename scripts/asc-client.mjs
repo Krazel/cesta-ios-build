@@ -14,7 +14,8 @@ export async function asc(method, endpoint, data) {
     method, headers: {Authorization:`Bearer ${message}.${signature}`,'Content-Type':'application/json'},
     body: data ? JSON.stringify(data) : undefined,
   });
-  const json = await response.json();
+  const raw = await response.text();
+  const json = raw ? JSON.parse(raw) : {};
   if (!response.ok) throw new Error(`${method} ${endpoint}: ${response.status} ${JSON.stringify(json.errors)}`);
   return json;
 }

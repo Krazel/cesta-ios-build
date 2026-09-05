@@ -59,6 +59,10 @@ try {
   const archive=path.join(temp,'Cesta.xcarchive');
   run('xcodebuild',['archive','-workspace','ios/Cesta.xcworkspace','-scheme','Cesta','-configuration','Release','-destination','generic/platform=iOS','-archivePath',archive,'ARCHS=arm64','ONLY_ACTIVE_ARCH=NO']);
   const app=path.join(archive,'Products','Applications','Cesta.app');
+  const archivedInfoPath=path.join(temp,'archived-info.plist');
+  run('plutil',['-convert','xml1','-o',archivedInfoPath,path.join(app,'Info.plist')]);
+  const archivedInfo=plist.parse(fs.readFileSync(archivedInfoPath,'utf8'));
+  if(archivedInfo.CFBundleIdentifier!==cfg.bundleId || archivedInfo.CFBundleShortVersionString!==cfg.marketingVersion || String(archivedInfo.CFBundleVersion)!==String(cfg.buildNumber))throw new Error('Archived app identity/version does not match the TestFlight release');
   run('codesign',['--verify','--deep','--strict',app]);
   const options=path.join(temp,'ExportOptions.plist');
   fs.writeFileSync(options,plist.build({method:'app-store-connect',destination:'export',teamID:cfg.teamId,signingStyle:'manual',signingCertificate:'Apple Distribution',provisioningProfiles:{[cfg.bundleId]:provision.Name},manageAppVersionAndBuildNumber:false,uploadSymbols:true,stripSwiftSymbols:true}));

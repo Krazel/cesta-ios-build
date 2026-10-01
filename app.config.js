@@ -8,7 +8,7 @@ module.exports = ({ config }) => {
     ios: {
       ...config.ios,
       bundleIdentifier: 'com.dmkr.cesta.B2X6D3A9J9',
-      buildNumber: '3',
+      buildNumber: '1',
       appleTeamId: 'B2X6D3A9J9',
       infoPlist,
     },

@@ -17,7 +17,7 @@
         },
         "ITSAppUsesNonExemptEncryption": false
       },
-      "buildNumber": "3"
+      "buildNumber": "1"
     },
     "android": {
       "package": "com.dmkr.cesta",

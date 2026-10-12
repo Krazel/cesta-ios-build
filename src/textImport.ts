@@ -163,7 +163,9 @@ export function parseShoppingText(text: string, catalog: CatalogEntry[]): TextPr
     );
     const match =
       exact ||
-      catalog.find((entry) => entry.names.some((label) => forms(label).includes(clean(name))));
+      catalog.find((entry) =>
+        entry.names.some((label) => forms(label).some((form) => forms(name).includes(form))),
+      );
     const product: Product = match
       ? { ...match.product, unit: unit || (explicitQuantity ? 'ud' : match.product.unit) }
       : { name, category: 'other', emoji: '🛍️', unit: unit || 'ud' };

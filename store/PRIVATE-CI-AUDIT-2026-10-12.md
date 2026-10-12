@@ -1,5 +1,11 @@
 # Cesta — auditoría de próxima CI privada, 2026-10-12
 
+## Reanudación de cierre de octubre
+
+El encargo posterior permite preparar las guardas privadas. Ambas copias locales eliminan la condición solo-público y exigen propietario, rama main e input manual `free_ci_verified=true`. El input es false por defecto: un disparo sin verificarlo omite el job. TestFlight conserva app-store-production y añade las regresiones de sincronización. No se han subido estos cambios ni ejecutado jobs. Los apartados siguientes conservan la auditoría inicial; la condición solo-público describe los archivos anteriores, no esta candidata.
+
+El input es una confirmación de preflight, no una consulta automática de facturación ni una garantía de coste. Antes de marcarlo hay que releer acceso privado, plan/entorno, cuota de macOS y almacenamiento, y bloqueo de exceso. Todo sigue sin comprobar por ENOTFOUND/conector404 el 12/10. No mover secretos a otro alcance para evitar el requisito de entornos privados, comprar planes, activar gasto ni reabrir código. Si no se puede demostrar capacidad gratuita real, no ejecutar. La próxima build requiere petición expresa y numeración nueva comprobada por Apple; no reutilizar 1.2(1).
+
 Alcance: documentación y lectura; sin cambios de workflows, funcionalidad, firma, secretos, builds, tienda ni pushes. Política común: .studio/private-code-ci-policy-20261012.md. Código privado y soporte separado autorizados por el usuario. PR-016 lo concilia el cerebro.
 
 ## Vía de compilación conservada

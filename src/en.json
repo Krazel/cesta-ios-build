@@ -712,6 +712,8 @@
   "Se conservará una copia aquí y se eliminará la lista de la nube para todos los participantes. Las invitaciones dejarán de funcionar.": "A copy will stay here and the cloud list will be deleted for all participants. Invitations will stop working.",
   "Se conservará una copia aquí y saldrás de la lista compartida. Los demás podrán seguir utilizándola.": "A copy will stay here and you will leave the shared list. Others can keep using it.",
   "Guardar copia local": "Keep local copy",
+  "{0} (recuperada)": "{0} (recovered)",
+  "No se pudieron compartir algunos cambios. Se han conservado en una copia local en Listas. La lista compartida puede seguir utilizándose.": "Some changes could not be shared. They have been kept in a local copy in Lists. You can keep using the shared list.",
   "Tus listas personales, catálogo y favoritos se guardan en este dispositivo. Solo las listas que eliges compartir o usar en otros dispositivos se guardan en Cloudflare, junto con sus fotos y nombres de participantes. Se envían cambios y se recuperan novedades al conectar.": "Your personal lists, catalogue and favourites stay on this device. Only lists you choose to share or use on other devices are stored in Cloudflare, including their photos and participant names. Changes are sent and updates are retrieved when connecting.",
   "Tus listas anteriores se han conservado aquí. Crea una invitación nueva para compartirlas por Internet.": "Your previous lists have been kept here. Create a new invitation to share them over the internet.",
   "Se ha cerrado el acceso compartido. Tus cambios pendientes se han conservado en una copia local.": "Shared access has ended. Your pending changes have been kept in a local copy.",

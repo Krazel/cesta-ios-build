@@ -1,11 +1,17 @@
 name: Upload Cesta to TestFlight
 on:
   workflow_dispatch:
+    inputs:
+      free_ci_verified:
+        description: Private access, signing environment and free quota/budget verified before this run
+        type: boolean
+        default: false
+        required: true
 permissions:
   contents: read
 jobs:
   testflight:
-    if: github.actor == github.repository_owner && github.ref == 'refs/heads/main' && !github.event.repository.private
+    if: github.actor == github.repository_owner && github.ref == 'refs/heads/main' && inputs.free_ci_verified == true
     runs-on: macos-26
     environment: app-store-production
     timeout-minutes: 45
@@ -28,6 +34,7 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - run: npm run test:text-import
+      - run: node --test tests/syncEngine.test.mjs
       - name: Archive, sign, validate and upload
         run: node scripts/build-testflight.mjs
       - uses: actions/upload-artifact@v4

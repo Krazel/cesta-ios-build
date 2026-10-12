@@ -11,6 +11,7 @@ type Host = {
   token: () => string;
   api: () => string;
   uid: () => string;
+  recoveryName?: (name: string) => string;
   save: () => Promise<unknown>;
   change: () => void;
   error: (message: string) => void;
@@ -122,6 +123,7 @@ export class CloudSync {
             const newId = this.host.uid();
             state.snapshot.lists.push({
               ...copy,
+              name: this.host.recoveryName?.(copy.name) || copy.name,
               id: newId,
               ownerId: state.snapshot.device.id,
               members: [{ ...state.snapshot.device, role: 'owner' }],
@@ -169,6 +171,36 @@ export class CloudSync {
     } else return;
     this.host.change();
     void this.host.save().catch(() => {});
+  }
+  private async recoverRejectedChanges(id: string) {
+    const state = this.host.get();
+    const pending = state.pending.filter((op) => op.listId === id);
+    const base = state.snapshot.lists.find((list) => list.id === id);
+    if (!base || !pending.length) return;
+    // A permanent rejection rolls back the whole server batch. Preserve every
+    // unsent intention in a private copy before releasing the shared queue.
+    // Keep transient failures queued for retry instead.
+    const copy = pending
+      .filter((op) => !['list.delete', 'list.leave'].includes(op.type))
+      .reduce(
+        (lists, op) => reduceLists(lists, op, state.snapshot.device.id, state.snapshot.device.name),
+        [base],
+      )[0];
+    if (!copy) return;
+    state.snapshot.lists.push({
+      ...copy,
+      name: this.host.recoveryName?.(copy.name) || copy.name,
+      id: this.host.uid(),
+      ownerId: state.snapshot.device.id,
+      members: [{ ...state.snapshot.device, role: 'owner' }],
+    });
+    state.pending = state.pending.filter((op) => op.listId !== id);
+    this.host.change();
+    await this.host.save();
+    this.host.error(
+      'No se pudieron compartir algunos cambios. Se han conservado en una copia local en Listas. La lista compartida puede seguir utilizándose.',
+    );
+    return true;
   }
   start() {
     this.active = true;
@@ -296,6 +328,7 @@ export class CloudSync {
             break;
           }
           if (error instanceof CloudError && [400, 413].includes(error.status)) {
+            if (await this.recoverRejectedChanges(id)) continue;
             this.host.error(error.message);
             break;
           }
@@ -338,7 +371,14 @@ export class CloudSync {
           .get()
           .pending.filter((op) => op.listId === id)
           .slice(0, 25);
-        const response = await this.request(id, 'ops', { operations: batch });
+        let response;
+        try {
+          response = await this.request(id, 'ops', { operations: batch });
+        } catch (error) {
+          if (error instanceof CloudError && [400, 413].includes(error.status))
+            await this.recoverRejectedChanges(id);
+          throw error;
+        }
         for (const event of response.events) this.receive(id, event);
         this.host.get().pending = this.host
           .get()

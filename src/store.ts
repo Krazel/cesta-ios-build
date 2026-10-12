@@ -113,6 +113,7 @@ const cloudSync = new CloudSync({
   save,
   change: emit,
   uid,
+  recoveryName: (name) => t('{0} (recuperada)', name.slice(0, 44)),
   error: (message) => {
     state.error = t(message);
     emit();

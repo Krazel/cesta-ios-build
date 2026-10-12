@@ -2,6 +2,11 @@ name: Build iPhone IPA for Sideloadly
 on:
   workflow_dispatch:
     inputs:
+      free_ci_verified:
+        description: Private access and free quota/budget verified before this run
+        type: boolean
+        default: false
+        required: true
       api_url:
         description: API URL accessible from the iPhone
         type: string
@@ -10,7 +15,7 @@ permissions:
   contents: read
 jobs:
   build:
-    if: github.event.repository.private == false
+    if: github.actor == github.repository_owner && github.ref == 'refs/heads/main' && inputs.free_ci_verified == true
     runs-on: macos-26
     timeout-minutes: 45
     env:

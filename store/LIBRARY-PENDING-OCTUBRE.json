@@ -1,0 +1,14 @@
+{
+  "id": "PR-016",
+  "status": "Pending reconciliation; not sent to D1",
+  "reason": "GET /api/projects inaccessible: ENOTFOUND on 2026-10-12",
+  "initialActivationReceipt": ".studio/coordination/library-october-resume-receipt-20261012.json",
+  "initialActivationRevision": 14,
+  "requiresFreshReadAndRevision": true,
+  "preserveOtherFields": true,
+  "doNotChange": ["tracking", "version", "build", "releases", "published", "source"],
+  "proposedChanges": {
+    "detail": "12/10 candidata local: recuperación de cola compartida con copia privada, plurales al pegar texto y permisos depurados. UI ES/EN, TypeScript, regresiones y JS iOS/Hermes verificados. Última beta sigue 1.2(1) interna; sin nueva build/envío. Cloud actual, QA física y CI privada pendientes.",
+    "next": "Cierre de octubre: conciliar entrega local y store/PREPARACION-TIENDA-OCTUBRE.md con revisión fresca; validar Worker y redes distintas al recuperar acceso, ejecutar store/QA-IPHONE-OCTUBRE.md en iPhone/iPad, confirmar invitación y cuota/entorno de CI privada. Workflows candidatos con propietario/main e input false por defecto; no disparar sin verificación gratuita y petición expresa de build. Capturas nativas y metadatos finales pendientes; sin App Review/publicación automática. Propietario 01a06e9f-beba-7de0-b5d6-1cdf79cc0479."
+  }
+}

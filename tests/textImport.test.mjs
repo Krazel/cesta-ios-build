@@ -7,11 +7,34 @@ const catalog = [
   ['Huevos', 'Eggs', 'docena'],
   ['Tomates', 'Tomatoes', 'kg'],
   ['Espaguetis', 'Spaghetti', 'paquete'],
+  ['Yogur', 'Yogurt', 'pack'],
 ].map(([name, english, unit]) => ({
   product: { name, catalogId: name, unit, emoji: '🛍️', category: 'pantry' },
   names: [name, english],
 }));
 const parse = (text) => parseShoppingText(text, catalog);
+
+test('Plural shopping text resolves singular catalogue products without replacing exact custom names', () => {
+  const items = parse('2 yogures; 3 yogurts');
+  assert.equal(items.length, 1);
+  assert.equal(items[0].product.catalogId, 'Yogur');
+  assert.equal(items[0].quantity, 5);
+  assert.equal(items[0].product.unit, 'ud');
+  const custom = {
+    product: {
+      name: 'Yogures',
+      productId: 'custom-yogurt',
+      unit: 'pack',
+      emoji: '🥣',
+      category: 'dairy',
+    },
+    names: ['Yogures'],
+  };
+  assert.equal(
+    parseShoppingText('Yogures', [...catalog, custom])[0].product.productId,
+    'custom-yogurt',
+  );
+});
 
 test('Spanish message and English names resolve products, quantities and unknown names', () => {
   const items = parse(

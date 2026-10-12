@@ -1,5 +1,7 @@
 # Cesta
 
+Preparación de cierre de octubre: [estado y pendientes](CIERRE-OCTUBRE.md), [paquete de tienda](store/PREPARACION-TIENDA-OCTUBRE.md) y [prueba física](store/QA-IPHONE-OCTUBRE.md). Correcciones candidatas locales del 12/10; última beta entregada sigue 1.2(1). Vista personal local: `node scripts/preview-local.mjs` después de `npm run build:web`, sin API de nube. QA de interfaz sin red: `node scripts/verify-local-ui.mjs`; no sustituye iPhone ni prueba cloud.
+
 Aplicación de listas de la compra para iPhone y web, en castellano e inglés.
 
 Web: https://cesta.krazel-zodiac-daily.workers.dev. `npm run preview` abre esta dirección pública. La última entrega acreditada es TestFlight interno 1.2 (1), con Internet, del 2026-10-02; las pruebas físicas siguen pendientes.

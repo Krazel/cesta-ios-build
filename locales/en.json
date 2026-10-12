@@ -1,6 +1,5 @@
 {
   "ios": {
-    "NSPhotoLibraryUsageDescription": "Choose a photo to recognise your products.",
-    "NSLocalNetworkUsageDescription": "Cesta connects to the list service on your network to sync shopping across your devices."
+    "NSPhotoLibraryUsageDescription": "Choose a photo to recognise your products."
   }
 }

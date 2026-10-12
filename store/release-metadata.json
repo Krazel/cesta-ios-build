@@ -2,8 +2,8 @@
   "appId": "6808982515",
   "bundleId": "com.dmkr.cesta.B2X6D3A9J9",
   "version": "1.2",
-  "supportUrl": "https://github.com/Krazel/cesta-ios-build/blob/main/docs/support.md",
-  "privacyPolicyUrl": "https://github.com/Krazel/cesta-ios-build/blob/main/docs/privacy.md",
+  "supportUrl": "https://krazel.github.io/cesta/support/",
+  "privacyPolicyUrl": "https://krazel.github.io/cesta/privacy/",
   "locales": {
     "es-ES": {
       "description": "Organiza la compra de cada día y conserva tus listas habituales para la próxima vez.\n\nPREPARA Y REUTILIZA\nCrea distintas listas, añade a Inicio las que vas a utilizar y marca lo comprado. Añade productos solo para esta compra o guárdalos como habituales. Al empezar otra compra, los habituales vuelven a estar listos.\n\nENCUENTRA LO QUE NECESITAS\nBusca productos mientras escribes, explora el catálogo y crea productos con una foto propia. Añade cantidades y notas, pega un texto para convertirlo en productos y ajusta su tamaño en pantalla.\n\nCOMPRA JUNTOS\nComparte una lista mediante invitación y edítala desde distintos dispositivos por Internet. Los cambios se sincronizan al añadir productos o marcar lo comprado. También puedes abrir tus listas compartidas desde el navegador.\n\nTUS LISTAS, A MANO\nLas listas personales se guardan en tu dispositivo. Solo las listas que eliges compartir o usar en otros dispositivos se sincronizan en la nube. Puedes editar sin conexión y recuperar los cambios compartidos cuando vuelvas a tener Internet.\n\nDisponible en castellano e inglés, con idioma inicial según el dispositivo.",

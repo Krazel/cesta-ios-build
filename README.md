@@ -2,7 +2,9 @@
 
 Aplicación de listas de la compra para iPhone y web, en castellano e inglés.
 
-Web: https://cesta.krazel-zodiac-daily.workers.dev. `npm run preview` abre esta dirección pública. La versión de TestFlight 1.1 (2) conserva el servicio LAN; la candidata con Internet es 1.2 (3), todavía sin distribuir.
+Web: https://cesta.krazel-zodiac-daily.workers.dev. `npm run preview` abre esta dirección pública. La última entrega acreditada es TestFlight interno 1.2 (1), con Internet, del 2026-10-02; las pruebas físicas siguen pendientes.
+
+El código está en un repositorio privado. Soporte público: https://krazel.github.io/cesta/support/. Privacidad pública: https://krazel.github.io/cesta/privacy/. El contenido aprobado y los enlaces de Apple están verificados; recibos en .studio/support/cesta-private-repo-20261012/ desde la raíz de Studio. Antes de la siguiente build, consultar [la auditoría de CI privada](store/PRIVATE-CI-AUDIT-2026-10-12.md): los workflows conservados aún solo permiten repos públicos y el plan/cuota/acceso privado requieren comprobación. No se han lanzado builds ni activado gastos por esta conciliación.
 
 ## Modelo local y sincronización
 
@@ -37,7 +39,7 @@ El primer acceso a la web requiere Internet. Después puede reabrirse sin conexi
 
 `wrangler.jsonc` identifica el Worker cesta en la cuenta existente de Studio. El plan Workers Free se verificó en el panel el 2026-09-05. No se activó ningún plan de pago. Las cuotas se comparten con otros servicios de esa cuenta. Las listas sincronizadas se limitan a 32 participantes, 1000 productos y unos 750 KB para mantener las fotos y el estado dentro del tamaño admitido por la conexión.
 
-Compilar y verificar antes de `npx wrangler deploy`. El despliegue publica la web y la API; no equivale a una entrega de iPhone. Los archivos de estado local, logs y credenciales no pertenecen al repositorio público.
+Compilar y verificar antes de `npx wrangler deploy`. El despliegue publica la web y la API; no equivale a una entrega de iPhone. Los archivos de estado local, logs y credenciales no pertenecen a Git ni al sitio de soporte.
 
 ## iPhone
 

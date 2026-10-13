@@ -6,7 +6,7 @@ Aplicación de listas de la compra para iPhone y web, en castellano e inglés.
 
 Web: https://cesta.krazel-zodiac-daily.workers.dev. `npm run preview` abre esta dirección pública. La última entrega acreditada es TestFlight interno 1.2 (1), con Internet, del 2026-10-02; las pruebas físicas siguen pendientes.
 
-El código está en un repositorio privado. Soporte público: https://krazel.github.io/cesta/support/. Privacidad pública: https://krazel.github.io/cesta/privacy/. El contenido aprobado y los enlaces de Apple están verificados; recibos en .studio/support/cesta-private-repo-20261012/ desde la raíz de Studio. Antes de la siguiente build, consultar [la auditoría de CI privada](store/PRIVATE-CI-AUDIT-2026-10-12.md): los workflows conservados aún solo permiten repos públicos y el plan/cuota/acceso privado requieren comprobación. No se han lanzado builds ni activado gastos por esta conciliación.
+El usuario ordenó el 13/10 volver público Krazel/cesta-ios-build antes de esta build, para usar Actions estándar gratuitas; visibilidad PUBLIC releída por API. Esta excepción sustituye para Cesta la preferencia privada del 12/10. Soporte público: https://krazel.github.io/cesta/support/. Privacidad pública: https://krazel.github.io/cesta/privacy/. Se conservan los secretos en app-store-production, restringido a main. La CI de TestFlight sigue exigiendo propietario y main; si se vuelve a privado, requiere comprobación de cuota/entorno antes de su input manual. No se activan planes ni gastos.
 
 ## Modelo local y sincronización
 

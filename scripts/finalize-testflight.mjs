@@ -13,8 +13,8 @@ if(!build || build.attributes.processingState!=='VALID'){
 }
 assert.equal(build.attributes.expired,false);
 const notes={
-'es-ES':'Listas personales locales por defecto. Comparte una lista o pulsa Usar en mis dispositivos para sincronizarla por Internet, mediante cambios y sin consultas periódicas. Prueba una invitación entre iPhone y la web, modificaciones simultáneas, modo sin conexión y volver a guardar una lista solo en el dispositivo. Las listas de la versión LAN anterior se conservan como copias locales y necesitan invitaciones nuevas. Alojamiento gratuito con cuotas; no hay sincronización automática de listas personales.',
-'en-US':'Personal lists stay local by default. Share a list or select Use on my devices to synchronize it over the internet with event updates and no polling. Test an invitation between iPhone and the website, concurrent edits, offline recovery and keeping a list only on the device again. Previous LAN lists remain as local copies and need new invitations. Free hosting has quotas; personal lists never upload automatically.'
+'es-ES':'Correcciones de recuperación: si el servidor rechaza cambios por tamaño o datos, se guardan en una copia local recuperada y la lista compartida puede seguir usándose. El texto pegado reconoce plurales como yogures. Eliminado el permiso Face ID que Cesta no utiliza. Prueba fotos, teclado, reutilización de listas y sincronización entre redes distintas. Las listas personales siguen locales; solo se sincronizan las compartidas o vinculadas. Las pruebas físicas de esta nueva build están pendientes.',
+'en-US':'Recovery fixes: if the server rejects changes due to size or data, they are kept in a recovered local copy and the shared list remains usable. Pasted text recognizes plurals such as yogurts. Removed the unused Face ID permission. Test photos, keyboard, list reuse and synchronization across different networks. Personal lists stay local; only shared or linked lists synchronize. Physical testing of this new build is pending.'
 };
 const locs=(await asc('GET',`/v1/builds/${build.id}/betaBuildLocalizations`)).data;
 for(const [locale,whatsNew] of Object.entries(notes)){

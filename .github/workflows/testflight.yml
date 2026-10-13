@@ -11,7 +11,7 @@ permissions:
   contents: read
 jobs:
   testflight:
-    if: github.actor == github.repository_owner && github.ref == 'refs/heads/main' && inputs.free_ci_verified == true
+    if: github.actor == github.repository_owner && github.ref == 'refs/heads/main' && (!github.event.repository.private || inputs.free_ci_verified == true)
     runs-on: macos-26
     environment: app-store-production
     timeout-minutes: 45
@@ -40,9 +40,9 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: Cesta-1.2-build1-TestFlight
+          name: Cesta-1.2.1-build1-TestFlight
           path: |
-            artifacts/Cesta-1.2-build1-TestFlight.ipa
+            artifacts/Cesta-1.2.1-build1-TestFlight.ipa
             artifacts/testflight-build.json
           if-no-files-found: ignore
           retention-days: 1

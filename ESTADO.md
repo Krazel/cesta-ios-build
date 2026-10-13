@@ -1,5 +1,11 @@
 # Cesta — estado del producto
 
+## Subida TestFlight solicitada — 2026-10-13
+
+El usuario pide subir la candidata y después ordena explícitamente poner Krazel/cesta-ios-build público antes de las builds. Excepción documentada en AGENTS local; PATCH de visibilidad aceptado tras aclarar la instrucción posterior al auto-review, GET confirma PUBLIC. No se cambia visibilidad de otros productos ni soporte/privacidad. Auditoría de21commits sin patrones de claves/tokens ni archivos de firma/datos; secretos continúan en entorno protegido/main. Actions estándar públicas, sin activar gastos. No requiere login de facturación ni ampliar OAuth.
+
+Apple releído: 1.2(1) VALID, tester INSTALLED, App Store1.2 PREPARE_FOR_SUBMISSION. Nueva candidata correctiva1.2.1(1), inexistente en Apple al preflight; no se degrada la línea1.2 heredada. Se aplica patch de marketing por correcciones de comportamiento y build1. TypeScript, trece pruebas de nube/sincronización/importación correctas; runtime Cloudflare local ya validado con la aprobación de acceso apropiada, sin ACLs ni despliegue. Detalle artifacts/testflight-20261013/apple-preflight.json. Se prepara compilación/firma/subida interna, sin App Review ni externos. No afirmar disponible antes de procesado y asignación.
+
 ## Cierre de octubre retomado — 2026-10-12
 
 Encargo vigente: CIERRE-OCTUBRE.md y .studio/coordination/cierre-octubre-20261012.md, PR-016. Correcciones candidatas locales: rechazos permanentes 400/413 de sincronización conservan los cambios pendientes en copia privada y liberan la lista compartida; errores temporales siguen en cola. Texto pegado reconoce plurales como «yogures» y «yogurts», conserva cantidades e identidad del catálogo y respeta coincidencias exactas de productos propios. Configuración candidata retira Face ID sin uso y textos LAN localizados; SecureStore sigue guardando credencial sin autenticación biométrica.

@@ -1,5 +1,13 @@
 # Cesta — estado del producto
 
+## TestFlight 1.2.1 (1) completado — 2026-10-13
+
+Nueva beta interna entregada y verificada por API: build63e90ccf-5fbf-41e7-875e-2a37dc3638e4, VALID e IN_BETA_TESTING, grupo interno existente y notas ES/EN releídos. CI38448608042 success, commit1aa38a8b5fe68bf6f38d319b49809d836d8d6b95. IPA11.227.846bytes SHA256f5f67c674544e10cac42881ae35c0cbec260a19600801ee40f71dce2ac6d0ea9, verificado independientemente. Incluye correcciones de recuperación/plurales/permisos. Detalle store/TESTFLIGHT-2026-10-13.md y artifacts/testflight-20261013/.
+
+El usuario ordenó poner público el repo antes de esta build; visibilidad PUBLIC confirmada, excepción a la preferencia privada anterior registrada en AGENTS. CI estándar/macOS y secretos existentes/main, sin gastos nuevos. Runtime Cloudflare local y trece pruebas pasan; bloqueos de acceso del12/10 resueltos mediante vías aprobadas, sin ACLs ni desactivar sandbox. Invitación del titular ya aceptada (INSTALLED para la app existente); no equivale a probar esta nueva beta.
+
+Prueba física de1.2.1(1) pendiente en iPhone/iPad y redes distintas. No TestFlight externo ni App Review/publicación comercial: borrador App Store1.2 sigue PREPARE_FOR_SUBMISSION. Soporte/privacidad independientes conservados. Esta entrega responde a la petición del13/10; futuras builds necesitan petición expresa. Actualización final D1 con lectura fresca y conservación de valores ajenos; recibo artifacts/testflight-20261013/library-complete.json.
+
 ## Subida TestFlight solicitada — 2026-10-13
 
 El usuario pide subir la candidata y después ordena explícitamente poner Krazel/cesta-ios-build público antes de las builds. Excepción documentada en AGENTS local; PATCH de visibilidad aceptado tras aclarar la instrucción posterior al auto-review, GET confirma PUBLIC. No se cambia visibilidad de otros productos ni soporte/privacidad. Auditoría de21commits sin patrones de claves/tokens ni archivos de firma/datos; secretos continúan en entorno protegido/main. Actions estándar públicas, sin activar gastos. No requiere login de facturación ni ampliar OAuth.

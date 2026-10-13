@@ -1,5 +1,7 @@
 # Cesta — paquete local de preparación, 12/10/2026
 
+Actualización13/10: la candidata correctiva ya se ha entregado como **TestFlight interno1.2.1(1)**, VALID e IN_BETA_TESTING. API y runtime Cloudflare recuperados y verificados mediante vías aprobadas. Repo PUBLIC por la instrucción humana posterior; no se activaron gastos. Biblioteca PR-016 rev16 verificada. Ver TESTFLIGHT-2026-10-13.md. Metadatos1.2.1 preparados solo localmente; borrador comercial Apple sigue1.2 PREPARE_FOR_SUBMISSION. Persisten QA física/capturas nativas y cierre de edad/privacidad antes de un envío comercial autorizado. Los bloqueos/candidata local del12/10 descritos abajo son historial.
+
 No es un envío a Apple. Ficha6808982515 y última beta1.2(1) interna; no revisión/página pública App Store acreditada. En esta sesión Apple, Cloudflare y biblioteca fallan ENOTFOUND. No se cambia distribución ni se selecciona/repite un binario. Soporte/privacidad ya migrados por cerebro, seis URLs releídas en su recibo.
 
 ## Fuente e inventario de datos

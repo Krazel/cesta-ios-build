@@ -1,7 +1,7 @@
 {
   "appId": "6808982515",
   "bundleId": "com.dmkr.cesta.B2X6D3A9J9",
-  "version": "1.2",
+  "version": "1.2.1",
   "supportUrl": "https://krazel.github.io/cesta/support/",
   "privacyPolicyUrl": "https://krazel.github.io/cesta/privacy/",
   "locales": {
@@ -14,5 +14,5 @@
       "keywords": "groceries,supermarket,products,pantry,organize,lists,shared,food"
     }
   },
-  "reviewNotes": "Cesta 1.2. No account, password or purchases are required. Enter a display name to start. Personal lists work locally. To share over the Internet, open a list menu, choose Share list and Create invitation; on a second device open the link in a browser or paste its code into Join a list. The HTTPS service is https://cesta.krazel-zodiac-daily.workers.dev and requires no local test server. Shared edits synchronize by events and recover after reconnection. Lists contains regular items; Home can also contain one-time extras. Product photos are optional and selected by the user. There is no advertising, subscription or payment flow. The latest delivered internal TestFlight binary is 1.2 (1). October candidate corrections are local until an explicitly requested new build; select the matching verified binary and capture native screenshots before submitting this draft."
+  "reviewNotes": "Cesta 1.2.1. No account, password or purchases are required. Enter a display name to start. Personal lists work locally. To share over the Internet, open a list menu, choose Share list and Create invitation; on a second device open the link in a browser or paste its code into Join a list. The HTTPS service is https://cesta.krazel-zodiac-daily.workers.dev and requires no local test server. Shared edits synchronize by events and recover after reconnection. Lists contains regular items; Home can also contain one-time extras. Product photos are optional and selected by the user. There is no advertising, subscription or payment flow. The latest delivered internal TestFlight binary is 1.2.1 (1), including the October recovery and permission fixes. Physical QA and native screenshots remain pending before App Review. The existing commercial draft in Apple is still 1.2 and has not been submitted by this TestFlight delivery."
 }

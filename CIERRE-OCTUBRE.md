@@ -1,5 +1,7 @@
 # Cesta — cierre de octubre
 
+13/10: el usuario solicita la nueva beta y ordena poner el repo público antes de compilar. Excepción a la preferencia privada anterior registrada en AGENTS y PUBLIC verificado. **1.2.1 (1) ya está en TestFlight interno**, VALID e IN_BETA_TESTING; CI38448608042, fuente1aa38a8, IPA/hash verificados. Runtime Cloudflare y trece pruebas correctos; acceso API recuperado por vías aprobadas. Titular INSTALLED en la app existente, QA física de nueva build pendiente. Cierre store/TESTFLIGHT-2026-10-13.md; biblioteca PR-016 guardada y releída rev16. No App Review ni externos. Los párrafos del12/10 siguientes son historial y no describen la última distribución/acceso.
+
 Encargo vigente del 12/10/2026: `.studio/coordination/cierre-octubre-20261012.md`, PR-016, propietario Lista compra. Objetivo 31/10; no es autorización para nueva build, App Review ni publicación.
 
 Prioridad: calidad de listas/fotos/teclado, compartir y recuperar cambios sin conexión; preparar CI privada sin gastos y requisitos de distribución. Mantener diseño aprobado ES/EN y datos personales.

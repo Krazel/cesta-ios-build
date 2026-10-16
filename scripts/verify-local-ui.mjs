@@ -80,7 +80,8 @@ try {
           .digest('hex'),
       });
     };
-    await page.goto('http://cesta.local/');
+    await page.goto('https://cesta.local/');
+    await button('Omitir tutorial', 'Skip tutorial').click();
     await expect(button('Empezar mi cesta', 'Start my basket')).toBeVisible();
     await expect(button('English')).toHaveCount(0);
     await expect(button('Español')).toHaveCount(0);

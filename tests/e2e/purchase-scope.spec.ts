@@ -1,3 +1,4 @@
+import { skipTutorial } from './tutorial-helper';
 import { test, expect } from '@playwright/test';
 
 for (const language of ['es', 'en'] as const) {
@@ -20,6 +21,7 @@ for (const language of ['es', 'en'] as const) {
     };
     try {
       await page.goto('/');
+      await skipTutorial(page);
       await expect(button('Empezar mi cesta', 'Start my basket')).toBeVisible();
       await expect(button('English')).toHaveCount(0);
       await expect(button('Español')).toHaveCount(0);

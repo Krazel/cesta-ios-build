@@ -1,0 +1,325 @@
+{
+  "date": "2026-10-16",
+  "nativeBuild": false,
+  "userDesignChoice": null,
+  "entries": [
+    {
+      "file": "current/autocomplete-en.png",
+      "bytes": 32621,
+      "sha256": "2f109675b7cfd7f861552b9d759f6b56452f4eaa6ca09b3bcf3d3bdf17dfdffc",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/autocomplete-es.png",
+      "bytes": 33980,
+      "sha256": "0cd568debf99779b4b901045a757dd9e5bff0ab49c58aca9effcab29e1b8c862",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/custom-photo-en.png",
+      "bytes": 29127,
+      "sha256": "01ae2ff1ff05e1228da8eecf301864170bb49c0c768c9e12ce8cd29c2b09ba4c",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/custom-photo-es.png",
+      "bytes": 29961,
+      "sha256": "83f371f4988a71f68ea1dbfed9c606d10a14d8aecc47d3fb974b7c098d27dbc4",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/default-saved-list-en.png",
+      "bytes": 32729,
+      "sha256": "daf582be42879540d0fe800faa792fb24f36e78f7c83a3b40e2698cf02ad885c",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/default-saved-list-es.png",
+      "bytes": 32809,
+      "sha256": "1b5b2ea3612bf5d935cbcee9e85872724e3a181b00ac7c96e10918e94f2b6361",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/home-active-en.png",
+      "bytes": 19874,
+      "sha256": "2688357955c8a1b6dad3ed4a813eb7d6804b18d25ab0e98ef607ab007e72effc",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/home-active-es.png",
+      "bytes": 19930,
+      "sha256": "b9f4876c0948d4bc6d9c0be801171ed0eeb28f8657829b2ea0276e20163aba45",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/home-empty-en.png",
+      "bytes": 29668,
+      "sha256": "a8ea4ac4f71a2b26adfd3c9a49e3252c5cf487e8a15ac54fe26a6d7b37e7dfa7",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/home-empty-es.png",
+      "bytes": 27834,
+      "sha256": "f31b8cdeaa493809bf7b4cb1edcf09c97fe4a93ff0d7c60024db09c19f3a3774",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/join-en.png",
+      "bytes": 39633,
+      "sha256": "e534a5339cdadcb0b10dfc44f013967367a7d4a2e1f4e1d6e7fd911bef045f4a",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/join-es.png",
+      "bytes": 38303,
+      "sha256": "d1aa3c3d59bc90f872301a4b05cc07a3a864cb40c2aafebb5fa921235407e0bd",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/library-en.png",
+      "bytes": 46935,
+      "sha256": "25a222e276ff81397ff20e7f67a097c96b58aab7c949daf8fae2abfc7f158ac9",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/library-es.png",
+      "bytes": 48115,
+      "sha256": "ce2df5d07096ad10b348c99ff81c40928a25d078833ccf3886455e5b6bdf68eb",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/list-options-en.png",
+      "bytes": 25402,
+      "sha256": "0cdd7161483b888dd99d37fe38994002466dd72b4c391f0e214a218819f69e16",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/list-options-es.png",
+      "bytes": 27163,
+      "sha256": "2673192f888b68c77ef6ed9812a047cf6771df7dd2a5fcde324023ad363133ca",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/new-list-en.png",
+      "bytes": 48172,
+      "sha256": "15fc40cbf5c6a8fcaa59bdc894bf6b9eb7cef69260fb375129181f232f2b4144",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/new-list-es.png",
+      "bytes": 49754,
+      "sha256": "b4bd5297e221d133d430849bd905c85c5c135277f432779e15c23c9118dc63fa",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/onboarding-en.png",
+      "bytes": 38817,
+      "sha256": "905cbe5f8565702bde1784a5c24d7a92efbdeb54b519a0a9e3c84365bae53688",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/onboarding-es.png",
+      "bytes": 39792,
+      "sha256": "53f2810265b3f63e2ac2ee95c2ebb8ce593991ac2401b2639c39d66f2f934861",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/privacy-en.png",
+      "bytes": 45130,
+      "sha256": "19c228aebdeea4dba54edb932f5690409e4c745c71a36a467ab45489a1cb9b6e",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/privacy-es.png",
+      "bytes": 43026,
+      "sha256": "4ae276052ac00c20fac5239bcedb078803dbb7b842f44e4cd03cfae097229114",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/product-form-en.png",
+      "bytes": 36998,
+      "sha256": "71d419c4652b4f9a326ea5ada9187f3df6d8867ae172781c7fea06c40724ebf2",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/product-form-es.png",
+      "bytes": 38339,
+      "sha256": "e4d9a7b97a7ffb2ee6dc8f0ad02074072f3f371d877f008fa852ec2a408b1d71",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/products-en.png",
+      "bytes": 51693,
+      "sha256": "b1360ba4d108a7ef9616fd7a50aa3f3cc85ce706113798a05bdfb6b811ef6ed0",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/products-es.png",
+      "bytes": 49276,
+      "sha256": "ba37ad3bf0b50a48b3a69597f4dc53cbe64b8cf0c4dfa9d799d57774dcf25f45",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/profile-en.png",
+      "bytes": 34605,
+      "sha256": "81e48ea90ebe630223e96652e846091a30bc19fcf52e95a6ba8ca424419f67f9",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/profile-es.png",
+      "bytes": 36818,
+      "sha256": "b7643e9ec7959a615623f9bef8cb15d2d43740f8455967872b5d2f5f3b3ea6df",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/saved-list-en.png",
+      "bytes": 22039,
+      "sha256": "3fa86b3914820c4c2bd6335b36dad7fc67b856d1e7874e46adb9c94f602cce6a",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/saved-list-es.png",
+      "bytes": 22236,
+      "sha256": "5727884310e955e2f7e5034be81e32b4516e2ac6109e32ca4a3db790e7cdd30a",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/settings-en.png",
+      "bytes": 40751,
+      "sha256": "876b740a1e0d43355f675e43ae72746a85cb88543e3b291e7e9e69cb6a608cda",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/settings-es.png",
+      "bytes": 41486,
+      "sha256": "e2735e6cffc088f85a286bcc104e6df8c92980fef61a9a6cc4ed924d7f6f3a13",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/share-en.png",
+      "bytes": 38537,
+      "sha256": "cada76bf31ee2c422ffddaff8d1e7304a36f02b3b8396ceacc9e5f5ce3796d29",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/share-es.png",
+      "bytes": 39356,
+      "sha256": "c9240e6d6f982aff16513ed2f9edb11781d07211110ff87db962bce5bfde1bda",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/shopping-en.png",
+      "bytes": 29773,
+      "sha256": "6d64df8abeb045743a5f49fa0850af0974d10a930ef640fe29d74c9879fa1170",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/shopping-es.png",
+      "bytes": 30515,
+      "sha256": "75470c02f377f275d57efb87b08aac6d30089ce7206d0e413974972d9220d10b",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/text-import-en.png",
+      "bytes": 36023,
+      "sha256": "aa4a66d7980c284ae11da20cfc5c8fa5e1fb073d2ed0e268dd8283aa9c1ce363",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/text-import-es.png",
+      "bytes": 35413,
+      "sha256": "b04d2be5db492779127a7e51f61f9dba121a1ae15353bcdfec97d0648faeaf6f",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/text-preview-en.png",
+      "bytes": 39930,
+      "sha256": "d5b55d1d18b3a9a818caa7ec1a9dfffb0df083f9f9b6024b7198ffa6220b0932",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/text-preview-es.png",
+      "bytes": 40598,
+      "sha256": "4cf3b6e32cbde4ad8bb1adc5d5e096b2c3139fbec38879cb3928aba86c7238e2",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/tutorial-1-en.png",
+      "bytes": 33792,
+      "sha256": "9029d20bb067fd1d82030cbad59a486eb7bf792813be7296f43a8e8c70d713be",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/tutorial-1-es.png",
+      "bytes": 35235,
+      "sha256": "9a4ddc060d5ba3127d0fd8c0150298f3b5b0ba714ceea0c6f4ddb5a49786e1d5",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/tutorial-2-en.png",
+      "bytes": 32289,
+      "sha256": "ab7fa324d412af847e4db7ab7a08b36486fc0cdec012b4acf3b2577546acc755",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/tutorial-2-es.png",
+      "bytes": 32035,
+      "sha256": "948c8d590023ca9e9ccc889537204443e8b04c04ee608d77fdbef49797e472e5",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/tutorial-3-en.png",
+      "bytes": 33371,
+      "sha256": "7c8c38776233eb94c33b187e80c9e89cf8905d246e5e4aa6d074fc65cce2e80f",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/tutorial-3-es.png",
+      "bytes": 34409,
+      "sha256": "1aed90a0f726b4ac66bc9c733515cc9f78b4a3826da08704677faa663141fe98",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/tutorial-4-en.png",
+      "bytes": 36979,
+      "sha256": "f348e62b55c951305a59436aeb01fca9e1c365d2bc13e05daa82cf016b661c7b",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/tutorial-4-es.png",
+      "bytes": 38411,
+      "sha256": "35cfe7f61a6a8488f5af29cf820af61c70eae8dc2039080e965c0b00721ed5a5",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/tutorial-small-en.png",
+      "bytes": 22731,
+      "sha256": "5e3ac4219d0660637447d217ec2914f49abe5eb67048d7d4c901c99ab3a42a97",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "current/tutorial-small-es.png",
+      "bytes": 22676,
+      "sha256": "ec54c592b01c75c8b72cb09a0d79a14bb2952e238fdfc546e57a06baf769d9b9",
+      "kind": "actual candidate web capture, agent review"
+    },
+    {
+      "file": "proposals/B1-B3.png",
+      "bytes": 1380632,
+      "sha256": "9a0204db043adf9f6681859df25bae7756070e44eb847e7684158d221eb6fd20",
+      "kind": "ChatGPT Images proposal, not approved"
+    },
+    {
+      "file": "proposals/B4-B5.png",
+      "bytes": 1308139,
+      "sha256": "bf339b8eb39ac2c89f9a438b24fb5285b6d07a3a5b0143990207afb4c9632fd7",
+      "kind": "ChatGPT Images proposal, not approved"
+    },
+    {
+      "file": "proposals/B6-B8.png",
+      "bytes": 1341422,
+      "sha256": "5c4d35755069cede12639f0ec7f7dab02716aa46b9ee47e4132c6d833b2f09b7",
+      "kind": "ChatGPT Images proposal, not approved"
+    }
+  ]
+}

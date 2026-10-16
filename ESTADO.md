@@ -1,5 +1,21 @@
 # Cesta — estado del producto
 
+## Tutorial y revisión visual — 2026-10-16
+
+Tutorial implementado en candidata local: cuatro pasos ES/EN antes de la primera
+bienvenida, omitir/finalizar persistidos y repetición desde Ajustes. Usuarios ya
+incorporados conservan su apertura; las invitaciones sobreviven al tutorial.
+No cambia listas ni permisos. TypeScript y exportación web correctos; 17
+comprobaciones por idioma y tres pruebas de compra compartida/local offline pasan.
+
+Auditoría de todas las pestañas y ventanas: `design/review-20261016/AUDITORIA.md`.
+Comparativa seleccionable A/B en `design/review-20261016/index.html`, con capturas
+actuales y ocho propuestas de ChatGPT Imágenes. No hay selección del usuario ni
+rediseños aplicados. Tutorial delegado revisado por el agente en navegador; no QA
+física. No nueva IPA/TestFlight/despliegue. Última beta sigue 1.2.1 (1) interna.
+Biblioteca PR-016 actualizada y releída a revisión17, conservando tracking y los
+campos de distribución. Evidencia `artifacts/ui-review-20261016/`.
+
 ## TestFlight 1.2.1 (1) completado — 2026-10-13
 
 Nueva beta interna entregada y verificada por API: build63e90ccf-5fbf-41e7-875e-2a37dc3638e4, VALID e IN_BETA_TESTING, grupo interno existente y notas ES/EN releídos. CI38448608042 success, commit1aa38a8b5fe68bf6f38d319b49809d836d8d6b95. IPA11.227.846bytes SHA256f5f67c674544e10cac42881ae35c0cbec260a19600801ee40f71dce2ac6d0ea9, verificado independientemente. Incluye correcciones de recuperación/plurales/permisos. Detalle store/TESTFLIGHT-2026-10-13.md y artifacts/testflight-20261013/.

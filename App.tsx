@@ -32,6 +32,7 @@ import { CompactList } from './src/CompactList';
 import { HomeScreen } from './src/HomeScreen';
 import { CategoryStrip } from './src/CategoryStrip';
 import { TextImportForm } from './src/TextImportForm';
+import { Tutorial } from './src/Tutorial';
 import { ProductsScreen, ProductVisual } from './src/ProductsScreen';
 import { t as tr, productLabel, getCurrentLanguage } from './src/i18n';
 import { chooseProductPhoto } from './src/photos';
@@ -55,6 +56,7 @@ import {
   makeLocal,
   join,
   onboard,
+  completeTutorial,
   removeMember,
   revoke,
   selectList,
@@ -93,6 +95,7 @@ const feedback = () => {
 
 function AppContent() {
   const state = useCesta();
+  const [tutorialReplay, setTutorialReplay] = useState(false);
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const wide = width > 700;
@@ -549,6 +552,16 @@ function AppContent() {
         <Text style={s.body}>{tr('Preparando tu cesta…')}</Text>
       </View>
     );
+  if (!state.tutorialSeen || tutorialReplay)
+    return (
+      <Tutorial
+        onClose={async () => {
+          if (!state.tutorialSeen) await completeTutorial();
+          setTutorialReplay(false);
+        }}
+      />
+    );
+
   if (!state.onboarded)
     return (
       <KeyboardScreen style={[a.root, { paddingTop: insets.top }]}>
@@ -764,6 +777,12 @@ function AppContent() {
             </Text>
             <View style={a.itemsGroup}>
               {[
+                {
+                  icon: 'lists',
+                  title: tr('Ver tutorial'),
+                  subtitle: tr('Un repaso rápido de Cesta'),
+                  action: () => setTutorialReplay(true),
+                },
                 {
                   icon: 'download',
                   title: tr('Guardar una copia'),

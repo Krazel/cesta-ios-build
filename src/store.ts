@@ -27,6 +27,7 @@ const SECRET = 'cesta-device-v1';
 type State = {
   ready: boolean;
   onboarded: boolean;
+  tutorialSeen: boolean;
   snapshot: Snapshot;
   pending: Operation[];
   online: boolean;
@@ -47,6 +48,7 @@ type State = {
 let state: State = {
   ready: false,
   onboarded: false,
+  tutorialSeen: false,
   snapshot: { device: { id: 'local-device', name: t('Mi móvil') }, lists: [] },
   pending: [],
   online: false,
@@ -86,6 +88,7 @@ export const currentLists = () =>
 const save = () => {
   const payload = JSON.stringify({
     onboarded: state.onboarded,
+    tutorialSeen: state.tutorialSeen,
     snapshot: state.snapshot,
     pending: state.pending,
     favorites: state.favorites,
@@ -138,6 +141,10 @@ export async function initialize() {
         Array.isArray(data.pending)
       ) {
         state = { ...state, ...data };
+        // Established users keep their launch flow; the guide remains in Settings.
+        state.tutorialSeen =
+          data.tutorialSeen === true ||
+          (data.tutorialSeen === undefined && data.onboarded === true);
         state.cloud = data.cloud || {};
         state.sequence = data.sequence || 0;
         state.productSize = Object.hasOwn(productSizes, data.productSize)
@@ -252,6 +259,18 @@ export async function onboard(name: string) {
   ensureStarterLists();
   emit();
   await save();
+}
+
+export async function completeTutorial() {
+  state.tutorialSeen = true;
+  try {
+    await save();
+    emit();
+  } catch (error) {
+    state.tutorialSeen = false;
+    emit();
+    throw error;
+  }
 }
 function ensureStarterLists(): boolean {
   if ((state.starterListsVersion || 0) >= 1) return false;
@@ -663,6 +682,7 @@ export async function eraseDevice() {
     ...state,
     ready: false,
     onboarded: false,
+    tutorialSeen: false,
     snapshot: { device: { id: 'local-device', name: t('Mi móvil') }, lists: [] },
     pending: [],
     cloud: {},

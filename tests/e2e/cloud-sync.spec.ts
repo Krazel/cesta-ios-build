@@ -1,7 +1,9 @@
+import { skipTutorial } from './tutorial-helper';
 import { test, expect, type Page } from '@playwright/test';
 const button = (p: Page, name: string) => p.getByRole('button', { name, exact: true });
 async function onboard(p: Page, name: string) {
   await p.goto('/');
+  await skipTutorial(p);
   await p.getByRole('textbox', { name: 'Tu nombre', exact: true }).fill(name);
   await button(p, 'Empezar mi cesta').click();
 }
@@ -47,6 +49,7 @@ test('Personal lists make no API calls; shared lists send deltas and recover off
     await button(pa, 'Cerrar ventana').click();
     await onboard(pb, 'Luis');
     await pb.goto('/#join=' + data.code);
+    await skipTutorial(pb);
     await button(pb, 'Unirme a la lista').click();
     await expect(pb.getByRole('checkbox', { name: 'Comprar Privado', exact: true })).toBeVisible();
     await expect.poll(() => frames.some((raw) => JSON.parse(raw).type === 'snapshot')).toBe(true);
@@ -119,7 +122,9 @@ test('Installed web shell reopens and edits personal lists offline', async ({ pa
     await navigator.serviceWorker.ready;
     if (!navigator.serviceWorker.controller)
       await new Promise<void>((resolve) =>
-        navigator.serviceWorker.addEventListener('controllerchange', () => resolve(), { once: true }),
+        navigator.serviceWorker.addEventListener('controllerchange', () => resolve(), {
+          once: true,
+        }),
       );
   });
   await context.setOffline(true);
@@ -128,7 +133,9 @@ test('Installed web shell reopens and edits personal lists offline', async ({ pa
   await add(page, 'Guardado offline');
   await page.reload();
   await button(page, 'Abrir Compra sin Internet').click();
-  await expect(page.getByRole('checkbox', { name: 'Comprar Guardado offline', exact: true })).toBeVisible();
+  await expect(
+    page.getByRole('checkbox', { name: 'Comprar Guardado offline', exact: true }),
+  ).toBeVisible();
   await page.screenshot({ path: 'artifacts/screenshots/cloud-offline-es.png' });
   await context.setOffline(false);
 });
@@ -186,6 +193,7 @@ test('Legacy LAN data migrates to local copies without uploading personal lists'
       );
   });
   await page.goto('/');
+  await skipTutorial(page);
   await button(page, 'Abrir Lista anterior').click();
   await expect(page.getByRole('checkbox', { name: 'Comprar Arroz', exact: true })).toContainText(
     '3',

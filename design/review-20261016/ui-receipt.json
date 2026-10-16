@@ -1,0 +1,360 @@
+{
+  "checkedAt": "2026-10-16T12:02:15.727Z",
+  "mode": "offline-static-browser",
+  "liveCloudVerified": false,
+  "nativeDeviceVerified": false,
+  "languages": [
+    {
+      "language": "es",
+      "passed": true,
+      "checks": [
+        "tutorial-first-launch-next-back-finish",
+        "tutorial-replay-skip-persistence",
+        "tutorial-upgrade-keeps-existing-flow",
+        "tutorial-320px",
+        "invitation-survives-first-launch-guide",
+        "onboarding-device-language",
+        "paste-list",
+        "autocomplete",
+        "optional-photo-resize-and-reload",
+        "progress-percentage",
+        "keyboard-dismissal",
+        "saved-list-extra-separation",
+        "home-toggle",
+        "reuse",
+        "tab-context",
+        "large-size-320px",
+        "reduced-viewport"
+      ],
+      "apiCalls": 0,
+      "runtimeErrors": 0
+    },
+    {
+      "language": "en",
+      "passed": true,
+      "checks": [
+        "tutorial-first-launch-next-back-finish",
+        "tutorial-replay-skip-persistence",
+        "tutorial-upgrade-keeps-existing-flow",
+        "tutorial-320px",
+        "invitation-survives-first-launch-guide",
+        "onboarding-device-language",
+        "paste-list",
+        "autocomplete",
+        "optional-photo-resize-and-reload",
+        "progress-percentage",
+        "keyboard-dismissal",
+        "saved-list-extra-separation",
+        "home-toggle",
+        "reuse",
+        "tab-context",
+        "large-size-320px",
+        "reduced-viewport"
+      ],
+      "apiCalls": 0,
+      "runtimeErrors": 0
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "tutorial-1-es.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "9a4ddc060d5ba3127d0fd8c0150298f3b5b0ba714ceea0c6f4ddb5a49786e1d5"
+    },
+    {
+      "file": "tutorial-2-es.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "948c8d590023ca9e9ccc889537204443e8b04c04ee608d77fdbef49797e472e5"
+    },
+    {
+      "file": "tutorial-3-es.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "1aed90a0f726b4ac66bc9c733515cc9f78b4a3826da08704677faa663141fe98"
+    },
+    {
+      "file": "tutorial-4-es.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "35cfe7f61a6a8488f5af29cf820af61c70eae8dc2039080e965c0b00721ed5a5"
+    },
+    {
+      "file": "onboarding-es.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "53f2810265b3f63e2ac2ee95c2ebb8ce593991ac2401b2639c39d66f2f934861"
+    },
+    {
+      "file": "library-es.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "ce2df5d07096ad10b348c99ff81c40928a25d078833ccf3886455e5b6bdf68eb"
+    },
+    {
+      "file": "new-list-es.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "b4bd5297e221d133d430849bd905c85c5c135277f432779e15c23c9118dc63fa"
+    },
+    {
+      "file": "default-saved-list-es.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "1b5b2ea3612bf5d935cbcee9e85872724e3a181b00ac7c96e10918e94f2b6361"
+    },
+    {
+      "file": "home-empty-es.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "f31b8cdeaa493809bf7b4cb1edcf09c97fe4a93ff0d7c60024db09c19f3a3774"
+    },
+    {
+      "file": "join-es.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "d1aa3c3d59bc90f872301a4b05cc07a3a864cb40c2aafebb5fa921235407e0bd"
+    },
+    {
+      "file": "text-import-es.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "b04d2be5db492779127a7e51f61f9dba121a1ae15353bcdfec97d0648faeaf6f"
+    },
+    {
+      "file": "text-preview-es.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "4cf3b6e32cbde4ad8bb1adc5d5e096b2c3139fbec38879cb3928aba86c7238e2"
+    },
+    {
+      "file": "autocomplete-es.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "0cd568debf99779b4b901045a757dd9e5bff0ab49c58aca9effcab29e1b8c862"
+    },
+    {
+      "file": "products-es.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "ba37ad3bf0b50a48b3a69597f4dc53cbe64b8cf0c4dfa9d799d57774dcf25f45"
+    },
+    {
+      "file": "product-form-es.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "e4d9a7b97a7ffb2ee6dc8f0ad02074072f3f371d877f008fa852ec2a408b1d71"
+    },
+    {
+      "file": "custom-photo-es.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "83f371f4988a71f68ea1dbfed9c606d10a14d8aecc47d3fb974b7c098d27dbc4"
+    },
+    {
+      "file": "shopping-es.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "75470c02f377f275d57efb87b08aac6d30089ce7206d0e413974972d9220d10b"
+    },
+    {
+      "file": "list-options-es.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "2673192f888b68c77ef6ed9812a047cf6771df7dd2a5fcde324023ad363133ca"
+    },
+    {
+      "file": "share-es.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "c9240e6d6f982aff16513ed2f9edb11781d07211110ff87db962bce5bfde1bda"
+    },
+    {
+      "file": "home-active-es.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "b9f4876c0948d4bc6d9c0be801171ed0eeb28f8657829b2ea0276e20163aba45"
+    },
+    {
+      "file": "saved-list-es.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "5727884310e955e2f7e5034be81e32b4516e2ac6109e32ca4a3db790e7cdd30a"
+    },
+    {
+      "file": "settings-es.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "e2735e6cffc088f85a286bcc104e6df8c92980fef61a9a6cc4ed924d7f6f3a13"
+    },
+    {
+      "file": "privacy-es.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "4ae276052ac00c20fac5239bcedb078803dbb7b842f44e4cd03cfae097229114"
+    },
+    {
+      "file": "profile-es.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "b7643e9ec7959a615623f9bef8cb15d2d43740f8455967872b5d2f5f3b3ea6df"
+    },
+    {
+      "file": "tutorial-small-es.png",
+      "width": 320,
+      "height": 568,
+      "sha256": "ec54c592b01c75c8b72cb09a0d79a14bb2952e238fdfc546e57a06baf769d9b9"
+    },
+    {
+      "file": "tutorial-1-en.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "9029d20bb067fd1d82030cbad59a486eb7bf792813be7296f43a8e8c70d713be"
+    },
+    {
+      "file": "tutorial-2-en.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "ab7fa324d412af847e4db7ab7a08b36486fc0cdec012b4acf3b2577546acc755"
+    },
+    {
+      "file": "tutorial-3-en.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "7c8c38776233eb94c33b187e80c9e89cf8905d246e5e4aa6d074fc65cce2e80f"
+    },
+    {
+      "file": "tutorial-4-en.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "f348e62b55c951305a59436aeb01fca9e1c365d2bc13e05daa82cf016b661c7b"
+    },
+    {
+      "file": "onboarding-en.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "905cbe5f8565702bde1784a5c24d7a92efbdeb54b519a0a9e3c84365bae53688"
+    },
+    {
+      "file": "library-en.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "25a222e276ff81397ff20e7f67a097c96b58aab7c949daf8fae2abfc7f158ac9"
+    },
+    {
+      "file": "new-list-en.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "15fc40cbf5c6a8fcaa59bdc894bf6b9eb7cef69260fb375129181f232f2b4144"
+    },
+    {
+      "file": "default-saved-list-en.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "daf582be42879540d0fe800faa792fb24f36e78f7c83a3b40e2698cf02ad885c"
+    },
+    {
+      "file": "home-empty-en.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "a8ea4ac4f71a2b26adfd3c9a49e3252c5cf487e8a15ac54fe26a6d7b37e7dfa7"
+    },
+    {
+      "file": "join-en.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "e534a5339cdadcb0b10dfc44f013967367a7d4a2e1f4e1d6e7fd911bef045f4a"
+    },
+    {
+      "file": "text-import-en.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "aa4a66d7980c284ae11da20cfc5c8fa5e1fb073d2ed0e268dd8283aa9c1ce363"
+    },
+    {
+      "file": "text-preview-en.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "d5b55d1d18b3a9a818caa7ec1a9dfffb0df083f9f9b6024b7198ffa6220b0932"
+    },
+    {
+      "file": "autocomplete-en.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "2f109675b7cfd7f861552b9d759f6b56452f4eaa6ca09b3bcf3d3bdf17dfdffc"
+    },
+    {
+      "file": "products-en.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "b1360ba4d108a7ef9616fd7a50aa3f3cc85ce706113798a05bdfb6b811ef6ed0"
+    },
+    {
+      "file": "product-form-en.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "71d419c4652b4f9a326ea5ada9187f3df6d8867ae172781c7fea06c40724ebf2"
+    },
+    {
+      "file": "custom-photo-en.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "01ae2ff1ff05e1228da8eecf301864170bb49c0c768c9e12ce8cd29c2b09ba4c"
+    },
+    {
+      "file": "shopping-en.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "6d64df8abeb045743a5f49fa0850af0974d10a930ef640fe29d74c9879fa1170"
+    },
+    {
+      "file": "list-options-en.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "0cdd7161483b888dd99d37fe38994002466dd72b4c391f0e214a218819f69e16"
+    },
+    {
+      "file": "share-en.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "cada76bf31ee2c422ffddaff8d1e7304a36f02b3b8396ceacc9e5f5ce3796d29"
+    },
+    {
+      "file": "home-active-en.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "2688357955c8a1b6dad3ed4a813eb7d6804b18d25ab0e98ef607ab007e72effc"
+    },
+    {
+      "file": "saved-list-en.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "3fa86b3914820c4c2bd6335b36dad7fc67b856d1e7874e46adb9c94f602cce6a"
+    },
+    {
+      "file": "settings-en.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "876b740a1e0d43355f675e43ae72746a85cb88543e3b291e7e9e69cb6a608cda"
+    },
+    {
+      "file": "privacy-en.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "19c228aebdeea4dba54edb932f5690409e4c745c71a36a467ab45489a1cb9b6e"
+    },
+    {
+      "file": "profile-en.png",
+      "width": 390,
+      "height": 844,
+      "sha256": "81e48ea90ebe630223e96652e846091a30bc19fcf52e95a6ba8ca424419f67f9"
+    },
+    {
+      "file": "tutorial-small-en.png",
+      "width": 320,
+      "height": 568,
+      "sha256": "5e3ac4219d0660637447d217ec2914f49abe5eb67048d7d4c901c99ab3a42a97"
+    }
+  ]
+}

@@ -35,7 +35,27 @@ const api = async (method = 'GET', body) => {
 const current = (await api()).projects.find((p) => p.id === 'PR-016');
 assert(current && /Cesta/i.test(current.name));
 const changes = input.changes || {};
-assert(Object.keys(changes).every((k) => ['detail', 'next', 'stage'].includes(k)));
+assert(
+  Object.keys(changes).every((k) =>
+    ['detail', 'next', 'stage', 'version', 'build', 'distribution', 'tracking'].includes(k),
+  ),
+);
+if (
+  'version' in changes ||
+  'build' in changes ||
+  'distribution' in changes ||
+  'tracking' in changes
+) {
+  const evidence = JSON.parse(
+    fs.readFileSync('artifacts/testflight-20261016/apple-complete.json', 'utf8'),
+  );
+  assert.equal(evidence.version, '1.3');
+  assert.equal(evidence.buildNumber, '1');
+  assert.equal(evidence.build.attributes.processingState, 'VALID');
+  assert.equal(evidence.betaDetail.attributes.internalBuildState, 'IN_BETA_TESTING');
+  assert(evidence.membership.some((b) => b.id === evidence.build.id));
+  if (changes.tracking) changes.tracking = { ...current.tracking, ...changes.tracking };
+}
 if (Object.keys(changes).length) {
   await api('PUT', { revision: current.revision, project: { ...current, ...changes } });
 }
@@ -44,9 +64,11 @@ for (const [k, v] of Object.entries(changes)) assert.deepEqual(fresh[k], v);
 for (const [k, v] of Object.entries(current))
   if (!(k in changes) && !['revision', 'updatedAt'].includes(k)) assert.deepEqual(fresh[k], v);
 const output =
-  input.review === 'implementation'
-    ? 'artifacts/ui-implementation-20261016'
-    : 'artifacts/ui-review-20261016';
+  input.review === 'testflight'
+    ? 'artifacts/testflight-20261016'
+    : input.review === 'implementation'
+      ? 'artifacts/ui-implementation-20261016'
+      : 'artifacts/ui-review-20261016';
 fs.mkdirSync(output, { recursive: true });
 fs.writeFileSync(
   `${output}/library-${Object.keys(changes).length ? 'updated' : 'read'}.json`,

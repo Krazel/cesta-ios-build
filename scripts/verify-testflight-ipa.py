@@ -10,11 +10,12 @@ import zipfile
 
 folder = pathlib.Path(sys.argv[1]).resolve()
 manifest = json.loads((folder / 'testflight-build.json').read_text(encoding='utf-8'))
-assert manifest['version'] == '1.2.1' and str(manifest['build']) == '1'
-assert manifest['commit'] == '1aa38a8b5fe68bf6f38d319b49809d836d8d6b95'
-assert str(manifest['run']) == '38448608042'
+expected_version, expected_build, expected_commit, expected_run = sys.argv[2:6] if len(sys.argv) == 6 else ('1.2.1', '1', '1aa38a8b5fe68bf6f38d319b49809d836d8d6b95', '38448608042')
+assert manifest['version'] == expected_version and str(manifest['build']) == expected_build
+assert manifest['commit'] == expected_commit
+assert str(manifest['run']) == expected_run
 assert manifest['signatureVerified'] and manifest['uploadAccepted']
-ipa = folder / 'Cesta-1.2.1-build1-TestFlight.ipa'
+ipa = folder / f'Cesta-{expected_version}-build{expected_build}-TestFlight.ipa'
 digest = hashlib.sha256(ipa.read_bytes()).hexdigest()
 assert digest == manifest['sha256'] and ipa.stat().st_size == manifest['bytes']
 with zipfile.ZipFile(ipa) as archive:
@@ -24,7 +25,7 @@ with zipfile.ZipFile(ipa) as archive:
     app = info_path.rsplit('/', 1)[0]
     info = plistlib.loads(archive.read(info_path))
     assert info['CFBundleIdentifier'] == manifest['bundleId'] == 'com.dmkr.cesta.B2X6D3A9J9'
-    assert info['CFBundleShortVersionString'] == '1.2.1' and str(info['CFBundleVersion']) == '1'
+    assert info['CFBundleShortVersionString'] == expected_version and str(info['CFBundleVersion']) == expected_build
     assert info['MinimumOSVersion'] == '16.4'
     assert int(info['DTXcode']) >= 2640
     assert info['CFBundleSupportedPlatforms'] == ['iPhoneOS']
@@ -42,6 +43,9 @@ with zipfile.ZipFile(ipa) as archive:
     assert struct.unpack('<I', executable[4:8])[0] == 0x100000C
     js = archive.read(app + '/main.jsbundle')
     assert b'https://cesta.krazel-zodiac-daily.workers.dev' in js
+    if expected_version == '1.3':
+        for marker in [b'View tutorial', b'Start another shop', b'Choose unit']:
+            assert marker in js, marker
     profile = archive.read(app + '/embedded.mobileprovision')
     start = profile.index(b'<?xml')
     end = profile.index(b'</plist>', start) + len(b'</plist>')
@@ -56,7 +60,7 @@ with zipfile.ZipFile(ipa) as archive:
         assert not plistlib.loads(archive.read(filename)).get('NSPrivacyTracking', False)
     receipt = {
         'checkedAt': datetime.datetime.now(datetime.timezone.utc).isoformat(),
-        'version': '1.2.1', 'build': '1', 'sha256': digest, 'bytes': ipa.stat().st_size,
+        'version': expected_version, 'build': expected_build, 'sha256': digest, 'bytes': ipa.stat().st_size,
         'commit': manifest['commit'], 'run': manifest['run'], 'zipEntries': len(names),
         'zipCRCVerified': True, 'arm64Verified': True, 'httpsInJavaScript': True,
         'minimumOS': info['MinimumOSVersion'], 'Xcode': info['DTXcode'], 'SDK': info['DTSDKName'],

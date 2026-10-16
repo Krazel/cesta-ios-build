@@ -1,0 +1,32 @@
+{
+  "approvedBy": "human user in Lista compra",
+  "date": "2026-10-16",
+  "screens": [
+    "B1",
+    "B2",
+    "B3",
+    "B4",
+    "B5",
+    "B6",
+    "B7",
+    "B8"
+  ],
+  "userSelection": "Mi elección para Cesta: Listas B1; Productos B2; Ajustes B3; Pegar lista B4; Crear producto B5; Compartir B6; Opciones de lista B7; Compra B8.",
+  "clarification": "The user did not understand Volver a usar. Relabelled Empezar otra compra with explanation and existing confirmation.",
+  "references": [
+    {
+      "file": "../review-20261016/proposals/B1-B3.png",
+      "sha256": "9a0204db043adf9f6681859df25bae7756070e44eb847e7684158d221eb6fd20"
+    },
+    {
+      "file": "../review-20261016/proposals/B4-B5.png",
+      "sha256": "bf339b8eb39ac2c89f9a438b24fb5285b6d07a3a5b0143990207afb4c9632fd7"
+    },
+    {
+      "file": "../review-20261016/proposals/B6-B8.png",
+      "sha256": "5c4d35755069cede12639f0ec7f7dab02716aa46b9ee47e4132c6d833b2f09b7"
+    }
+  ],
+  "implementationReview": "agent in browser; physical iPhone QA pending",
+  "nativeBuild": false
+}

@@ -26,6 +26,8 @@ export function CompactList({
   pinned,
   onActivate,
   onStore,
+  feedback,
+  feedbackError,
 }: {
   list: ShoppingList;
   shopping: boolean;
@@ -44,6 +46,8 @@ export function CompactList({
   pinned: boolean;
   onActivate: () => void;
   onStore: () => void;
+  feedback?: string;
+  feedbackError?: boolean;
 }) {
   const [draft, setDraft] = useState('');
   const [search, setSearch] = useState('');
@@ -78,7 +82,11 @@ export function CompactList({
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={
-            pinned ? t('Quitar del inicio') : complete ? t('Volver a usar') : t('Añadir al inicio')
+            pinned
+              ? t('Quitar del inicio')
+              : complete
+                ? t('Empezar otra compra')
+                : t('Añadir al inicio')
           }
           onPress={pinned ? onStore : onActivate}
           style={{
@@ -95,14 +103,29 @@ export function CompactList({
         <IconButton name="more" label={t('Opciones de la lista')} onPress={onMenu} />
       </View>
       <View style={c.meta}>
-        <Text style={c.caption} accessibilityLiveRegion="polite">
-          {shopping
-            ? t('{0} de {1} comprados', bought, list.items.length)
-            : t('{0} productos', displayed.length)}
-          {shopping
-            ? ` · ${list.items.length ? Math.round((bought / list.items.length) * 100) : 0}%`
-            : ` · ${t(pinned ? 'En inicio' : 'Guardada')}`}
-        </Text>
+        <View style={{ flex: 1, minWidth: 0, gap: 2 }}>
+          <Text style={c.caption} accessibilityLiveRegion="polite">
+            {shopping
+              ? t('{0} de {1} comprados', bought, list.items.length)
+              : t('{0} productos', displayed.length)}
+            {shopping
+              ? ` · ${list.items.length ? Math.round((bought / list.items.length) * 100) : 0}%`
+              : ` · ${t(pinned ? 'En inicio' : 'Guardada')}`}
+          </Text>
+          {!!feedback && (
+            <Text
+              accessibilityLiveRegion="polite"
+              numberOfLines={feedbackError ? undefined : 1}
+              style={{
+                fontSize: 11,
+                lineHeight: 15,
+                color: feedbackError ? '#A14734' : theme.green,
+              }}
+            >
+              {feedbackError ? feedback : '✓ ' + feedback}
+            </Text>
+          )}
+        </View>
         <View style={s.row}>
           <Pressable
             accessibilityRole="button"
@@ -161,12 +184,12 @@ export function CompactList({
         {!shopping && pinned && (
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={complete ? t('Volver a usar') : t('Abrir compra')}
+            accessibilityLabel={complete ? t('Empezar otra compra') : t('Abrir compra')}
             onPress={onActivate}
             style={c.listAction}
           >
             <Icon name="basket" size={17} />
-            <Text style={c.caption}>{complete ? t('Volver a usar') : t('Abrir compra')}</Text>
+            <Text style={c.caption}>{complete ? t('Empezar otra compra') : t('Abrir compra')}</Text>
           </Pressable>
         )}
         {!displayed.length ? (

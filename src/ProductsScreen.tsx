@@ -1,5 +1,5 @@
 import { PurchaseScope } from './PurchaseScope';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   FlatList,
   Image,
@@ -27,32 +27,12 @@ import {
 } from './store';
 import { t, productLabel } from './i18n';
 import { chooseProductPhoto } from './photos';
-import { CategoryStrip } from './CategoryStrip';
+import { ChoiceField } from './ChoiceField';
+import { ProductFields } from './ProductFields';
+import { ProductVisual } from './ProductVisual';
+export { ProductVisual } from './ProductVisual';
 import { Button, Field, Icon, IconButton, s, theme } from './ui';
 
-export function ProductVisual({ product, size = 49 }: { product: Product; size?: number }) {
-  return product.image ? (
-    <Image
-      accessibilityLabel={t('Foto de {0}', productLabel(product))}
-      source={{ uri: product.image }}
-      resizeMode="cover"
-      style={{ width: size, height: size, borderRadius: size * 0.28 }}
-    />
-  ) : (
-    <View
-      style={{
-        width: size,
-        height: size,
-        borderRadius: size * 0.28,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: categories.find((c) => c.id === product.category)?.color || '#EEEFE7',
-      }}
-    >
-      <Text style={{ fontSize: size * 0.57 }}>{product.emoji}</Text>
-    </View>
-  );
-}
 export function ProductsScreen({
   onNewList,
   activeList,
@@ -74,6 +54,13 @@ export function ProductsScreen({
   const productSize = productSizes[state.productSize];
   const [query, setQuery] = useState(''),
     [filter, setFilter] = useState('all');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [lastAdded, setLastAdded] = useState<{ key: string; at: number } | null>(null);
+  useEffect(() => {
+    if (!lastAdded) return;
+    const timer = setTimeout(() => setLastAdded(null), 2200);
+    return () => clearTimeout(timer);
+  }, [lastAdded]);
   const [editing, setEditing] = useState<Product | null>(null),
     [creating, setCreating] = useState(false);
   const [name, setName] = useState(''),
@@ -98,6 +85,7 @@ export function ProductsScreen({
         (filter === 'custom' && !!p.productId) ||
         (filter === 'favorites' && starred(p)) ||
         p.category === filter) &&
+      (categoryFilter === 'all' || p.category === categoryFilter) &&
       matchesProductSearch(p, query),
   );
   const close = () => {
@@ -144,6 +132,7 @@ export function ProductsScreen({
       close();
       setQuery('');
       setFilter('custom');
+      setCategoryFilter('all');
       setMessage(t('Producto guardado en tu catálogo'));
     } catch (e) {
       setError((e as Error).message);
@@ -158,7 +147,9 @@ export function ProductsScreen({
     if (!target || !selection.length) return;
     selection
       .filter((id) => lists.some((l) => l.id === id))
-      .forEach((id) => addProduct(id, target, amount));
+      .forEach((id) =>
+        addProduct(id, target, amount, '', purchaseOnly && oneTime && activeList?.id === id),
+      );
     setMessage(t('Añadido a {0} listas', selection.length));
     close();
   };
@@ -203,16 +194,53 @@ export function ProductsScreen({
           value={query}
           onChangeText={setQuery}
         />
-        <View style={{ paddingTop: 10 }}>
-          <CategoryStrip
-            options={[
+        <View style={{ paddingTop: 10, gap: 10 }}>
+          <View style={[s.row, { gap: 6 }]}>
+            {[
               { id: 'all', name: 'Todo', emoji: '🧺' },
               { id: 'custom', name: 'Mis productos', emoji: '🛍️' },
               { id: 'favorites', name: 'Favoritos', emoji: '❤️' },
-              ...categories,
-            ]}
-            selected={filter}
-            onSelect={setFilter}
+            ].map((option) => (
+              <Pressable
+                key={option.id}
+                accessibilityRole="button"
+                accessibilityLabel={t('Filtrar {0}', t(option.name))}
+                aria-pressed={filter === option.id}
+                accessibilityState={{ selected: filter === option.id }}
+                onPress={() => setFilter(option.id)}
+                style={[
+                  s.row,
+                  {
+                    flex: 1,
+                    minHeight: 44,
+                    justifyContent: 'center',
+                    gap: 5,
+                    borderRadius: 14,
+                    padding: 6,
+                    backgroundColor: filter === option.id ? theme.ink : '#E9EEE2',
+                  },
+                ]}
+              >
+                <Text aria-hidden>{option.emoji}</Text>
+                <Text
+                  style={{
+                    flexShrink: 1,
+                    fontSize: 12,
+                    color: filter === option.id ? '#fff' : theme.ink,
+                  }}
+                >
+                  {t(option.name)}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+          <ChoiceField
+            compact
+            label={t('Categoría')}
+            value={categoryFilter}
+            options={[{ id: 'all', name: 'Todas' }, ...categories]}
+            optionLabel="Filtrar {0}"
+            onChange={setCategoryFilter}
           />
         </View>
       </View>
@@ -271,23 +299,44 @@ export function ProductsScreen({
                 onPress={() => edit(product)}
               />
             )}
-            <IconButton
-              name="plus"
-              label={
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={
                 activeList
                   ? t('Añadir {0} a {1}', productLabel(product), activeList.name)
                   : t('Elegir listas para {0}', productLabel(product))
               }
-              color={activeList ? theme.green : theme.ink}
+              style={{
+                minWidth: 44,
+                minHeight: 44,
+                paddingHorizontal: 8,
+                borderRadius: 22,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: activeList
+                  ? lastAdded?.key === favoriteKey(product)
+                    ? '#E5EDDE'
+                    : theme.ink
+                  : 'transparent',
+              }}
               onPress={() => {
                 if (!activeList) {
                   openTarget(product);
                   return;
                 }
                 addProduct(activeList.id, product, 1, '', purchaseOnly && oneTime);
-                setMessage(t('{0} añadido a {1}', productLabel(product), activeList.name));
+                setLastAdded({ key: favoriteKey(product), at: Date.now() });
+                setMessage('');
               }}
-            />
+            >
+              {lastAdded?.key === favoriteKey(product) ? (
+                <Text accessibilityLiveRegion="polite" style={{ color: theme.green, fontSize: 12 }}>
+                  {t('✓ Añadido')}
+                </Text>
+              ) : (
+                <Icon name="plus" color={activeList ? '#fff' : theme.green} size={22} />
+              )}
+            </Pressable>
           </View>
         )}
       />
@@ -377,76 +426,28 @@ export function ProductsScreen({
                 </>
               ) : (
                 <>
-                  <View style={{ alignItems: 'center', gap: 12 }}>
-                    <ProductVisual
-                      product={{ name, unit, emoji, category, image: photo }}
-                      size={90}
-                    />
-                    <Button
-                      small
-                      secondary
-                      title={
-                        busy ? t('Preparando foto…') : photo ? t('Cambiar foto') : t('Añadir foto')
-                      }
-                      icon="image"
-                      disabled={busy}
-                      onPress={() => {
-                        setBusy(true);
-                        void chooseProductPhoto()
-                          .then((image) => {
-                            if (image) setPhoto(image);
-                          })
-                          .catch((e) => setError(e.message))
-                          .finally(() => setBusy(false));
-                      }}
-                    />
-                    {photo && (
-                      <Pressable
-                        accessibilityRole="button"
-                        accessibilityLabel={t('Quitar foto')}
-                        onPress={() => setPhoto(undefined)}
-                        style={{ padding: 8 }}
-                      >
-                        <Text style={{ color: theme.accent }}>{t('Quitar foto')}</Text>
-                      </Pressable>
-                    )}
-                    <Text style={p.caption}>{t('La foto es opcional.')}</Text>
-                  </View>
-                  <Field
-                    accessibilityLabel={t('Nombre del producto')}
-                    label={t('Producto')}
-                    placeholder={t('Por ejemplo, mi pan favorito')}
-                    value={name}
-                    onChangeText={setName}
-                    maxLength={80}
+                  <ProductFields
+                    name={name}
+                    setName={setName}
+                    unit={unit}
+                    setUnit={setUnit}
+                    emoji={emoji}
+                    setEmoji={setEmoji}
+                    category={category}
+                    setCategory={setCategory}
+                    photo={photo}
+                    setPhoto={setPhoto}
+                    busy={busy}
+                    onPhoto={() => {
+                      setBusy(true);
+                      void chooseProductPhoto()
+                        .then((image) => {
+                          if (image) setPhoto(image);
+                        })
+                        .catch((e) => setError(e.message))
+                        .finally(() => setBusy(false));
+                    }}
                   />
-                  <Field
-                    accessibilityLabel={t('Unidad')}
-                    label={t('Unidad')}
-                    value={unit}
-                    onChangeText={setUnit}
-                    maxLength={24}
-                  />
-                  <Text style={s.label}>{t('Categoría')}</Text>
-                  <View style={[s.row, { flexWrap: 'wrap', gap: 8 }]}>
-                    {categories.map((c) => (
-                      <Pressable
-                        key={c.id}
-                        accessibilityRole="button"
-                        accessibilityLabel={t('Categoría {0}', t(c.name))}
-                        aria-pressed={category === c.id}
-                        onPress={() => {
-                          setCategory(c.id);
-                          setEmoji(c.emoji);
-                        }}
-                        style={[p.chip, category === c.id && { backgroundColor: theme.ink }]}
-                      >
-                        <Text style={{ color: category === c.id ? '#fff' : theme.ink }}>
-                          {c.emoji} {t(c.name)}
-                        </Text>
-                      </Pressable>
-                    ))}
-                  </View>
                   <Button
                     title={t('Guardar producto')}
                     icon="check"

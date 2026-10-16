@@ -1,5 +1,12 @@
 # Cesta — cierre de octubre
 
+16/10, después de la elección: implementadas B1–B8 y aclarada «Empezar otra
+compra», con progreso conservado al quitar de Inicio. Tutorial mantenido. Cincuenta
+comprobaciones web (25 por idioma) y tres pruebas de compartir/offline correctas.
+Candidata local; distribución sigue 1.2.1 (1) interna. Informe y capturas en
+`design/implementation-20261016/`. Biblioteca PR-016 revisión18 verificada. No nueva
+build ni despliegue.
+
 16/10: tutorial inicial y repetible ES/EN preparado en candidata local; auditoría
 UI/UX y ocho propuestas visuales pendientes de elección. Comparativa
 `design/review-20261016/index.html`. Pruebas web ES/EN y tres pruebas compartidas

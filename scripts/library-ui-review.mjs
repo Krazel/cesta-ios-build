@@ -43,9 +43,13 @@ const fresh = (await api()).projects.find((p) => p.id === current.id);
 for (const [k, v] of Object.entries(changes)) assert.deepEqual(fresh[k], v);
 for (const [k, v] of Object.entries(current))
   if (!(k in changes) && !['revision', 'updatedAt'].includes(k)) assert.deepEqual(fresh[k], v);
-fs.mkdirSync('artifacts/ui-review-20261016', { recursive: true });
+const output =
+  input.review === 'implementation'
+    ? 'artifacts/ui-implementation-20261016'
+    : 'artifacts/ui-review-20261016';
+fs.mkdirSync(output, { recursive: true });
 fs.writeFileSync(
-  `artifacts/ui-review-20261016/library-${Object.keys(changes).length ? 'updated' : 'read'}.json`,
+  `${output}/library-${Object.keys(changes).length ? 'updated' : 'read'}.json`,
   JSON.stringify({ verifiedAt: new Date().toISOString(), project: fresh }, null, 2),
 );
 console.log(

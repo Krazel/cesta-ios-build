@@ -30,7 +30,9 @@ import { productSizes } from './src/appearance';
 import { PurchaseScope } from './src/PurchaseScope';
 import { CompactList } from './src/CompactList';
 import { HomeScreen } from './src/HomeScreen';
-import { CategoryStrip } from './src/CategoryStrip';
+import { ChoiceField } from './src/ChoiceField';
+import { ProductFields } from './src/ProductFields';
+import { SettingsScreen } from './src/SettingsScreen';
 import { TextImportForm } from './src/TextImportForm';
 import { Tutorial } from './src/Tutorial';
 import { ProductsScreen, ProductVisual } from './src/ProductsScreen';
@@ -76,6 +78,7 @@ type Sheet =
   | 'share'
   | 'join'
   | 'list-menu'
+  | 'language'
   | 'display'
   | 'profile'
   | 'privacy'
@@ -106,6 +109,7 @@ function AppContent() {
   const [sheet, setSheet] = useState<Sheet>(null);
   const [confirm, setConfirm] = useState<Confirm>(null);
   const [toast, setToast] = useState('');
+  const [toastKind, setToastKind] = useState<'success' | 'error'>('success');
   const [busy, setBusy] = useState(false);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState<Category | 'all'>('all');
@@ -134,7 +138,6 @@ function AppContent() {
   const [importTarget, setImportTarget] = useState('new');
   const [importName, setImportName] = useState('');
   const [chooseImportTarget, setChooseImportTarget] = useState(false);
-  const [targetPickerOpen, setTargetPickerOpen] = useState(false);
   const lists = currentLists();
   const active = lists.find((l) => l.id === state.selectedId);
   const openedList = detail ? lists.find((l) => l.id === openedId) : undefined;
@@ -157,7 +160,10 @@ function AppContent() {
   const catalogShown = catalog.filter(
     (p) => matchesProductSearch(p, productName) && (category === 'all' || p.category === category),
   );
-  const notify = (message: string) => setToast(message);
+  const notify = (message: string, kind: 'success' | 'error' = 'success') => {
+    setToast(message);
+    setToastKind(kind);
+  };
   useEffect(() => {
     void initialize();
     return startSync();
@@ -169,7 +175,7 @@ function AppContent() {
   }, [toast]);
   useEffect(() => {
     if (state.error) {
-      notify(state.error);
+      notify(state.error, 'error');
       clearError();
     }
   }, [state.error]);
@@ -219,7 +225,6 @@ function AppContent() {
   };
   const openTextImport = (fromHome = false) => {
     setChooseImportTarget(fromHome);
-    setTargetPickerOpen(false);
     setImportTarget(fromHome ? 'new' : active?.id || 'new');
     setImportName(tr('Mi nueva compra'));
     open('text-import');
@@ -249,7 +254,9 @@ function AppContent() {
     try {
       await action();
     } catch (e) {
-      setSheetError(e instanceof Error ? e.message : tr('No se ha podido completar.'));
+      const message = e instanceof Error ? e.message : tr('No se ha podido completar.');
+      setSheetError(message);
+      if (!sheet) notify(message, 'error');
     } finally {
       setBusy(false);
     }
@@ -313,7 +320,7 @@ function AppContent() {
   function removeFromHome(list: ShoppingList) {
     setListActive(list.id, false);
     setSheet(null);
-    notify(tr('Lista guardada. Puedes volver a usarla desde Listas.'));
+    notify(tr('Lista guardada con su progreso. La encontrarás en Listas.'));
   }
   function activateList(list: ShoppingList) {
     if (list.items.length && list.items.every((item) => item.checked)) {
@@ -720,158 +727,80 @@ function AppContent() {
               pinned={state.activeListIds.includes(openedList.id)}
               onActivate={() => activateList(openedList)}
               onStore={() => removeFromHome(openedList)}
+              feedback={toast}
+              feedbackError={toastKind === 'error'}
             />
           </View>
         ) : null}
 
         {tab === 'settings' && (
-          <ScrollView contentContainerStyle={a.page}>
-            <View style={[s.row, { gap: 10, marginVertical: 14 }]}>
-              <Text style={[s.label, { flex: 1 }]}>{tr('Idioma')}</Text>
-              {(['es', 'en'] as const).map((language) => (
-                <Pressable
-                  key={language}
-                  accessibilityRole="button"
-                  accessibilityLabel={language === 'es' ? tr('Español') : tr('English')}
-                  aria-pressed={state.language === language}
-                  onPress={() => setLanguage(language)}
-                  style={[a.chip, state.language === language && a.chipSelected]}
-                >
-                  <Text style={{ color: state.language === language ? '#fff' : theme.ink }}>
-                    {language === 'es' ? tr('Español') : tr('English')}
-                  </Text>
-                </Pressable>
-              ))}
-            </View>
-            <View style={{ marginVertical: 16 }}>
-              <ProductSizeSettings />
-            </View>
-            <Text style={a.eyebrow}>{tr('TODO A TU GUSTO')}</Text>
-            <Text style={[s.title, { marginTop: 10, marginBottom: 24 }]}>
-              {tr('Tu pequeño espacio.')}
-            </Text>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel={tr('Cambiar nombre')}
-              onPress={() => {
-                setName(state.snapshot.device.name);
-                open('profile');
-              }}
-              style={[a.listCard, s.row, { gap: 15 }]}
-            >
-              <View style={a.avatar}>
-                <Text style={a.avatarText}>
-                  {state.snapshot.device.name.charAt(0).toUpperCase()}
-                </Text>
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text style={a.cardTitle}>{state.snapshot.device.name}</Text>
-                <Text style={[a.caption, { marginTop: 5 }]}>
-                  {tr('Así te ven en tus listas compartidas')}{' '}
-                </Text>
-              </View>
-              <Icon name="edit" size={20} />
-            </Pressable>
-            <Text style={[a.categoryTitle, { marginTop: 30, marginBottom: 12 }]}>
-              {tr('TUS DATOS, CONTIGO')}{' '}
-            </Text>
-            <View style={a.itemsGroup}>
-              {[
-                {
-                  icon: 'lists',
-                  title: tr('Ver tutorial'),
-                  subtitle: tr('Un repaso rápido de Cesta'),
-                  action: () => setTutorialReplay(true),
+          <SettingsScreen
+            onProfile={() => {
+              setName(state.snapshot.device.name);
+              open('profile');
+            }}
+            onLanguage={() => open('language')}
+            onSize={() => open('display')}
+            onTutorial={() => setTutorialReplay(true)}
+            onExport={() => void exportBackup().catch((e) => notify(e.message, 'error'))}
+            onImport={() => void importBackup().catch((e) => notify(e.message, 'error'))}
+            onJoin={() => {
+              setJoinCode('');
+              open('join');
+            }}
+            onSync={() =>
+              void run(async () => {
+                await synchronize();
+                notify(tr('Sincronización comprobada.'));
+              })
+            }
+            onPrivacy={() => open('privacy')}
+            onErase={() =>
+              setConfirm({
+                title: tr('¿Borrar tus datos?'),
+                body: tr(
+                  'Se eliminarán tus listas, incluso las que compartes, y tu acceso a listas de otras personas. Guarda una copia antes. Esta acción no se puede deshacer.',
+                ),
+                label: tr('Borrar mis datos'),
+                action: async () => {
+                  await eraseDevice();
+                  setTab('home');
+                  setDetail(false);
                 },
-                {
-                  icon: 'download',
-                  title: tr('Guardar una copia'),
-                  subtitle: tr('Todas tus listas en un archivo'),
-                  action: () => void exportBackup().catch((e) => notify(e.message)),
-                },
-                {
-                  icon: 'upload',
-                  title: tr('Importar una copia'),
-                  subtitle: tr('Recupera listas como copias privadas'),
-                  action: () => void importBackup().catch((e) => notify(e.message)),
-                },
-                {
-                  icon: 'link',
-                  title: tr('Usar otro dispositivo'),
-                  subtitle: tr('Abre una invitación a la misma lista'),
-                  action: () => {
-                    setJoinCode('');
-                    open('join');
-                  },
-                },
-                {
-                  icon: 'refresh',
-                  title: tr('Sincronizar ahora'),
-                  subtitle: state.pending.length
-                    ? tr('{0} cambios por enviar', state.pending.length)
-                    : state.online
-                      ? tr('Tus cambios están al día')
-                      : tr('Trabajando sin conexión'),
-                  action: () =>
-                    void run(async () => {
-                      await synchronize();
-                      notify(tr('Sincronización comprobada.'));
-                    }),
-                },
-                {
-                  icon: 'heart',
-                  title: tr('Privacidad'),
-                  subtitle: tr('Lo que guardamos y por qué'),
-                  action: () => open('privacy'),
-                },
-              ].map((x) => (
-                <Pressable
-                  key={x.title}
-                  accessibilityRole="button"
-                  accessibilityLabel={x.title}
-                  onPress={x.action}
-                  style={a.settingRow}
-                >
-                  <Icon name={x.icon} color={theme.green} />
-                  <View style={{ flex: 1, gap: 5 }}>
-                    <Text style={a.smallHeading}>{x.title}</Text>
-                    <Text style={a.caption}>{x.subtitle}</Text>
-                  </View>
-                  <Icon name="chevron" size={17} color={theme.muted} />
-                </Pressable>
-              ))}
-            </View>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel={tr('Borrar mis datos')}
-              onPress={() =>
-                setConfirm({
-                  title: tr('¿Borrar tus datos?'),
-                  body: tr(
-                    'Se eliminarán tus listas, incluso las que compartes, y tu acceso a listas de otras personas. Guarda una copia antes. Esta acción no se puede deshacer.',
-                  ),
-                  label: tr('Borrar mis datos'),
-                  action: async () => {
-                    await eraseDevice();
-                    setTab('home');
-                    setDetail(false);
-                  },
-                })
-              }
-              style={{ paddingVertical: 24 }}
-            >
-              <Text style={{ fontSize: 14, color: '#AC5141' }}>{tr('Borrar mis datos')}</Text>
-            </Pressable>
-            <View style={{ alignItems: 'center', marginTop: 28, gap: 8 }}>
-              <View style={a.wordmark}>
-                <Icon name="basket" color={theme.muted} />
-                <Text style={[a.brand, { fontSize: 28, color: theme.muted }]}>cesta</Text>
-              </View>
-              <Text style={a.caption}>{tr('Hecha para las pequeñas cosas · v1.0')}</Text>
-            </View>
-          </ScrollView>
+              })
+            }
+          />
         )}
       </View>
+      {!!toast && !showingList && !sheet && (
+        <View
+          accessibilityLiveRegion="polite"
+          style={[
+            s.row,
+            {
+              padding: 10,
+              paddingHorizontal: 20,
+              gap: 8,
+              backgroundColor: toastKind === 'error' ? '#F9E7DE' : '#E5EDDE',
+            },
+          ]}
+        >
+          <Icon
+            name={toastKind === 'error' ? 'close' : 'check'}
+            size={17}
+            color={toastKind === 'error' ? '#A14734' : theme.green}
+          />
+          <Text
+            style={{
+              flex: 1,
+              color: toastKind === 'error' ? '#A14734' : theme.green,
+              fontSize: 12,
+            }}
+          >
+            {toast}
+          </Text>
+        </View>
+      )}
       {nav()}
 
       <Modal
@@ -899,29 +828,31 @@ function AppContent() {
               ]}
             >
               <Text style={[a.sectionTitle, { flex: 1 }]}>
-                {sheet === 'display'
-                  ? tr('Tamaño de los productos')
-                  : sheet === 'new'
-                    ? editingList
-                      ? tr('Un nuevo aire')
-                      : tr('Una nueva lista')
-                    : sheet === 'text-import'
-                      ? tr('Del texto a tu compra')
-                      : sheet === 'add'
-                        ? tr('¿Qué añadimos?')
-                        : sheet === 'edit'
-                          ? editingItem
-                            ? tr('A tu gusto')
-                            : tr('Tu propio producto')
-                          : sheet === 'share'
-                            ? tr('Una cesta compartida')
-                            : sheet === 'join'
-                              ? tr('La compra, juntos')
-                              : sheet === 'profile'
-                                ? tr('Así te llamamos')
-                                : sheet === 'privacy'
-                                  ? tr('Tu privacidad')
-                                  : tr('Tu lista, a tu manera')}
+                {sheet === 'language'
+                  ? tr('Idioma')
+                  : sheet === 'display'
+                    ? tr('Tamaño de los productos')
+                    : sheet === 'new'
+                      ? editingList
+                        ? tr('Un nuevo aire')
+                        : tr('Una nueva lista')
+                      : sheet === 'text-import'
+                        ? tr('Pegar lista')
+                        : sheet === 'add'
+                          ? tr('¿Qué añadimos?')
+                          : sheet === 'edit'
+                            ? editingItem
+                              ? tr('A tu gusto')
+                              : tr('Tu propio producto')
+                            : sheet === 'share'
+                              ? tr('Compartir {0}', active?.name || '')
+                              : sheet === 'join'
+                                ? tr('La compra, juntos')
+                                : sheet === 'profile'
+                                  ? tr('Así te llamamos')
+                                  : sheet === 'privacy'
+                                    ? tr('Tu privacidad')
+                                    : tr('Opciones de {0}', active?.name || '')}
               </Text>
               <IconButton
                 name="close"
@@ -932,52 +863,63 @@ function AppContent() {
             <ScrollView
               keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 10, gap: 18 }}
+              contentContainerStyle={{
+                paddingHorizontal: 24,
+                paddingBottom: 10,
+                gap: sheet === 'list-menu' ? 0 : 18,
+              }}
             >
+              {!!toast && !sheetError && (
+                <Text
+                  accessibilityLiveRegion="polite"
+                  style={{ color: toastKind === 'error' ? '#A14734' : theme.green, fontSize: 12 }}
+                >
+                  {toast}
+                </Text>
+              )}
               {sheetError && (
                 <Text accessibilityRole="alert" style={a.error}>
                   {sheetError}
                 </Text>
               )}
+              {sheet === 'language' && (
+                <View style={{ gap: 10 }}>
+                  {(['es', 'en'] as const).map((language) => (
+                    <Button
+                      key={language}
+                      title={language === 'es' ? 'Español' : 'English'}
+                      secondary={state.language !== language}
+                      onPress={() => {
+                        setLanguage(language);
+                        setSheet(null);
+                      }}
+                    />
+                  ))}
+                </View>
+              )}
               {sheet === 'display' && <ProductSizeSettings />}
               {sheet === 'text-import' && (
                 <>
                   {chooseImportTarget && (
-                    <View style={{ gap: 8 }}>
-                      <Text style={s.label}>{tr('Añadir a')}</Text>
-                      <Pressable
-                        accessibilityRole="button"
-                        accessibilityLabel={tr('Elegir destino')}
-                        accessibilityState={{ expanded: targetPickerOpen }}
-                        onPress={() => setTargetPickerOpen(!targetPickerOpen)}
-                        style={[s.row, { minHeight: 44, gap: 8 }]}
-                      >
-                        <Icon name="down" size={17} />
-                        <Text style={s.label}>
-                          {importTarget === 'new'
-                            ? tr('Crear nueva lista')
-                            : lists.find((list) => list.id === importTarget)?.name}
-                        </Text>
-                      </Pressable>
-                      {targetPickerOpen &&
-                        [{ id: 'new', name: tr('Crear nueva lista') }, ...lists].map((list) => (
-                          <Pressable
-                            key={list.id}
-                            accessibilityRole="radio"
-                            accessibilityState={{ checked: importTarget === list.id }}
-                            aria-checked={importTarget === list.id}
-                            accessibilityLabel={list.name}
-                            onPress={() => {
-                              setImportTarget(list.id);
-                              setTargetPickerOpen(false);
-                            }}
-                            style={[s.row, { minHeight: 44, gap: 9 }]}
-                          >
-                            <Icon name={importTarget === list.id ? 'check' : 'plus'} size={18} />
-                            <Text style={s.label}>{list.name}</Text>
-                          </Pressable>
-                        ))}
-                      {importTarget === 'new' && (
+                    <ChoiceField
+                      compact
+                      label={tr('Elegir destino')}
+                      value={importTarget}
+                      options={[
+                        { id: 'new', name: tr('Crear nueva lista'), literal: true },
+                        ...lists.map((list) => ({
+                          id: list.id,
+                          name: list.name,
+                          literal: true,
+                          emoji: list.emoji,
+                        })),
+                      ]}
+                      onChange={setImportTarget}
+                    />
+                  )}
+                  <TextImportForm
+                    beforeSubmit={
+                      chooseImportTarget && importTarget === 'new' ? (
                         <Field
                           label={tr('Nombre de la lista')}
                           accessibilityLabel={tr('Nombre de la lista')}
@@ -985,10 +927,8 @@ function AppContent() {
                           onChangeText={setImportName}
                           maxLength={80}
                         />
-                      )}
-                    </View>
-                  )}
-                  <TextImportForm
+                      ) : undefined
+                    }
                     catalog={catalog}
                     onAdd={(items) => {
                       if (importTarget === 'new' && !importName.trim())
@@ -1147,11 +1087,13 @@ function AppContent() {
                       />
                     )}
                   </View>
-                  <CategoryStrip
-                    options={[{ id: 'all', name: 'Todo', emoji: '🧺' }, ...categories]}
-                    selected={category}
-                    onSelect={(id) => setCategory(id as Category | 'all')}
-                    label="Catálogo {0}"
+                  <ChoiceField
+                    compact
+                    label={tr('Categoría')}
+                    value={category}
+                    options={[{ id: 'all', name: 'Todas' }, ...categories]}
+                    optionLabel="Filtrar {0}"
+                    onChange={(value) => setCategory(value as Category | 'all')}
                   />
                   {productName.trim() &&
                     !catalog.some((p) => normalize(productLabel(p)) === normalize(productName)) && (
@@ -1260,117 +1202,28 @@ function AppContent() {
               )}
               {sheet === 'edit' && (
                 <>
-                  <View style={{ alignItems: 'center' }}>
-                    <ProductVisual
-                      product={{
-                        name: productName,
-                        unit,
-                        emoji: productEmoji,
-                        category: productCategory,
-                        image: productImage,
-                      }}
-                      size={86}
-                    />
-                    <View style={{ marginTop: 12, gap: 8 }}>
-                      <Button
-                        secondary
-                        small
-                        title={productImage ? tr('Cambiar foto') : tr('Añadir foto')}
-                        icon="image"
-                        disabled={busy}
-                        onPress={() =>
-                          void run(async () => {
-                            const image = await chooseProductPhoto();
-                            if (image) setProductImage(image);
-                          })
-                        }
-                      />
-                      {productImage && (
-                        <Button
-                          secondary
-                          small
-                          title={tr('Quitar foto')}
-                          onPress={() => setProductImage(undefined)}
-                        />
-                      )}
-                    </View>
-                  </View>
-                  <Field
-                    accessibilityLabel={tr('Nombre del producto')}
-                    label={tr('Producto')}
-                    value={productName}
-                    onChangeText={setProductName}
-                    placeholder={tr('¿Qué necesitas?')}
-                    maxLength={80}
-                  />
-                  <View style={[s.row, { gap: 12 }]}>
-                    <View style={{ flex: 1 }}>
-                      <Field
-                        accessibilityLabel={tr('Cantidad')}
-                        label={tr('Cantidad')}
-                        value={productQuantity}
-                        onChangeText={setProductQuantity}
-                        keyboardType="decimal-pad"
-                        maxLength={7}
-                      />
-                    </View>
-                    <View style={{ flex: 1 }}>
-                      <Field
-                        accessibilityLabel={tr('Unidad')}
-                        label={tr('Unidad')}
-                        value={unit}
-                        onChangeText={setUnit}
-                        maxLength={24}
-                      />
-                    </View>
-                  </View>
-                  <View style={[s.row, { gap: 7, flexWrap: 'wrap' }]}>
-                    {[tr('ud'), 'kg', 'g', 'L', 'pack', tr('bote')].map((u) => (
-                      <Pressable
-                        key={u}
-                        accessibilityRole="button"
-                        accessibilityLabel={tr('Unidad {0}', u)}
-                        onPress={() => setUnit(u)}
-                        style={[a.chip, unit === u && a.chipSelected]}
-                      >
-                        <Text style={{ color: unit === u ? '#fff' : theme.ink, fontSize: 13 }}>
-                          {u}
-                        </Text>
-                      </Pressable>
-                    ))}
-                  </View>
-                  <Text style={s.label}>{tr('Pasillo')}</Text>
-                  <View style={[s.row, { gap: 7, flexWrap: 'wrap' }]}>
-                    {categories.map((c) => (
-                      <Pressable
-                        key={c.id}
-                        accessibilityRole="button"
-                        accessibilityLabel={tr('Categoría {0}', tr(c.name))}
-                        onPress={() => {
-                          setProductCategory(c.id);
-                          if (!editingItem) setProductEmoji(c.emoji);
-                        }}
-                        style={[a.chip, productCategory === c.id && a.chipSelected]}
-                      >
-                        <Text
-                          style={{
-                            color: productCategory === c.id ? '#fff' : theme.ink,
-                            fontSize: 12,
-                          }}
-                        >
-                          {c.emoji} {tr(c.name)}
-                        </Text>
-                      </Pressable>
-                    ))}
-                  </View>
-                  <Field
-                    accessibilityLabel={tr('Nota del producto')}
-                    label={tr('Una nota, si hace falta')}
-                    placeholder={tr('Sin lactosa, bien maduros, marca favorita…')}
-                    value={note}
-                    onChangeText={setNote}
-                    maxLength={300}
-                    multiline
+                  <ProductFields
+                    name={productName}
+                    setName={setProductName}
+                    unit={unit}
+                    setUnit={setUnit}
+                    emoji={productEmoji}
+                    setEmoji={setProductEmoji}
+                    category={productCategory}
+                    setCategory={setProductCategory}
+                    photo={productImage}
+                    setPhoto={setProductImage}
+                    busy={busy}
+                    quantity={productQuantity}
+                    setQuantity={setProductQuantity}
+                    note={note}
+                    setNote={setNote}
+                    onPhoto={() =>
+                      void run(async () => {
+                        const image = await chooseProductPhoto();
+                        if (image) setProductImage(image);
+                      })
+                    }
                   />
                   {(purchaseContext || editingItem?.oneTime) && (
                     <PurchaseScope value={editOneTime} onChange={setEditOneTime} />
@@ -1396,90 +1249,35 @@ function AppContent() {
               )}
               {sheet === 'share' && active && (
                 <>
-                  <Text style={a.smallHeading}>
-                    {state.cloud[active.id]
+                  <Text
+                    style={[
+                      a.smallHeading,
+                      {
+                        alignSelf: 'flex-start',
+                        backgroundColor: '#E5EDDE',
+                        borderRadius: 12,
+                        paddingVertical: 7,
+                        paddingHorizontal: 12,
+                      },
+                    ]}
+                  >
+                    {state.cloud[active.id]?.published
                       ? tr('Sincronización activada')
-                      : tr('Solo en este dispositivo')}
+                      : state.cloud[active.id]
+                        ? tr('Pendiente de conexión')
+                        : tr('Solo en este dispositivo')}
                   </Text>
                   <Text style={s.body}>
-                    {state.cloud[active.id]
+                    {state.cloud[active.id]?.published
                       ? tr(
                           'Solo se envían los cambios. Al volver a abrir la lista se recuperan las novedades.',
                         )
-                      : tr(
-                          'Esta lista es privada y local. Al crear una invitación, se guardará en la nube para poder compartirla.',
-                        )}
+                      : state.cloud[active.id]
+                        ? tr('La invitación necesita conexión. Tus cambios siguen guardados aquí.')
+                        : tr(
+                            'Al crear una invitación, esta lista se guardará en la nube. Las demás seguirán en tu dispositivo.',
+                          )}
                   </Text>
-                  <View style={a.shareHero}>
-                    <View style={[s.row, { justifyContent: 'center', marginBottom: 12 }]}>
-                      {active.members.slice(0, 5).map((m, i) => (
-                        <View
-                          key={m.id}
-                          style={[
-                            a.avatar,
-                            {
-                              backgroundColor:
-                                palette[['sage', 'peach', 'lilac', 'butter', 'blue'][i]].bg,
-                              marginLeft: i ? -8 : 0,
-                              borderColor: '#fff',
-                              borderWidth: 3,
-                            },
-                          ]}
-                        >
-                          <Text style={a.avatarText}>{m.name.charAt(0).toUpperCase()}</Text>
-                        </View>
-                      ))}
-                    </View>
-                    <Text style={[a.cardTitle, { textAlign: 'center' }]}>{active.name}</Text>
-                    <Text style={[s.body, { textAlign: 'center', fontSize: 14, marginTop: 8 }]}>
-                      {tr('Tú apuntas el pan. Alguien añade el café.')}
-                      {`\n`}
-                      {tr('Todos veis la misma lista.')}{' '}
-                    </Text>
-                  </View>
-                  <Text style={a.categoryTitle}>
-                    {tr('EN ESTA LISTA ·')} {active.members.length}
-                  </Text>
-                  {active.members.map((m) => (
-                    <View key={m.id} style={[s.row, { gap: 12 }]}>
-                      <View style={[a.miniAvatar, { width: 36, height: 36, borderRadius: 18 }]}>
-                        <Text style={{ fontWeight: '600', color: theme.ink }}>
-                          {m.name.charAt(0).toUpperCase()}
-                        </Text>
-                      </View>
-                      <View style={{ flex: 1 }}>
-                        <Text style={a.smallHeading}>
-                          {m.name}
-                          {m.id === state.snapshot.device.id ? ' ' + tr('(tú)') + '' : ''}
-                        </Text>
-                        <Text style={a.caption}>
-                          {m.role === 'owner'
-                            ? tr('Creó la lista')
-                            : tr('Puede añadir y marcar productos')}
-                        </Text>
-                      </View>
-                      {active.ownerId === state.snapshot.device.id &&
-                        m.id !== state.snapshot.device.id && (
-                          <IconButton
-                            name="close"
-                            label={tr('Quitar a {0}', m.name)}
-                            onPress={() =>
-                              setConfirm({
-                                title: tr('¿Quitar a {0}?', m.name),
-                                body: tr(
-                                  'Perderá el acceso a esta lista al sincronizar. También se desactivarán las invitaciones anteriores.',
-                                ),
-                                label: tr('Quitar participante'),
-                                action: async () => {
-                                  await removeMember(active.id, m.id);
-                                  setInviteCode('');
-                                },
-                              })
-                            }
-                          />
-                        )}
-                    </View>
-                  ))}
                   {active.ownerId === state.snapshot.device.id ? (
                     <>
                       {!inviteCode ? (
@@ -1490,17 +1288,8 @@ function AppContent() {
                             disabled={busy}
                             onPress={() => void shareInvitation()}
                           />
-                          <Button
-                            secondary
-                            title={tr('Usar en mis dispositivos')}
-                            icon="link"
-                            disabled={busy}
-                            onPress={() => void shareInvitation()}
-                          />
                           <Text style={a.caption}>
-                            {tr(
-                              'Abre el enlace en tu otro móvil u ordenador. Solo se sincroniza esta lista.',
-                            )}
+                            {tr('El enlace sirve también para tus otros dispositivos.')}
                           </Text>
                         </View>
                       ) : (
@@ -1543,33 +1332,79 @@ function AppContent() {
                           </Text>
                         </View>
                       )}
-                      <Pressable
-                        accessibilityRole="button"
-                        accessibilityLabel={tr('Desactivar invitaciones')}
-                        onPress={() =>
-                          setConfirm({
-                            title: tr('¿Desactivar invitaciones?'),
-                            body: tr(
-                              'Los enlaces anteriores dejarán de funcionar. Las personas que ya están en la lista conservarán su acceso.',
-                            ),
-                            label: tr('Desactivar enlaces'),
-                            action: async () => {
-                              await revoke(active.id);
-                              setInviteCode('');
-                              notify(tr('Invitaciones desactivadas'));
-                            },
-                          })
-                        }
-                        style={{ alignItems: 'center', padding: 12 }}
-                      >
-                        <Text style={a.textLink}>{tr('Desactivar enlaces anteriores')}</Text>
-                      </Pressable>
+                      {state.cloud[active.id]?.published && (
+                        <Pressable
+                          accessibilityRole="button"
+                          accessibilityLabel={tr('Desactivar invitaciones')}
+                          onPress={() =>
+                            setConfirm({
+                              title: tr('¿Desactivar invitaciones?'),
+                              body: tr(
+                                'Los enlaces anteriores dejarán de funcionar. Las personas que ya están en la lista conservarán su acceso.',
+                              ),
+                              label: tr('Desactivar enlaces'),
+                              action: async () => {
+                                await revoke(active.id);
+                                setInviteCode('');
+                                notify(tr('Invitaciones desactivadas'));
+                              },
+                            })
+                          }
+                          style={{ alignItems: 'center', padding: 12 }}
+                        >
+                          <Text style={a.textLink}>{tr('Desactivar enlaces anteriores')}</Text>
+                        </Pressable>
+                      )}
                     </>
                   ) : (
                     <Text style={s.body}>
                       {tr('Quien creó la lista puede invitar a más personas.')}
                     </Text>
                   )}
+                  <Text style={a.categoryTitle}>
+                    {tr('Participantes · {0}', active.members.length)}
+                  </Text>
+                  {active.members.map((m) => (
+                    <View key={m.id} style={[s.row, { gap: 12 }]}>
+                      <View style={[a.miniAvatar, { width: 36, height: 36, borderRadius: 18 }]}>
+                        <Text style={{ fontWeight: '600', color: theme.ink }}>
+                          {m.name.charAt(0).toUpperCase()}
+                        </Text>
+                      </View>
+                      <View style={{ flex: 1 }}>
+                        <Text style={a.smallHeading}>
+                          {m.name}
+                          {m.id === state.snapshot.device.id ? ' ' + tr('(tú)') + '' : ''}
+                        </Text>
+                        <Text style={a.caption}>
+                          {m.role === 'owner'
+                            ? tr('Creó la lista')
+                            : tr('Puede añadir y marcar productos')}
+                        </Text>
+                      </View>
+                      {active.ownerId === state.snapshot.device.id &&
+                        m.id !== state.snapshot.device.id && (
+                          <IconButton
+                            name="close"
+                            label={tr('Quitar a {0}', m.name)}
+                            onPress={() =>
+                              setConfirm({
+                                title: tr('¿Quitar a {0}?', m.name),
+                                body: tr(
+                                  'Perderá el acceso a esta lista al sincronizar. También se desactivarán las invitaciones anteriores.',
+                                ),
+                                label: tr('Quitar participante'),
+                                action: async () => {
+                                  await removeMember(active.id, m.id);
+                                  setInviteCode('');
+                                },
+                              })
+                            }
+                          />
+                        )}
+                    </View>
+                  ))}
+                  <Text style={a.caption}>{tr('Las invitaciones caducan a los 7 días.')}</Text>
                 </>
               )}
               {sheet === 'join' && (
@@ -1686,12 +1521,25 @@ function AppContent() {
                   </Text>
                   {[
                     {
+                      order: 7,
+                      section: 'ORGANIZAR',
+                      subtitle: '',
                       title: tr('Tamaño de los productos'),
                       icon: 'grid',
                       fn: () => open('display'),
                     },
-                    { title: tr('Pegar lista'), icon: 'copy', fn: () => openTextImport() },
                     {
+                      order: 1,
+                      section: 'COMPRA',
+                      subtitle: '',
+                      title: tr('Pegar lista'),
+                      icon: 'copy',
+                      fn: () => openTextImport(),
+                    },
+                    {
+                      order: 4,
+                      section: 'ORGANIZAR',
+                      subtitle: '',
                       title: tr('Compartir lista'),
                       icon: 'people',
                       fn: () => {
@@ -1702,6 +1550,9 @@ function AppContent() {
                     ...(state.cloud[active.id]
                       ? [
                           {
+                            order: 8,
+                            section: 'ORGANIZAR',
+                            subtitle: '',
                             title: tr('Guardar solo en este dispositivo'),
                             icon: 'download',
                             fn: () =>
@@ -1731,6 +1582,9 @@ function AppContent() {
                     ...(bought.length
                       ? [
                           {
+                            order: 9,
+                            section: 'LIMPIEZA',
+                            subtitle: '',
                             title: tr('Eliminar productos comprados'),
                             icon: 'check',
                             fn: () =>
@@ -1751,6 +1605,9 @@ function AppContent() {
                         ]
                       : []),
                     {
+                      order: 3,
+                      section: 'COMPRA',
+                      subtitle: '',
                       title: state.activeListIds.includes(active.id)
                         ? tr('Quitar del inicio')
                         : tr('Añadir al inicio'),
@@ -1761,6 +1618,9 @@ function AppContent() {
                           : activateList(active),
                     },
                     {
+                      order: 5,
+                      section: 'ORGANIZAR',
+                      subtitle: '',
                       title: tr('Editar nombre y color'),
                       icon: 'edit',
                       fn: () => {
@@ -1772,6 +1632,9 @@ function AppContent() {
                       },
                     },
                     {
+                      order: 6,
+                      section: 'ORGANIZAR',
+                      subtitle: '',
                       title: tr('Duplicar lista'),
                       icon: 'copy',
                       fn: () => {
@@ -1793,13 +1656,20 @@ function AppContent() {
                       },
                     },
                     {
-                      title: tr('Volver a usar'),
+                      order: 2,
+                      section: 'COMPRA',
+                      subtitle:
+                        'Desmarca los habituales y retira los extras de la compra anterior.',
+                      title: tr('Empezar otra compra'),
                       icon: 'refresh',
                       fn: () => {
                         requestReuse(active);
                       },
                     },
                     {
+                      order: 10,
+                      section: 'LIMPIEZA',
+                      subtitle: '',
                       title:
                         active.ownerId === state.snapshot.device.id
                           ? tr('Eliminar lista')
@@ -1807,26 +1677,40 @@ function AppContent() {
                       icon: 'trash',
                       fn: () => requestDelete(active),
                     },
-                  ].map((x) => (
-                    <Pressable
-                      key={x.title}
-                      accessibilityRole="button"
-                      accessibilityLabel={x.title}
-                      onPress={x.fn}
-                      style={a.settingRow}
-                    >
-                      <Icon name={x.icon} color={x.icon === 'trash' ? theme.accent : theme.ink} />
-                      <Text
-                        style={[
-                          a.smallHeading,
-                          { flex: 1, color: x.icon === 'trash' ? theme.accent : theme.ink },
-                        ]}
-                      >
-                        {x.title}
-                      </Text>
-                      <Icon name="chevron" size={17} />
-                    </Pressable>
-                  ))}
+                  ]
+                    .sort((x, y) => x.order - y.order)
+                    .map((x, index, rows) => (
+                      <React.Fragment key={x.title}>
+                        {(index === 0 || rows[index - 1].section !== x.section) && (
+                          <Text style={[a.categoryTitle, { marginTop: 12, marginBottom: 4 }]}>
+                            {tr(x.section)}
+                          </Text>
+                        )}
+                        <Pressable
+                          accessibilityRole="button"
+                          accessibilityLabel={x.title}
+                          onPress={x.fn}
+                          style={a.menuRow}
+                        >
+                          <Icon
+                            name={x.icon}
+                            color={x.icon === 'trash' ? theme.accent : theme.ink}
+                          />
+                          <View style={{ flex: 1, gap: 4 }}>
+                            <Text
+                              style={[
+                                a.smallHeading,
+                                { color: x.icon === 'trash' ? theme.accent : theme.ink },
+                              ]}
+                            >
+                              {x.title}
+                            </Text>
+                            {!!x.subtitle && <Text style={a.caption}>{tr(x.subtitle)}</Text>}
+                          </View>
+                          <Icon name="chevron" size={17} />
+                        </Pressable>
+                      </React.Fragment>
+                    ))}
                 </>
               )}
             </ScrollView>
@@ -1870,18 +1754,6 @@ function AppContent() {
           </View>
         </View>
       </Modal>
-      {toast && (
-        <View
-          pointerEvents="none"
-          accessibilityLiveRegion="polite"
-          style={[a.toast, { bottom: Math.max(insets.bottom, 10) + 87 }]}
-        >
-          <Icon name="check" size={17} color="#fff" />
-          <Text style={{ color: '#fff', fontSize: 13, flexShrink: 1, lineHeight: 19 }}>
-            {toast}
-          </Text>
-        </View>
-      )}
     </KeyboardScreen>
   );
 }
@@ -2193,6 +2065,15 @@ const a = StyleSheet.create({
     fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
     fontSize: 17,
     color: theme.green,
+  },
+  menuRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    minHeight: 52,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: theme.line,
   },
   settingRow: {
     flexDirection: 'row',

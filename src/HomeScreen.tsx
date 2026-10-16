@@ -50,7 +50,6 @@ export function HomeScreen({
           {library ? (
             <View style={{ flex: 1, gap: 4 }}>
               <Text style={h.heading}>{t('Listas')}</Text>
-              <Text style={h.caption}>{t('Guárdalas hoy. Úsalas cuando quieras.')}</Text>
             </View>
           ) : (
             <View style={[s.row, { gap: 7 }]}>
@@ -117,9 +116,7 @@ export function HomeScreen({
         contentContainerStyle={h.content}
         ListHeaderComponent={
           <View style={[s.row, { gap: 10, marginBottom: 8 }]}>
-            <Text style={library ? h.heading : s.label}>
-              {library ? t('Tus listas guardadas') : t('En compra')}
-            </Text>
+            <Text style={s.label}>{library ? t('Guardadas') : t('En compra')}</Text>
             <Text style={h.count}>{lists.length}</Text>
           </View>
         }
@@ -159,128 +156,44 @@ export function HomeScreen({
               </View>
             );
           return (
-            <View style={[h.card, wide && { flex: 1, maxWidth: '49%' }]}>
-              <View style={[s.row, { alignItems: 'flex-start' }]}>
-                <Pressable
-                  accessibilityRole="button"
-                  accessibilityLabel={t('Abrir {0}', list.name)}
-                  onPress={() => onOpen(list)}
-                  style={[s.row, { flex: 1, gap: 12, padding: 18, paddingRight: 0 }]}
-                >
-                  <View style={[h.emoji, { backgroundColor: p.bg }]}>
-                    <Text style={{ fontSize: 30 }}>{list.emoji}</Text>
-                  </View>
-                  <View style={{ flex: 1, gap: 5 }}>
-                    <Text style={h.name}>{list.name}</Text>
-                    <Text style={h.caption}>
-                      {count ? t('{0} productos', count) : t('Sin productos todavía')}
-                    </Text>
-                  </View>
-                </Pressable>
-                <View style={{ paddingTop: 11, paddingRight: 7 }}>
-                  <IconButton
-                    name="more"
-                    label={t('Opciones de {0}', list.name)}
-                    onPress={() => onMenu(list)}
-                  />
+            <View style={[h.libraryRow, wide && { flex: 1, maxWidth: '49%' }]}>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={t('Abrir {0}', list.name)}
+                onPress={() => onOpen(list)}
+                style={[s.row, { flex: 1, gap: 10, minWidth: 0, minHeight: 60 }]}
+              >
+                <View style={[h.compactEmoji, { backgroundColor: p.bg }]}>
+                  <Text style={{ fontSize: 25 }}>{list.emoji}</Text>
                 </View>
-              </View>
-              <View style={{ paddingHorizontal: 18, paddingBottom: 15 }}>
-                {!library && (
-                  <View style={[s.row, { gap: 12, marginBottom: 12 }]}>
-                    <View style={h.track}>
-                      <View
-                        style={{
-                          height: 5,
-                          width: `${count ? (done / count) * 100 : 0}%`,
-                          backgroundColor: p.dark,
-                          borderRadius: 5,
-                        }}
-                      />
-                    </View>
-                    <Text style={h.caption}>
-                      {done}/{count}
-                    </Text>
-                  </View>
-                )}
-                <View style={[s.row, { gap: 6 }]}>
-                  <Icon
-                    name={list.members.length > 1 ? 'people' : 'heart'}
-                    size={14}
-                    color={theme.muted}
-                  />
-                  <Text style={[h.caption, { flex: 1 }]}>
-                    {list.members.length > 1
-                      ? t('Compartida · {0} personas', list.members.length)
-                      : t('Solo para ti')}
+                <View style={{ flex: 1, minWidth: 0, gap: 4 }}>
+                  <Text style={[h.name, { fontSize: 15 }]} numberOfLines={2}>
+                    {list.name}
                   </Text>
-                  {library && (
-                    <Text style={[h.badge, { backgroundColor: pinned ? '#E5EDDE' : '#F0F1EB' }]}>
-                      {pinned ? t('En inicio') : t('Guardada')}
-                    </Text>
-                  )}
+                  <Text style={h.caption}>
+                    {t('{0} productos', count)} · {t(pinned ? 'En inicio' : 'Guardada')}
+                  </Text>
                 </View>
-                {library ? (
-                  <View style={[s.row, { gap: 6, marginTop: 14 }]}>
-                    <View style={{ flex: 1 }}>
-                      <Button
-                        small
-                        secondary={pinned}
-                        title={
-                          complete
-                            ? t('Volver a usar')
-                            : pinned
-                              ? t('Abrir compra')
-                              : t('Añadir al inicio')
-                        }
-                        label={
-                          complete
-                            ? t('Volver a usar {0}', list.name)
-                            : pinned
-                              ? t('Abrir compra {0}', list.name)
-                              : t('Añadir {0} al inicio', list.name)
-                        }
-                        icon={complete ? 'refresh' : pinned ? 'arrow' : 'plus'}
-                        onPress={() => (complete ? onReuse(list) : onActivate(list))}
-                      />
-                    </View>
-                    <IconButton
-                      name="trash"
-                      label={
-                        list.ownerId === state.snapshot.device.id
-                          ? t('Eliminar {0}', list.name)
-                          : t('Salir de {0}', list.name)
-                      }
-                      color={theme.accent}
-                      onPress={() => onDelete(list)}
-                    />
-                  </View>
-                ) : (
-                  <View style={[s.row, { gap: 8, marginTop: 14 }]}>
-                    <View style={{ flex: 1 }}>
-                      <Button
-                        small
-                        secondary
-                        title={complete ? t('Guardar lista') : t('Quitar del inicio')}
-                        label={
-                          complete
-                            ? t('Guardar {0}', list.name)
-                            : t('Quitar {0} del inicio', list.name)
-                        }
-                        icon={complete ? 'check' : 'close'}
-                        onPress={() => onRemove(list)}
-                      />
-                    </View>
-                    {complete && (
-                      <IconButton
-                        name="refresh"
-                        label={t('Volver a usar {0}', list.name)}
-                        onPress={() => onReuse(list)}
-                      />
-                    )}
-                  </View>
-                )}
-              </View>
+              </Pressable>
+              <Button
+                small
+                secondary={!pinned && !complete}
+                title={complete ? t('Otra compra') : pinned ? t('Abrir compra') : t('Inicio')}
+                label={
+                  complete
+                    ? t('Empezar otra compra con {0}', list.name)
+                    : pinned
+                      ? t('Abrir compra {0}', list.name)
+                      : t('Añadir {0} al inicio', list.name)
+                }
+                icon={complete ? 'refresh' : pinned ? undefined : 'plus'}
+                onPress={() => (complete ? onReuse(list) : onActivate(list))}
+              />
+              <IconButton
+                name="more"
+                label={t('Opciones de {0}', list.name)}
+                onPress={() => onMenu(list)}
+              />
             </View>
           );
         }}
@@ -374,6 +287,19 @@ const h = StyleSheet.create({
     paddingVertical: 4,
     color: theme.muted,
     fontSize: 12,
+  },
+  libraryRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingLeft: 12,
+    paddingRight: 2,
+    paddingVertical: 4,
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: theme.line,
+    borderRadius: 17,
+    backgroundColor: '#fff',
   },
   card: {
     borderRadius: 22,

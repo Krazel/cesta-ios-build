@@ -169,7 +169,7 @@ try {
     assert(saved.customProducts[0].image.startsWith('data:image/jpeg;base64,'));
     assert(saved.customProducts[0].image.length <= 60000);
     await button('Opciones de la lista', 'List options').click();
-    await button('Volver a usar', 'Use again').click();
+    await button('Empezar otra compra', 'Start another shop').click();
     await button('Empezar de nuevo', 'Start again').click();
     await expect(
       page.getByRole('checkbox', {
@@ -179,7 +179,9 @@ try {
     ).toHaveCount(0);
     await expect(page.getByRole('checkbox')).toHaveCount(3);
     await tab('Ajustes', 'Settings').click();
+    await button('Tamaño de los productos').click();
     await page.getByRole('radio', { name: t('Grande', 'Large'), exact: true }).click();
+    await button('Cerrar ventana').click();
     await tab('Inicio', 'Home').click();
     await expect(input()).toBeVisible();
     await page.setViewportSize({ width: 320, height: 740 });

@@ -42,7 +42,7 @@ test('Personal lists make no API calls; shared lists send deltas and recover off
     await expect(pa.getByText('Solo en este dispositivo', { exact: true })).toBeVisible();
     await button(pa, 'Compartir lista').click();
     const invitation = pa.waitForResponse((r) => r.url().endsWith('/invite') && r.status() === 200);
-    await button(pa, 'Usar en mis dispositivos').click();
+    await button(pa, 'Crear invitación').click();
     const data = await (await invitation).json();
     expect(data.code).toMatch(/^[a-f0-9]{32}\.[a-zA-Z0-9_-]{24}$/);
     await pa.screenshot({ path: 'artifacts/screenshots/cloud-share-es.png' });

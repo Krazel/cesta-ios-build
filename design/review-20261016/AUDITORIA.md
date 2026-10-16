@@ -1,5 +1,11 @@
 # Cesta: tutorial y revisión UI/UX — 16/10/2026
 
+Actualización posterior del mismo día: el usuario eligió expresamente B1–B8.
+Las ocho propuestas están implementadas en candidata local. «Volver a usar» se
+aclara como «Empezar otra compra». Informe y evidencia posteriores en
+`../implementation-20261016/README.md`. El resto de este documento conserva la
+auditoría y la situación de las propuestas antes de esa elección.
+
 Encargo del usuario: tutorial en primera apertura y recuperable desde Ajustes;
 revisar cada página y ofrecer una alternativa de ChatGPT Imágenes donde convenga,
 para elegir entre actual y propuesta. La elección visual sigue pendiente.

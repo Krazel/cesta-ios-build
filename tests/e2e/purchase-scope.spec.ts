@@ -96,7 +96,7 @@ for (const language of ['es', 'en'] as const) {
         }),
       ).toBeVisible();
       await button('Opciones de la lista', 'List options').click();
-      await button('Volver a usar', 'Use again').click();
+      await button('Empezar otra compra', 'Start another shop').click();
       await button('Empezar de nuevo', 'Start again').click();
       await expect(
         page.getByRole('checkbox', {

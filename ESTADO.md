@@ -1,5 +1,23 @@
 # Cesta — estado del producto
 
+## Diseños B1–B8 implementados — 2026-10-16
+
+El usuario eligió expresamente las ocho propuestas. Aplicadas: filas compactas
+de Listas sin borrado directo; categorías accesibles y feedback por producto;
+Ajustes agrupados con versión real; importación centrada en revisión; formulario
+de producto con nombre primero, foto compacta, selectores y muestra; compartir
+con una sola acción; opciones agrupadas; feedback de Compra junto al progreso.
+Se conservan los datos, extras/habituales, permisos y sincronización existentes.
+
+Por la duda del usuario, «Volver a usar» se llama «Empezar otra compra» y explica
+que desmarca habituales y retira extras. Quitar de Inicio conserva el progreso.
+Tutorial inicial/repetible conservado. TypeScript/exportación web correctos;
+25 comprobaciones por idioma ES/EN y tres pruebas compartidas locales correctas.
+Prueba real del enlace local también correcta. Evidencia y aprobación:
+`design/implementation-20261016/README.md`. No nueva IPA, TestFlight ni despliegue;
+última beta sigue 1.2.1 (1) interna. QA física pendiente. Biblioteca PR-016 guardada y releída en revisión18 con lectura fresca, conservando
+versión, build y tracking de distribución. Recibo artifacts/ui-implementation-20261016/library-updated.json.
+
 ## Tutorial y revisión visual — 2026-10-16
 
 Tutorial implementado en candidata local: cuatro pasos ES/EN antes de la primera

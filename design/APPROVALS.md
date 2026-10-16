@@ -1,5 +1,23 @@
 # Referencias visuales de Cesta
 
+## B1–B8 elegidas e implementadas — 2026-10-16
+
+El usuario pegó en este chat su elección expresa de las ocho propuestas:
+Listas B1, Productos B2, Ajustes B3, Pegar lista B4, Crear producto B5, Compartir
+B6, Opciones B7 y Compra B8. Esta elección sustituye el estado pendiente del
+apartado anterior. Referencias originales conservadas en
+`review-20261016/proposals/`; aprobación y SHA en
+`implementation-20261016/approval.json`.
+
+Implementadas en la candidata web sin cambiar proveedor, datos ni distribución.
+Se adaptan textos, unidades y estados a datos reales, no a los ejemplos de la
+imagen. Por la duda del usuario, «Volver a usar» pasa a «Empezar otra compra» y
+explica que desmarca habituales y retira extras, con confirmación cuando procede.
+«Quitar del inicio» conserva lista y progreso. Las capturas de implementación
+ES/EN están en `implementation-20261016/screenshots/`, con recibo de pruebas.
+Revisión del agente frente a las tres láminas; no implica aprobación humana
+posterior de cada píxel ni comprobación física de teclado/VoiceOver.
+
 ## Tutorial y alternativas UI/UX — 2026-10-16
 
 El usuario encarga implementar el tutorial y ofrecer alternativas con ChatGPT

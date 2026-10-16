@@ -1,5 +1,12 @@
 # Cesta — cierre de octubre
 
+16/10, subida solicitada y completada: **1.3 (1) disponible en TestFlight interno**,
+VALID e IN_BETA_TESTING; fuente c3616ea, CI38926116655, grupo y notas ES/EN
+releídos. IPA/firma/permisos/HTTPS verificados. Incluye tutorial y B1–B8. QA física
+de esta build pendiente; App Store1.2 sigue en preparación, externos sin activar.
+Detalle store/TESTFLIGHT-2026-10-16.md; biblioteca PR-016 revisión20 verificada.
+Los párrafos siguientes conservan historial.
+
 16/10, después de la elección: implementadas B1–B8 y aclarada «Empezar otra
 compra», con progreso conservado al quitar de Inicio. Tutorial mantenido. Cincuenta
 comprobaciones web (25 por idioma) y tres pruebas de compartir/offline correctas.

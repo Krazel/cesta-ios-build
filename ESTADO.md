@@ -1,5 +1,31 @@
 # Cesta — estado del producto
 
+## TestFlight 1.3 (1) entregado — 2026-10-16
+
+Tutorial y B1–B8 ya están en TestFlight interno. Build
+ea746207-c9c3-479b-ab7c-a22b9f10ac5b VALID, IN_BETA_TESTING, grupo existente y
+notas ES/EN releídos; upload COMPLETE sin errores/avisos. CI38926116655 correcto,
+fuente c3616ea1506038fb7fc662fba765cc7234951011. IPA11.235.962bytes,
+SHA256ed1137ef1c92ef1173de8458451354735aafacf7ca81a7699da6b52aaca1ca43,
+ZIP/identidad/arm64/HTTPS/permisos/perfil verificados, firma codesign correcta en CI.
+Detalle store/TESTFLIGHT-2026-10-16.md y artifacts/testflight-20261016/.
+
+Los usuarios existentes pueden ver el tutorial desde Ajustes; la primera apertura
+automática corresponde a instalaciones nuevas. QA física de esta build pendiente.
+App Store1.2 sigue PREPARE_FOR_SUBMISSION; externos sin activar. Repo PUBLIC y
+secretos protegidos conservados. No despliegue web. Biblioteca PR-016 guardada y
+releída en revisión20 con los demás valores conservados; recibo library-updated.json
+de esta entrega. Las secciones siguientes son historial de preparación/candidata.
+
+## Subida autorizada de 1.3 (1) — 2026-10-16
+
+Usuario pide TestFlight del tutorial y B1–B8. CI38926116655 iniciada desde
+c3616ea1506038fb7fc662fba765cc7234951011, repo PUBLIC y entorno protegido
+verificados. Preflight Apple no contiene1.3 y confirma grupo interno existente.
+App Store1.2 sigue en preparación. Candidata nueva todavía en compilación/firma;
+última beta disponible sigue1.2.1(1) hasta procesado/grupo verificados. Detalle
+store/TESTFLIGHT-2026-10-16.md; biblioteca PR-016 inicio revisión19 releída.
+
 ## Diseños B1–B8 implementados — 2026-10-16
 
 El usuario eligió expresamente las ocho propuestas. Aplicadas: filas compactas

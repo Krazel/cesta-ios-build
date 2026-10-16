@@ -1,10 +1,10 @@
 # Cesta
 
-Última beta entregada: **1.2.1 (1)** en TestFlight interno, verificada el13/10; [recibo de entrega](store/TESTFLIGHT-2026-10-13.md). Incluye correcciones de recuperación, plurales y permisos. [Estado y pendientes](CIERRE-OCTUBRE.md), [paquete de tienda](store/PREPARACION-TIENDA-OCTUBRE.md) y [prueba física](store/QA-IPHONE-OCTUBRE.md). Vista personal local: `node scripts/preview-local.mjs` después de `npm run build:web`, sin API de nube. QA de interfaz sin red: `node scripts/verify-local-ui.mjs`; no sustituye iPhone ni prueba cloud.
+Última beta entregada: **1.3 (1)** en TestFlight interno, verificada el16/10; [recibo de entrega](store/TESTFLIGHT-2026-10-16.md). Incluye el tutorial y los ocho diseños B1–B8 elegidos. [Estado y pendientes](CIERRE-OCTUBRE.md), [paquete de tienda](store/PREPARACION-TIENDA-OCTUBRE.md) y [prueba física](store/QA-IPHONE-OCTUBRE.md). Vista personal local: `node scripts/preview-local.mjs` después de `npm run build:web`, sin API de nube. QA de interfaz sin red: `node scripts/verify-local-ui.mjs`; no sustituye iPhone ni prueba cloud.
 
 Aplicación de listas de la compra para iPhone y web, en castellano e inglés.
 
-Web: https://cesta.krazel-zodiac-daily.workers.dev. `npm run preview` abre esta dirección pública. TestFlight interno1.2.1(1), con Internet, del2026-10-13; las pruebas físicas de esta beta siguen pendientes. No nueva publicación web por esta subida.
+Web: https://cesta.krazel-zodiac-daily.workers.dev. `npm run preview` abre esta dirección pública. TestFlight interno1.3(1), con Internet, del2026-10-16; las pruebas físicas de esta beta siguen pendientes. No nueva publicación web por esta subida.
 
 El usuario ordenó el 13/10 volver público Krazel/cesta-ios-build antes de esta build, para usar Actions estándar gratuitas; visibilidad PUBLIC releída por API. Esta excepción sustituye para Cesta la preferencia privada del 12/10. Soporte público: https://krazel.github.io/cesta/support/. Privacidad pública: https://krazel.github.io/cesta/privacy/. Se conservan los secretos en app-store-production, restringido a main. La CI de TestFlight sigue exigiendo propietario y main; si se vuelve a privado, requiere comprobación de cuota/entorno antes de su input manual. No se activan planes ni gastos.
 

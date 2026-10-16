@@ -1,5 +1,12 @@
 # Cesta — preparación de TestFlight
 
+16/10/2026: última beta **1.3 (1)** interna, Apple VALID e IN_BETA_TESTING,
+CI38926116655, build ea746207-c9c3-479b-ab7c-a22b9f10ac5b. Tutorial y B1–B8
+incluidos; firma, IPA, HTTPS, permisos, notas ES/EN y grupo existente verificados.
+Biblioteca PR-016 revisión20 guardada/releída. QA física pendiente; sin externos
+ni App Review. Detalle [entrega del16/10](TESTFLIGHT-2026-10-16.md). Los apartados
+siguientes conservan las entregas y decisiones anteriores.
+
 13/10/2026: última beta **1.2.1 (1)** interna, Apple VALID e IN_BETA_TESTING; CI38448608042, build63e90ccf-5fbf-41e7-875e-2a37dc3638e4. Recuperación/plurales/permisos corregidos. Repositorio PUBLIC por petición expresa posterior a la regla privada. API y runtime local recuperados mediante vías aprobadas; tester ya INSTALLED para la app existente. Prueba física de esta nueva build pendiente. No externos/App Review; borrador comercial1.2 sigue en preparación. Recibo store/TESTFLIGHT-2026-10-13.md y D1 PR-016 rev16 verificada; versiones anteriores conservadas como historial.
 
 ## Enlaces tras privatización — 2026-10-12

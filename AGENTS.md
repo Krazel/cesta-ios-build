@@ -21,3 +21,12 @@ Por petición posterior del usuario, Krazel/cesta-ios-build es privado. Soporte 
 ## Excepción expresa posterior — 2026-10-13
 
 El usuario solicita «sube a testflight» y, ante la comprobación de cuota privada, ordena: «tiene que ser repositorio público antes de hacer [...] las builds [...] ponlo público». Esta instrucción humana posterior autoriza volver público únicamente Krazel/cesta-ios-build y ejecutar la beta solicitada mediante runner estándar público, sin nuevos gastos. Sustituye para Cesta la prohibición anterior de reabrir código. Conservar soporte/privacidad independientes y secretos protegidos; no publicar Studio, APIs/IOS, datos, material de firma ni contactos privados. No autoriza App Review, testers externos ni cambios de otros productos. Comprobar y releer la visibilidad por API; esta anotación no significa que el cambio ya se haya realizado.
+
+## TestFlight del rediseño — 2026-10-16
+
+Tras elegir e implementar B1–B8, el usuario pide expresamente «súbelo a
+TestFlight». Autoriza compilar, firmar, subir y distribuir internamente Cesta
+1.3 (1), con el tutorial y esos diseños, reutilizando el grupo y firma existentes.
+Conservar el repositorio público según la excepción anterior. No incluye App
+Review, distribución externa ni publicación comercial. Futuras builds requieren
+otra petición expresa. Detalle y estado real: store/TESTFLIGHT-2026-10-16.md.

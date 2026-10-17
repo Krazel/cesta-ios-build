@@ -1,5 +1,23 @@
 # Cesta — estado del producto
 
+## Entrega1.4(1) — 17/10/2026
+
+17/10/2026: **Cesta1.4(1) disponible en TestFlight interno**, Apple VALID e
+IN_BETA_TESTING. Build68e9e8f8-88ac-455e-be6a-7d21928d375d, notas ES/EN y grupo
+existente releídos. CI39051045729, fuente f8657aae745ba852b3970716b728342a608838fd.
+Compras de Inicio separadas de Listas guardadas, copias con progreso independiente,
+actualización expresa desde opciones, retirada fácil y comprados separados al final
+incluso por pasillos. Tutorial ES/EN explica también compartir compras por invitación.
+IPA11.238.653bytes, SHA2561ee8d7af1f04531a244bcfa71553246c2d7d881762965a83f99cc02fef229e28.
+Firma/identidad/arm64/HTTPS/permisos/perfil comprobados. Quince pruebas de texto,
+modelo y sync,56comprobaciones web ES/EN con60capturas, seis pruebas UI locales de
+nube/aislamiento/migración correctas. Servicio público responde con protocolo2
+por CI39051616877; timeout TCP de este equipo, no incidencia del Worker confirmada.
+QA física pendiente. App Store1.2 PREPARE_FOR_SUBMISSION, externos sin activar.
+Biblioteca PR-016 revisión22 guardada y releída. Web pública sin nuevo despliegue.
+
+Los apartados siguientes conservan el historial.
+
 ## Compras independientes y tutorial conjunto — 2026-10-17
 
 Candidata1.4(1) implementada y autorizada para TestFlight interno. Listas e Inicio

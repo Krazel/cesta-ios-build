@@ -45,10 +45,10 @@ with zipfile.ZipFile(ipa) as archive:
     assert b'https://cesta.krazel-zodiac-daily.workers.dev' in js
     if expected_version == '1.3':
         for marker in [b'View tutorial', b'Start another shop', b'Choose unit']:
-            assert marker in js, marker
+            assert marker in js or marker.decode().encode('utf-16le') in js, marker
     if expected_version == '1.4':
         for marker in [b'purchaseSources', b'Update saved list', b'Finish shop', b'Bought', b'You can shop together']:
-            assert marker in js, marker
+            assert marker in js or marker.decode().encode('utf-16le') in js, marker
     profile = archive.read(app + '/embedded.mobileprovision')
     start = profile.index(b'<?xml')
     end = profile.index(b'</plist>', start) + len(b'</plist>')

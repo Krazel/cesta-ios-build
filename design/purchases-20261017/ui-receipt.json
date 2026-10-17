@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-17T16:43:58.574Z",
+  "checkedAt": "2026-10-17T16:49:22.418Z",
   "mode": "offline-static-browser",
   "liveCloudVerified": false,
   "nativeDeviceVerified": false,
@@ -38,7 +38,7 @@
         "reduced-viewport"
       ],
       "personalApiCallsBeforeSharing": 0,
-      "explicitOfflineShareRequests": 5,
+      "explicitOfflineShareRequests": 4,
       "runtimeErrors": 0
     },
     {
@@ -82,360 +82,1990 @@
   "screenshots": [
     {
       "file": "tutorial-1-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "Guarda una lista. Úsala cuando quieras.",
+            "rect": {
+              "x": 24,
+              "y": 428,
+              "width": 342,
+              "height": 76,
+              "top": 428,
+              "right": 366,
+              "bottom": 504,
+              "left": 24
+            }
+          }
+        ]
+      },
       "width": 390,
       "height": 844,
       "sha256": "62daf0886af484d59d45e88ca57d5d507fead0118a7e74e7a234143319906e91"
     },
     {
       "file": "tutorial-2-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "Añade a tu manera.",
+            "rect": {
+              "x": 24,
+              "y": 428,
+              "width": 342,
+              "height": 38,
+              "top": 428,
+              "right": 366,
+              "bottom": 466,
+              "left": 24
+            }
+          }
+        ]
+      },
       "width": 390,
       "height": 844,
       "sha256": "948c8d590023ca9e9ccc889537204443e8b04c04ee608d77fdbef49797e472e5"
     },
     {
       "file": "tutorial-3-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "Lo de hoy y lo de siempre.",
+            "rect": {
+              "x": 24,
+              "y": 428,
+              "width": 342,
+              "height": 76,
+              "top": 428,
+              "right": 366,
+              "bottom": 504,
+              "left": 24
+            }
+          }
+        ]
+      },
       "width": 390,
       "height": 844,
       "sha256": "5d0b4af00c311478efcdd608620e88fb544bc02437fe703abaacaa6e49af95e3"
     },
     {
       "file": "tutorial-4-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "También podéis comprar juntos.",
+            "rect": {
+              "x": 24,
+              "y": 428,
+              "width": 342,
+              "height": 76,
+              "top": 428,
+              "right": 366,
+              "bottom": 504,
+              "left": 24
+            }
+          }
+        ]
+      },
       "width": 390,
       "height": 844,
       "sha256": "3e3d8acda86a5bb6125c30277f01a2747c9795c7705483382ee9e90dd82eee4e"
     },
     {
       "file": "onboarding-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": []
+      },
       "width": 390,
       "height": 844,
       "sha256": "53f2810265b3f63e2ac2ee95c2ebb8ce593991ac2401b2639c39d66f2f934861"
     },
     {
       "file": "library-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "edbcf3bca89b2569d41b6d1086fb25d6682e0d64aaafeb2624c0015933724492"
     },
     {
       "file": "new-list-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "409639096d92e37faf19e371ffc9b6972abeec127536e9010a2199cf40ed87bb"
     },
     {
       "file": "default-saved-list-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🥑 Compra semanal",
+            "rect": {
+              "x": 56,
+              "y": 12,
+              "width": 211.625,
+              "height": 28,
+              "top": 12,
+              "right": 267.625,
+              "bottom": 40,
+              "left": 56
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "1b5b2ea3612bf5d935cbcee9e85872724e3a181b00ac7c96e10918e94f2b6361"
     },
     {
       "file": "home-empty-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "f31b8cdeaa493809bf7b4cb1edcf09c97fe4a93ff0d7c60024db09c19f3a3774"
     },
     {
       "file": "join-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "d1aa3c3d59bc90f872301a4b05cc07a3a864cb40c2aafebb5fa921235407e0bd"
     },
     {
       "file": "text-import-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "40fc4c8f8d67b3629c3ac1c6f95c4df0ee60889a4cb9313fba20cb07ef0d0dfe"
     },
     {
       "file": "text-preview-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "013ff02b2df0884c2f8a8e7a54f15057eedf168f2b8bed67412dfccfc9493746"
     },
     {
       "file": "purchase-feedback-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 56,
+              "y": 12,
+              "width": 211.625,
+              "height": 28,
+              "top": 12,
+              "right": 267.625,
+              "bottom": 40,
+              "left": 56
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "324afd942513cf5fb5d01a53ca13290f8ea04c0a6fd2000553487aaea33eaaf1"
     },
     {
       "file": "autocomplete-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 56,
+              "y": 12,
+              "width": 211.625,
+              "height": 28,
+              "top": 12,
+              "right": 267.625,
+              "bottom": 40,
+              "left": 56
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "91484c0f01f2e0808ac83d7bb75dedb1b99660e9dadf936713de13c01b2d9981"
     },
     {
       "file": "products-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0,
+              "left": 0
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "46f45a80129b175e20a640879c91cc8c2e3b9466abc76ffd4c6a36a11f7f88cb"
     },
     {
       "file": "category-filter-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0,
+              "left": 0
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "208e59d7f67b9f86f0331e08260042a7ba2dbfaa36021859eb93ae2e44fa2d2a"
     },
     {
       "file": "product-form-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0,
+              "left": 0
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "80de2813a22d5203664b54d6db57a79aaafd7aa8cc3537106a9b881fc0edbfed"
     },
     {
       "file": "custom-photo-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0,
+              "left": 0
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "8ced99346e3b6603aaee4e91a9d496a2ea826203b7814c7c7859d98af38c868e"
     },
     {
       "file": "shopping-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 56,
+              "y": 12,
+              "width": 211.625,
+              "height": 28,
+              "top": 12,
+              "right": 267.625,
+              "bottom": 40,
+              "left": 56
+            }
+          },
+          {
+            "text": "Comprados · 1",
+            "rect": {
+              "x": 18,
+              "y": 398,
+              "width": 354,
+              "height": 26,
+              "top": 398,
+              "right": 372,
+              "bottom": 424,
+              "left": 18
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "a520273a9e35961a35d26ae9b0548ef0837f4b0bd4e97f33809bf94455e1eaa5"
     },
     {
       "file": "list-options-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 56,
+              "y": 12,
+              "width": 211.625,
+              "height": 28,
+              "top": 12,
+              "right": 267.625,
+              "bottom": 40,
+              "left": 56
+            }
+          },
+          {
+            "text": "Comprados · 1",
+            "rect": {
+              "x": 18,
+              "y": 398,
+              "width": 354,
+              "height": 26,
+              "top": 398,
+              "right": 372,
+              "bottom": 424,
+              "left": 18
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "30ffbc508e68e587b59b3d70f311599190f227b670ea37d506e6640f84313057"
     },
     {
       "file": "share-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 56,
+              "y": 12,
+              "width": 211.625,
+              "height": 28,
+              "top": 12,
+              "right": 267.625,
+              "bottom": 40,
+              "left": 56
+            }
+          },
+          {
+            "text": "Comprados · 1",
+            "rect": {
+              "x": 18,
+              "y": 398,
+              "width": 354,
+              "height": 26,
+              "top": 398,
+              "right": 372,
+              "bottom": 424,
+              "left": 18
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "e4678ac6fe5aafec978eb694d6374ffbe286fee08cecadc213d64a4184f7bce2"
     },
     {
       "file": "share-offline-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 56,
+              "y": 12,
+              "width": 211.625,
+              "height": 28,
+              "top": 12,
+              "right": 267.625,
+              "bottom": 40,
+              "left": 56
+            }
+          },
+          {
+            "text": "Comprados · 1",
+            "rect": {
+              "x": 18,
+              "y": 398,
+              "width": 354,
+              "height": 26,
+              "top": 398,
+              "right": 372,
+              "bottom": 424,
+              "left": 18
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "ffe2115ad7c05b04d3cc4859b342d2bde7a7d79e8e191e29b5ce902cadc53b16"
     },
     {
       "file": "home-active-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "bc32477b64362d021e2c86c7dd7b3981655378855e832d0fea020188f976bfb0"
     },
     {
       "file": "saved-list-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 56,
+              "y": 12,
+              "width": 211.625,
+              "height": 28,
+              "top": 12,
+              "right": 267.625,
+              "bottom": 40,
+              "left": 56
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "97a3e07bc78a5b9fa99c70322c18a0b16e568205175743779fe4e2923429d73e"
     },
     {
       "file": "purchased-separated-aisles-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 56,
+              "y": 12,
+              "width": 211.625,
+              "height": 28,
+              "top": 12,
+              "right": 267.625,
+              "bottom": 40,
+              "left": 56
+            }
+          },
+          {
+            "text": "Comprados · 1",
+            "rect": {
+              "x": 18,
+              "y": 605,
+              "width": 354,
+              "height": 26,
+              "top": 605,
+              "right": 372,
+              "bottom": 631,
+              "left": 18
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "7dce52a7e85fd59f1e33f6ad2f7e5094fea9fa2edb26671a16c907a4f5429e9e"
     },
     {
       "file": "complete-remove-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 56,
+              "y": 12,
+              "width": 211.625,
+              "height": 28,
+              "top": 12,
+              "right": 267.625,
+              "bottom": 40,
+              "left": 56
+            }
+          },
+          {
+            "text": "Comprados · 5",
+            "rect": {
+              "x": 18,
+              "y": 248,
+              "width": 354,
+              "height": 26,
+              "top": 248,
+              "right": 372,
+              "bottom": 274,
+              "left": 18
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "5dc4213ae79773d956a238abb8204cc58ab763713d75e1f8b7c05094b9ed196f"
     },
     {
       "file": "settings-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0,
+              "left": 0
+            }
+          },
+          {
+            "text": "Ajustes",
+            "rect": {
+              "x": 20,
+              "y": 20,
+              "width": 350,
+              "height": 36,
+              "top": 20,
+              "right": 370,
+              "bottom": 56,
+              "left": 20
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "4e1293d948ef9f6b039288bf69ca260d4a646a55a43d4e2aa4522ae97a72f8f2"
     },
     {
       "file": "privacy-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0,
+              "left": 0
+            }
+          },
+          {
+            "text": "Ajustes",
+            "rect": {
+              "x": 20,
+              "y": 20,
+              "width": 350,
+              "height": 36,
+              "top": 20,
+              "right": 370,
+              "bottom": 56,
+              "left": 20
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "08f1b996c9dd8ce27782004aed995fe3e6e3811243c165ac147feec3996070e3"
     },
     {
       "file": "profile-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0,
+              "left": 0
+            }
+          },
+          {
+            "text": "Ajustes",
+            "rect": {
+              "x": 20,
+              "y": 20,
+              "width": 350,
+              "height": 36,
+              "top": 20,
+              "right": 370,
+              "bottom": 56,
+              "left": 20
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "9c1699f3975c433c756301d957ef2843bc35fc2d7d7a2d17bd94a57aa278f8bc"
     },
     {
       "file": "tutorial-small-es.png",
+      "layout": {
+        "scroll": 0,
+        "height": 568,
+        "headers": [
+          {
+            "text": "Añade a tu manera.",
+            "rect": {
+              "x": 24,
+              "y": 428,
+              "width": 272,
+              "height": 76,
+              "top": 428,
+              "right": 296,
+              "bottom": 504,
+              "left": 24
+            }
+          }
+        ]
+      },
       "width": 320,
       "height": 568,
       "sha256": "ec54c592b01c75c8b72cb09a0d79a14bb2952e238fdfc546e57a06baf769d9b9"
     },
     {
       "file": "tutorial-1-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "Save a list. Shop whenever you like.",
+            "rect": {
+              "x": 24,
+              "y": 428,
+              "width": 342,
+              "height": 76,
+              "top": 428,
+              "right": 366,
+              "bottom": 504,
+              "left": 24
+            }
+          }
+        ]
+      },
       "width": 390,
       "height": 844,
       "sha256": "d70254b212ac80117c300070a214b31debdfd0f4010396c3f2254f353845b88d"
     },
     {
       "file": "tutorial-2-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "Add things your way.",
+            "rect": {
+              "x": 24,
+              "y": 428,
+              "width": 342,
+              "height": 38,
+              "top": 428,
+              "right": 366,
+              "bottom": 466,
+              "left": 24
+            }
+          }
+        ]
+      },
       "width": 390,
       "height": 844,
       "sha256": "ab7fa324d412af847e4db7ab7a08b36486fc0cdec012b4acf3b2577546acc755"
     },
     {
       "file": "tutorial-3-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "For today or every shop.",
+            "rect": {
+              "x": 24,
+              "y": 428,
+              "width": 342,
+              "height": 38,
+              "top": 428,
+              "right": 366,
+              "bottom": 466,
+              "left": 24
+            }
+          }
+        ]
+      },
       "width": 390,
       "height": 844,
       "sha256": "a9cddc8836c443d73ba7492f1cb67114d786318a03b76b07a204a37291b37372"
     },
     {
       "file": "tutorial-4-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "You can shop together, too.",
+            "rect": {
+              "x": 24,
+              "y": 428,
+              "width": 342,
+              "height": 76,
+              "top": 428,
+              "right": 366,
+              "bottom": 504,
+              "left": 24
+            }
+          }
+        ]
+      },
       "width": 390,
       "height": 844,
       "sha256": "3a7ee27cdc7940f1e1f73246a2420a3a69113918f58517764b4649d6323050fc"
     },
     {
       "file": "onboarding-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": []
+      },
       "width": 390,
       "height": 844,
       "sha256": "905cbe5f8565702bde1784a5c24d7a92efbdeb54b519a0a9e3c84365bae53688"
     },
     {
       "file": "library-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "a0d2d535225effd072f045590461f3d6796553a147bccfea4f21ffeb03f7c7e0"
     },
     {
       "file": "new-list-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "b55f2068b66af9a208466b3d834befcdd415400ebb365a69145dd6f224f4c75f"
     },
     {
       "file": "default-saved-list-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🥑 Weekly shop",
+            "rect": {
+              "x": 56,
+              "y": 12,
+              "width": 207.828125,
+              "height": 28,
+              "top": 12,
+              "right": 263.828125,
+              "bottom": 40,
+              "left": 56
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "daf582be42879540d0fe800faa792fb24f36e78f7c83a3b40e2698cf02ad885c"
     },
     {
       "file": "home-empty-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "a8ea4ac4f71a2b26adfd3c9a49e3252c5cf487e8a15ac54fe26a6d7b37e7dfa7"
     },
     {
       "file": "join-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "e534a5339cdadcb0b10dfc44f013967367a7d4a2e1f4e1d6e7fd911bef045f4a"
     },
     {
       "file": "text-import-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "3ce9d72617310cc50423cca26cd6ba2f13d3550707b8da47f339340b55f20239"
     },
     {
       "file": "text-preview-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "0c0c096d2f8f61caa21d839c043124c52a2c0b897e0f52f6ff7de319648d5504"
     },
     {
       "file": "purchase-feedback-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 56,
+              "y": 12,
+              "width": 207.828125,
+              "height": 28,
+              "top": 12,
+              "right": 263.828125,
+              "bottom": 40,
+              "left": 56
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "2c0f83ce7862f17e482b2bc26dc55eb0314e9c42a8fc70504cd9b49a00d520dd"
     },
     {
       "file": "autocomplete-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 56,
+              "y": 12,
+              "width": 207.828125,
+              "height": 28,
+              "top": 12,
+              "right": 263.828125,
+              "bottom": 40,
+              "left": 56
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "2fde25396eef0e01f72e6edf1439f465c7333205e61879d3fda6cc063f71cb32"
     },
     {
       "file": "products-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0,
+              "left": 0
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "ac9bac001265f669dc60c1007d01ee473b1f31cf9ab8d570faa842701264c50d"
     },
     {
       "file": "category-filter-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0,
+              "left": 0
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "80762324ddc408a07cad96010d4571700b13db9ac6e823c1105dcf571b42b3f0"
     },
     {
       "file": "product-form-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0,
+              "left": 0
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "f3d21934e0ad3fc5e9275eaac78dda8647184f00c9406fc54a909e9dfef25e3b"
     },
     {
       "file": "custom-photo-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0,
+              "left": 0
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "88b706e10ad1edb2ad6a4e8578ec7621036608fcf7e1e619ba003cde4908ed8b"
     },
     {
       "file": "shopping-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 56,
+              "y": 12,
+              "width": 207.828125,
+              "height": 28,
+              "top": 12,
+              "right": 263.828125,
+              "bottom": 40,
+              "left": 56
+            }
+          },
+          {
+            "text": "Bought · 1",
+            "rect": {
+              "x": 18,
+              "y": 398,
+              "width": 354,
+              "height": 26,
+              "top": 398,
+              "right": 372,
+              "bottom": 424,
+              "left": 18
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "6232f0d11cab6d2a1ef57fc7a4235318570306ce5e5f64373ec1b4a75e56104f"
     },
     {
       "file": "list-options-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 56,
+              "y": 12,
+              "width": 207.828125,
+              "height": 28,
+              "top": 12,
+              "right": 263.828125,
+              "bottom": 40,
+              "left": 56
+            }
+          },
+          {
+            "text": "Bought · 1",
+            "rect": {
+              "x": 18,
+              "y": 398,
+              "width": 354,
+              "height": 26,
+              "top": 398,
+              "right": 372,
+              "bottom": 424,
+              "left": 18
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "254348543d6a8e1c7a3eefac69981e6bffea84fabf1c1b316ffa4279f923114c"
     },
     {
       "file": "share-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 56,
+              "y": 12,
+              "width": 207.828125,
+              "height": 28,
+              "top": 12,
+              "right": 263.828125,
+              "bottom": 40,
+              "left": 56
+            }
+          },
+          {
+            "text": "Bought · 1",
+            "rect": {
+              "x": 18,
+              "y": 398,
+              "width": 354,
+              "height": 26,
+              "top": 398,
+              "right": 372,
+              "bottom": 424,
+              "left": 18
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "9213e5a3b1cf61b2d79048479f4a4b97c27732340400c92261be537f4aee3c41"
     },
     {
       "file": "share-offline-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 56,
+              "y": 12,
+              "width": 207.828125,
+              "height": 28,
+              "top": 12,
+              "right": 263.828125,
+              "bottom": 40,
+              "left": 56
+            }
+          },
+          {
+            "text": "Bought · 1",
+            "rect": {
+              "x": 18,
+              "y": 398,
+              "width": 354,
+              "height": 26,
+              "top": 398,
+              "right": 372,
+              "bottom": 424,
+              "left": 18
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "20193f7429603cf7e366ec9e8177df85a0fe85896e3fd78abdffcf455fd07f1b"
     },
     {
       "file": "home-active-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "fb902d4083c0cac85bd490d019540381f778d5103d15dc3b8372432068ed1900"
     },
     {
       "file": "saved-list-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 56,
+              "y": 12,
+              "width": 207.828125,
+              "height": 28,
+              "top": 12,
+              "right": 263.828125,
+              "bottom": 40,
+              "left": 56
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "9640022b53b67ce3997fdfc56e3cef2e2c5cc266b309f72f810ebc04f3b493fd"
     },
     {
       "file": "purchased-separated-aisles-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 56,
+              "y": 12,
+              "width": 207.828125,
+              "height": 28,
+              "top": 12,
+              "right": 263.828125,
+              "bottom": 40,
+              "left": 56
+            }
+          },
+          {
+            "text": "Bought · 1",
+            "rect": {
+              "x": 18,
+              "y": 605,
+              "width": 354,
+              "height": 26,
+              "top": 605,
+              "right": 372,
+              "bottom": 631,
+              "left": 18
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "32d80ccb07872867c12abdfc33b92faf779e3a7f3bf9ace69c0c216010c45a3a"
     },
     {
       "file": "complete-remove-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 56,
+              "y": 12,
+              "width": 207.828125,
+              "height": 28,
+              "top": 12,
+              "right": 263.828125,
+              "bottom": 40,
+              "left": 56
+            }
+          },
+          {
+            "text": "Bought · 5",
+            "rect": {
+              "x": 18,
+              "y": 248,
+              "width": 354,
+              "height": 26,
+              "top": 248,
+              "right": 372,
+              "bottom": 274,
+              "left": 18
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "f3c3dca5006f59e257e2aa51f28f095e468cdc50124a4ca6c14314bf47f4de7d"
     },
     {
       "file": "settings-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0,
+              "left": 0
+            }
+          },
+          {
+            "text": "Settings",
+            "rect": {
+              "x": 20,
+              "y": 20,
+              "width": 350,
+              "height": 36,
+              "top": 20,
+              "right": 370,
+              "bottom": 56,
+              "left": 20
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "cbcceb646a82c7ecf9c69ed1cf52ffb48ac97013d1d2f33a39e67efb88606732"
     },
     {
       "file": "privacy-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0,
+              "left": 0
+            }
+          },
+          {
+            "text": "Settings",
+            "rect": {
+              "x": 20,
+              "y": 20,
+              "width": 350,
+              "height": 36,
+              "top": 20,
+              "right": 370,
+              "bottom": 56,
+              "left": 20
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "44188913bb4571d697789b8fbb365cda0527549f3786dea68ec1c91f97af977f"
     },
     {
       "file": "profile-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 844,
+        "headers": [
+          {
+            "text": "🧺 Semanal",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0,
+              "left": 0
+            }
+          },
+          {
+            "text": "Settings",
+            "rect": {
+              "x": 20,
+              "y": 20,
+              "width": 350,
+              "height": 36,
+              "top": 20,
+              "right": 370,
+              "bottom": 56,
+              "left": 20
+            }
+          }
+        ],
+        "nav": {
+          "x": 8,
+          "y": 786,
+          "width": 93.5,
+          "height": 48,
+          "top": 786,
+          "right": 101.5,
+          "bottom": 834,
+          "left": 8
+        }
+      },
       "width": 390,
       "height": 844,
       "sha256": "31d9baf2e75134c7f1685f2a5d3b697503d84483c36440fd1c7b0569cedf088a"
     },
     {
       "file": "tutorial-small-en.png",
+      "layout": {
+        "scroll": 0,
+        "height": 568,
+        "headers": [
+          {
+            "text": "Add things your way.",
+            "rect": {
+              "x": 24,
+              "y": 428,
+              "width": 272,
+              "height": 76,
+              "top": 428,
+              "right": 296,
+              "bottom": 504,
+              "left": 24
+            }
+          }
+        ]
+      },
       "width": 320,
       "height": 568,
       "sha256": "5e3ac4219d0660637447d217ec2914f49abe5eb67048d7d4c901c99ab3a42a97"

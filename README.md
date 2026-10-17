@@ -1,10 +1,15 @@
 # Cesta
 
-Última beta entregada: **1.3 (1)** en TestFlight interno, verificada el16/10; [recibo de entrega](store/TESTFLIGHT-2026-10-16.md). Incluye el tutorial y los ocho diseños B1–B8 elegidos. [Estado y pendientes](CIERRE-OCTUBRE.md), [paquete de tienda](store/PREPARACION-TIENDA-OCTUBRE.md) y [prueba física](store/QA-IPHONE-OCTUBRE.md). Vista personal local: `node scripts/preview-local.mjs` después de `npm run build:web`, sin API de nube. QA de interfaz sin red: `node scripts/verify-local-ui.mjs`; no sustituye iPhone ni prueba cloud.
+Última beta entregada: **1.4 (1)** en TestFlight interno, verificada el17/10;
+[recibo de entrega](store/TESTFLIGHT-2026-10-17.md). Compras independientes de las
+listas guardadas, comprados al final y tutorial con compra conjunta. [Estado y
+pendientes](CIERRE-OCTUBRE.md), [prueba física pendiente](store/QA-IPHONE-OCTUBRE.md).
+QA de interfaz local: `node scripts/verify-purchases-ui.mjs` tras `npm run build:web`.
+No sustituye iPhone ni los tests cloud. Vista local: `node scripts/preview-local.mjs`.
 
 Aplicación de listas de la compra para iPhone y web, en castellano e inglés.
 
-Web: https://cesta.krazel-zodiac-daily.workers.dev. `npm run preview` abre esta dirección pública. TestFlight interno1.3(1), con Internet, del2026-10-16; las pruebas físicas de esta beta siguen pendientes. No nueva publicación web por esta subida.
+Web: https://cesta.krazel-zodiac-daily.workers.dev. `npm run preview` abre esta dirección pública. TestFlight interno1.4(1), con Internet, del2026-10-17; las pruebas físicas de esta beta siguen pendientes. No nueva publicación web por esta subida.
 
 El usuario ordenó el 13/10 volver público Krazel/cesta-ios-build antes de esta build, para usar Actions estándar gratuitas; visibilidad PUBLIC releída por API. Esta excepción sustituye para Cesta la preferencia privada del 12/10. Soporte público: https://krazel.github.io/cesta/support/. Privacidad pública: https://krazel.github.io/cesta/privacy/. Se conservan los secretos en app-store-production, restringido a main. La CI de TestFlight sigue exigiendo propietario y main; si se vuelve a privado, requiere comprobación de cuota/entorno antes de su input manual. No se activan planes ni gastos.
 
@@ -12,7 +17,7 @@ El usuario ordenó el 13/10 volver público Krazel/cesta-ios-build antes de esta
 
 Las listas personales, catálogo y favoritos se guardan en el dispositivo. Crear, editar, marcar, importar y reutilizar una lista personal no contacta con la API.
 
-Al elegir **Compartir lista** o **Usar en mis dispositivos**, solo esa lista se publica en el servicio. Cada lista compartida tiene su propio Durable Object de Cloudflare con almacenamiento SQLite y conexiones WebSocket con hibernación. No hay consultas periódicas: al conectar se recupera la lista y las confirmaciones de operaciones pendientes; después se envían cambios. Los identificadores únicos evitan duplicados al reintentar una operación. Las operaciones de un lote se guardan de forma atómica.
+Al elegir **Compartir lista → Crear invitación**, solo esa lista se publica en el servicio. Cada lista compartida tiene su propio Durable Object de Cloudflare con almacenamiento SQLite y conexiones WebSocket con hibernación. No hay consultas periódicas: al conectar se recupera la lista y las confirmaciones de operaciones pendientes; después se envían cambios. Los identificadores únicos evitan duplicados al reintentar una operación. Las operaciones de un lote se guardan de forma atómica.
 
 Las invitaciones caducan a los siete días y una nueva sustituye la anterior. Los participantes editan; el propietario gestiona invitaciones y expulsiones. El propietario puede volver a una copia local retirando la lista de la nube para todos. Un participante puede salir y guardar su copia. El borrado de datos compartidos necesita conexión y confirmación del servidor.
 
@@ -22,7 +27,15 @@ Las listas de la beta LAN anterior se conservan localmente, incluidos cambios pe
 
 El inicio usa el idioma del dispositivo (castellano o inglés, con inglés para otros idiomas); el selector permanece en Ajustes. Las preferencias de idioma ya guardadas se respetan.
 
-En Inicio, los productos nuevos son **Solo esta compra** por defecto. Se puede elegir **Guardar como habitual**, también desde el catálogo o al editar el producto. La sección Listas muestra únicamente los habituales. Quitar una lista de Inicio y volver a abrirla conserva la compra en curso, incluidos sus extras. **Volver a usar** pide confirmación si hay compras marcadas o extras: retira los extras y desmarca los habituales. En listas compartidas esta acción se aplica a todos; respeta las adiciones posteriores y los productos que otra persona acaba de convertir en habituales. Los productos anteriores a esta mejora siguen siendo habituales.
+Listas guarda contenido reutilizable. **Añadir al inicio** copia sus productos a
+una compra privada independiente con progreso propio; no activa la misma lista.
+Añadir, editar o comprar en Inicio no cambia la guardada. **Actualizar lista**, en
+las opciones de la compra, guarda expresamente todo el contenido sin marcas.
+Cada activación crea una compra nueva; **×** o **Terminar compra** retira la compra
+y conserva la guardada. La retirada de una compra compartida solo la oculta aquí,
+sin borrar a los demás. Lo comprado va al final tras un divisor, también por pasillos.
+La migración conserva progreso y enlaces compartidos y crea una guardada privada.
+Las copias de seguridad conservan el tipo/enlace/actividad y remapean sus IDs.
 
 ## Desarrollo local
 

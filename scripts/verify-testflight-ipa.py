@@ -46,6 +46,9 @@ with zipfile.ZipFile(ipa) as archive:
     if expected_version == '1.3':
         for marker in [b'View tutorial', b'Start another shop', b'Choose unit']:
             assert marker in js, marker
+    if expected_version == '1.4':
+        for marker in [b'purchaseSources', b'Update saved list', b'Finish shop', b'Bought', b'You can shop together']:
+            assert marker in js, marker
     profile = archive.read(app + '/embedded.mobileprovision')
     start = profile.index(b'<?xml')
     end = profile.index(b'</plist>', start) + len(b'</plist>')

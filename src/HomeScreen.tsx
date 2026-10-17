@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { isPurchase } from './purchases';
 import { ShoppingList, normalize } from './domain';
 import { currentLists, useCesta } from './store';
 import { t } from './i18n';
@@ -40,7 +41,9 @@ export function HomeScreen({
   const all = currentLists();
   const lists = all.filter(
     (list) =>
-      (library || state.activeListIds.includes(list.id)) &&
+      (library
+        ? !isPurchase(state.purchaseSources, list.id)
+        : state.activeListIds.includes(list.id)) &&
       normalize(list.name).includes(normalize(search)),
   );
   return (
@@ -149,6 +152,11 @@ export function HomeScreen({
                   </View>
                 </Pressable>
                 <IconButton
+                  name="close"
+                  label={t('Quitar {0} del inicio', list.name)}
+                  onPress={() => onRemove(list)}
+                />
+                <IconButton
                   name="more"
                   label={t('Opciones de {0}', list.name)}
                   onPress={() => onMenu(list)}
@@ -171,23 +179,17 @@ export function HomeScreen({
                     {list.name}
                   </Text>
                   <Text style={h.caption}>
-                    {t('{0} productos', count)} · {t(pinned ? 'En inicio' : 'Guardada')}
+                    {t('{0} productos', count)} · {t('Guardada')}
                   </Text>
                 </View>
               </Pressable>
               <Button
                 small
-                secondary={!pinned && !complete}
-                title={complete ? t('Otra compra') : pinned ? t('Abrir compra') : t('Inicio')}
-                label={
-                  complete
-                    ? t('Empezar otra compra con {0}', list.name)
-                    : pinned
-                      ? t('Abrir compra {0}', list.name)
-                      : t('Añadir {0} al inicio', list.name)
-                }
-                icon={complete ? 'refresh' : pinned ? undefined : 'plus'}
-                onPress={() => (complete ? onReuse(list) : onActivate(list))}
+                secondary
+                title={t('Inicio')}
+                label={t('Añadir {0} al inicio', list.name)}
+                icon="plus"
+                onPress={() => onActivate(list)}
               />
               <IconButton
                 name="more"

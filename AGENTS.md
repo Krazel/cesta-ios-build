@@ -30,3 +30,12 @@ TestFlight». Autoriza compilar, firmar, subir y distribuir internamente Cesta
 Conservar el repositorio público según la excepción anterior. No incluye App
 Review, distribución externa ni publicación comercial. Futuras builds requieren
 otra petición expresa. Detalle y estado real: store/TESTFLIGHT-2026-10-16.md.
+
+## Compras independientes — 2026-10-17
+
+El usuario pide separar Listas (contenido reutilizable) de Inicio (copias de compra
+independientes), retirada fácil, comprados al final incluso por pasillos y tutorial
+que explique también compras conjuntas. Responde expresamente «Sí, subir a
+TestFlight» al terminar. Autoriza esta beta1.4(1), firma y grupo interno existentes;
+no App Review, externos ni publicación comercial. Conservar excepción pública
+para CI estándar sin nuevos gastos. No autoriza futuras builds automáticas.

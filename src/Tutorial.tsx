@@ -8,7 +8,7 @@ const steps = [
   {
     icon: 'lists',
     title: 'Guarda una lista. Úsala cuando quieras.',
-    body: 'En Listas guardas tus compras habituales. Pulsa «Añadir al inicio» para empezar una compra. Quitarla de Inicio no borra la lista guardada.',
+    body: 'En Listas guardas tus productos habituales. «Añadir al inicio» copia su contenido a una compra independiente. Puedes añadirla varias veces; cada compra tiene su propio progreso.',
     label: 'Listas → Inicio',
     rows: ['🛒  Compra semanal', '🍝  Noche de pasta'],
     hint: 'Añadir al inicio',
@@ -24,15 +24,15 @@ const steps = [
   {
     icon: 'check',
     title: 'Lo de hoy y lo de siempre.',
-    body: 'En Inicio marcas lo que ya has comprado. Al añadir algo, elige «Solo esta compra» para un extra puntual o «Guardar como habitual» para conservarlo al reutilizar la lista.',
+    body: 'Lo comprado baja a una sección separada. Quita la compra de Inicio con × cuando quieras; tu lista guardada sigue igual. Para conservar cambios, abre las opciones ··· y pulsa «Actualizar lista».',
     label: 'Compra semanal',
     rows: ['✓  Pan', '🥑  Aguacate'],
-    hint: 'Solo esta compra · Guardar como habitual',
+    hint: 'Compra independiente · Actualizar lista',
   },
   {
     icon: 'people',
-    title: 'Una lista, varios dispositivos.',
-    body: 'Dentro de una lista, abre Compartir y envía la invitación. Al aceptarla, los cambios se sincronizan con Internet. Sin conexión puedes seguir comprando; se enviarán al reconectar.',
+    title: 'También podéis comprar juntos.',
+    body: 'Para una compra conjunta, abre ··· → Compartir lista y envía la invitación. La otra persona pulsa «Unirme» o abre el enlace. Ambos podéis añadir productos y marcar lo comprado desde distintos dispositivos y redes. Sin conexión, los cambios esperan hasta reconectar.',
     label: 'Compartir lista',
     rows: ['🔗  Enviar invitación', '🛒  La misma compra para todos'],
     hint: 'Vuelve a verlo desde Ajustes',

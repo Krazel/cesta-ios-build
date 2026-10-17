@@ -6,7 +6,7 @@ import { normalize, productIdentity } from './domain';
 import { categories, matchesProductSearch } from './catalog';
 import { ProductVisual } from './ProductsScreen';
 import { productLabel, t } from './i18n';
-import { Icon, IconButton, s, theme } from './ui';
+import { Button, Icon, IconButton, s, theme } from './ui';
 
 export function CompactList({
   list,
@@ -61,9 +61,22 @@ export function CompactList({
   const visible = displayed.filter((item) =>
     normalize(productLabel(item) + ' ' + item.note).includes(normalize(search)),
   );
-  const ordered = shopping
-    ? [...visible.filter((item) => !item.checked), ...visible.filter((item) => item.checked)]
-    : visible;
+  const pending = shopping ? visible.filter((item) => !item.checked) : visible;
+  const purchased = shopping ? visible.filter((item) => item.checked) : [];
+  const renderEntries = (entries: Item[]) =>
+    grouped
+      ? categories.map((category) => {
+          const items = entries.filter((item) => item.category === category.id);
+          return items.length ? (
+            <View key={category.id}>
+              <Text style={c.category}>
+                {category.emoji} {t(category.name)}
+              </Text>
+              {items.map(renderItem)}
+            </View>
+          ) : null;
+        })
+      : entries.map(renderItem);
   const submit = () => {
     if (!draft.trim()) {
       onAdd();
@@ -81,14 +94,8 @@ export function CompactList({
         </Text>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={
-            pinned
-              ? t('Quitar del inicio')
-              : complete
-                ? t('Empezar otra compra')
-                : t('Añadir al inicio')
-          }
-          onPress={pinned ? onStore : onActivate}
+          accessibilityLabel={shopping ? t('Quitar del inicio') : t('Añadir al inicio')}
+          onPress={shopping ? onStore : onActivate}
           style={{
             minHeight: 44,
             paddingHorizontal: 8,
@@ -97,7 +104,7 @@ export function CompactList({
             gap: 4,
           }}
         >
-          <Icon name={pinned ? 'close' : 'plus'} size={14} color={theme.green} />
+          <Icon name={shopping ? 'close' : 'plus'} size={14} color={theme.green} />
           <Text style={{ fontSize: 12, color: theme.green }}>{t('Inicio')}</Text>
         </Pressable>
         <IconButton name="more" label={t('Opciones de la lista')} onPress={onMenu} />
@@ -181,16 +188,11 @@ export function CompactList({
         keyboardDismissMode="on-drag"
         showsVerticalScrollIndicator={false}
       >
-        {!shopping && pinned && (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={complete ? t('Empezar otra compra') : t('Abrir compra')}
-            onPress={onActivate}
-            style={c.listAction}
-          >
-            <Icon name="basket" size={17} />
-            <Text style={c.caption}>{complete ? t('Empezar otra compra') : t('Abrir compra')}</Text>
-          </Pressable>
+        {shopping && complete && (
+          <View style={{ paddingVertical: 12, gap: 8 }}>
+            <Text style={c.caption}>{t('¡Compra completa!')}</Text>
+            <Button title={t('Terminar compra')} icon="check" onPress={onStore} />
+          </View>
         )}
         {!displayed.length ? (
           <View style={c.empty}>
@@ -201,20 +203,28 @@ export function CompactList({
           <View style={c.empty}>
             <Text style={s.body}>{t('No está por aquí')}</Text>
           </View>
-        ) : grouped ? (
-          categories.map((category) => {
-            const entries = ordered.filter((item) => item.category === category.id);
-            return entries.length ? (
-              <View key={category.id}>
-                <Text style={c.category}>
-                  {category.emoji} {t(category.name)}
-                </Text>
-                {entries.map(renderItem)}
-              </View>
-            ) : null;
-          })
         ) : (
-          ordered.map(renderItem)
+          <>
+            {renderEntries(pending)}
+            {purchased.length > 0 && (
+              <View
+                style={{
+                  marginTop: 24,
+                  paddingTop: 16,
+                  borderTopWidth: 1,
+                  borderTopColor: theme.line,
+                }}
+              >
+                <Text
+                  accessibilityRole="header"
+                  style={[c.category, { paddingTop: 0, paddingBottom: 10 }]}
+                >
+                  {t('Comprados · {0}', purchased.length)}
+                </Text>
+                {purchased.map(renderItem)}
+              </View>
+            )}
+          </>
         )}
       </ScrollView>
       {!!draft.trim() && (
@@ -260,7 +270,7 @@ export function CompactList({
           </ScrollView>
         </View>
       )}
-      {shopping && !!draft.trim() && <PurchaseScope value={oneTime} onChange={onScopeChange} />}
+
       <View style={c.composer}>
         <TextInput
           accessibilityLabel={t('Añadir producto')}

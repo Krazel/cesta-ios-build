@@ -783,5 +783,20 @@
   "Solo esta compra": "This shop only",
   "Guardar como habitual": "Keep on saved list",
   "Se retirarán los productos de solo esta compra y se desmarcarán los habituales para todos los participantes.": "One-time items will be removed and regular items unchecked for everyone.",
-  "Se retirarán los productos de solo esta compra. Tus productos habituales quedarán listos para volver a comprar.": "One-time items will be removed. Your regular items will be ready for your next shop."
+  "Se retirarán los productos de solo esta compra. Tus productos habituales quedarán listos para volver a comprar.": "One-time items will be removed. Your regular items will be ready for your next shop.",
+  "Compra retirada de Inicio. Tus listas guardadas siguen intactas.": "Shop removed from Home. Your saved lists are unchanged.",
+  "¿Actualizar la lista guardada?": "Update the saved list?",
+  "Se guardarán todos los productos y cantidades de esta compra, sin las marcas de comprado. La compra actual seguirá igual.": "All products and quantities from this shop will be saved without bought marks. This shop will stay unchanged.",
+  "Actualizar lista": "Update saved list",
+  "Lista guardada actualizada": "Saved list updated",
+  "Guarda el contenido sin cambiar el progreso de esta compra.": "Save the contents without changing this shop’s progress.",
+  "Comprados · {0}": "Bought · {0}",
+  "Actívalo para crear una compra independiente. Desactívalo para guardar una lista reutilizable.": "Turn on to create an independent shop. Turn off to save a reusable list.",
+  "Se eliminará esta lista para las personas con las que la compartes. Las compras y listas guardadas independientes se conservan. Esta acción no se puede deshacer.": "This list will be deleted for everyone sharing it. Independent shops and saved lists will remain. This cannot be undone.",
+  "En Listas guardas tus productos habituales. «Añadir al inicio» copia su contenido a una compra independiente. Puedes añadirla varias veces; cada compra tiene su propio progreso.": "In Lists, keep your regular products. “Add to home” copies their contents into an independent shop. Add it again whenever you like; each shop has its own progress.",
+  "Lo comprado baja a una sección separada. Quita la compra de Inicio con × cuando quieras; tu lista guardada sigue igual. Para conservar cambios, abre las opciones ··· y pulsa «Actualizar lista».": "Bought products move to a separate section below. Remove a shop from Home with × whenever you like; your saved list stays unchanged. To keep changes, open ··· and tap “Update saved list”.",
+  "Compra independiente · Actualizar lista": "Independent shop · Update saved list",
+  "También podéis comprar juntos.": "You can shop together, too.",
+  "Para una compra conjunta, abre ··· → Compartir lista y envía la invitación. La otra persona pulsa «Unirme» o abre el enlace. Ambos podéis añadir productos y marcar lo comprado desde distintos dispositivos y redes. Sin conexión, los cambios esperan hasta reconectar.": "For a shared shop, open ··· → Share list and send an invitation. The other person taps “Join” or opens the link. Both of you can add products and mark them bought on different devices and networks. Offline changes wait until you reconnect.",
+  "Terminar compra": "Finish shop"
 }

@@ -1,3 +1,4 @@
+import { isPurchase, privateCopy, migratePurchases, type PurchaseSources } from './purchases';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
 import * as Crypto from 'expo-crypto';
@@ -39,6 +40,8 @@ type State = {
   productSize: ProductSize;
   selectedId: string | null;
   activeListIds: string[];
+  purchaseSources: PurchaseSources;
+  purchasesVersion: number;
   lastSync: number;
   pendingName?: string | null;
   starterListsVersion?: number;
@@ -60,6 +63,8 @@ let state: State = {
   productSize: 'comfortable',
   selectedId: null,
   activeListIds: [],
+  purchaseSources: {},
+  purchasesVersion: 1,
   lastSync: 0,
   cloud: {},
   sequence: 0,
@@ -97,6 +102,8 @@ const save = () => {
     productSize: state.productSize,
     selectedId: state.selectedId,
     activeListIds: state.activeListIds,
+    purchaseSources: state.purchaseSources,
+    purchasesVersion: state.purchasesVersion,
     pendingName: state.pendingName,
     starterListsVersion: state.starterListsVersion,
     cloud: state.cloud,
@@ -146,6 +153,8 @@ export async function initialize() {
           data.tutorialSeen === true ||
           (data.tutorialSeen === undefined && data.onboarded === true);
         state.cloud = data.cloud || {};
+        state.purchaseSources = data.purchaseSources || {};
+        state.purchasesVersion = data.purchasesVersion || 0;
         state.sequence = data.sequence || 0;
         state.productSize = Object.hasOwn(productSizes, data.productSize)
           ? data.productSize
@@ -185,6 +194,17 @@ export async function initialize() {
         );
     }
     state.snapshot.device.id = deviceId;
+    if (!state.purchasesVersion) {
+      const migrated = migratePurchases(
+        currentLists(),
+        state.activeListIds,
+        { ...state.snapshot.device, role: 'owner' },
+        uid,
+      );
+      state.snapshot.lists.push(...migrated.saved);
+      state.purchaseSources = migrated.sources;
+      state.purchasesVersion = 1;
+    }
     setCurrentLanguage(state.language);
     if (state.onboarded) ensureStarterLists();
     await save();
@@ -322,7 +342,10 @@ export function clearError() {
 }
 export function createList(name: string, emoji: string, color: string, activate = true) {
   const id = uid();
-  if (activate) state.activeListIds = [...state.activeListIds, id];
+  if (activate) {
+    state.activeListIds = [...state.activeListIds, id];
+    state.purchaseSources[id] = null;
+  }
   enqueue('list.create', id, { name, emoji, color, createdAt: new Date().toISOString() });
   selectList(id);
   return id;
@@ -335,13 +358,53 @@ export function setListActive(listId: string, active: boolean) {
   void save().catch(() => {});
 }
 export function reuseList(list: ShoppingList) {
-  // Reset only the items seen when starting this round; preserve simultaneous additions.
-  state.activeListIds = Array.from(new Set([...state.activeListIds, list.id]));
-  enqueue('items.reset', list.id, {
-    ids: list.items.filter((item) => !item.oneTime).map((item) => item.id),
-    removeIds: list.items.filter((item) => item.oneTime).map((item) => item.id),
-  });
+  if (currentLists().length >= 100) throw new Error(t('Puedes guardar hasta 100 listas.'));
+  const sourceId = isPurchase(state.purchaseSources, list.id)
+    ? state.purchaseSources[list.id]
+    : list.id;
+  const source = currentLists().find((entry) => entry.id === sourceId) || list;
+  const contents = isPurchase(state.purchaseSources, source.id)
+    ? source
+    : { ...source, items: source.items.filter((item) => !item.oneTime) };
+  const copy = privateCopy(contents, uid(), { ...state.snapshot.device, role: 'owner' }, uid);
+  state.snapshot.lists.unshift(copy);
+  state.purchaseSources[copy.id] = sourceId || null;
+  state.activeListIds.push(copy.id);
+  state.selectedId = copy.id;
+  emit();
+  void save().catch(() => {});
+  return copy;
 }
+export function updateSavedList(purchase: ShoppingList) {
+  const sourceId = state.purchaseSources[purchase.id];
+  let source = currentLists().find((list) => list.id === sourceId);
+  if (!source) {
+    const id = createList(purchase.name, purchase.emoji, purchase.color, false);
+    source = currentLists().find((list) => list.id === id)!;
+    state.purchaseSources[purchase.id] = id;
+    state.selectedId = purchase.id;
+  }
+  // Explicit snapshot of contents, never purchase progress. Clear only observed IDs.
+  persistOperations([
+    {
+      id: uid(),
+      type: 'items.clear',
+      listId: source.id,
+      data: { ids: source.items.map((item) => item.id) },
+    },
+    ...purchase.items.map((item) => ({
+      id: uid(),
+      type: 'item.add',
+      listId: source.id,
+      data: { ...item, id: uid(), checked: false, oneTime: false },
+    })),
+  ]);
+  return source.id;
+}
+export const visibleLists = () =>
+  currentLists().filter(
+    (list) => !isPurchase(state.purchaseSources, list.id) || state.activeListIds.includes(list.id),
+  );
 export function addProduct(
   listId: string,
   product: Product,
@@ -460,6 +523,7 @@ export async function join(input: string) {
   });
   const listId = parts[1];
   state.cloud[listId] ??= { published: true, version: 0 };
+  state.purchaseSources[listId] ??= null;
   cloudSync.receive(listId, remote);
   state.selectedId = listId;
   state.activeListIds = Array.from(new Set([...state.activeListIds, listId]));
@@ -485,6 +549,8 @@ export async function makeLocal(listId: string) {
     ownerId: state.snapshot.device.id,
     members: [{ ...state.snapshot.device, role: 'owner' }],
   });
+  if (isPurchase(state.purchaseSources, listId))
+    state.purchaseSources[nextId] = state.purchaseSources[listId];
   if (state.activeListIds.includes(listId)) state.activeListIds.push(nextId);
   state.selectedId = nextId;
   await save();
@@ -508,6 +574,8 @@ export function exportData() {
     {
       format: 'cesta-backup',
       version: 1,
+      purchaseSources: state.purchaseSources,
+      activeListIds: state.activeListIds,
       exportedAt: new Date().toISOString(),
       lists: currentLists(),
       favorites: state.favorites,
@@ -629,8 +697,14 @@ export function importData(raw: string) {
   if (customs.size > 300) throw new Error(t('Puedes guardar hasta 300 productos propios.'));
   // Persist one batch, rather than serializing every embedded photo once per item.
   const operations: Operation[] = [];
+  const importedIds = new Map(validLists.map((list) => [list.id, uid()]));
   for (const list of validLists) {
-    const listId = uid();
+    const listId = importedIds.get(list.id)!;
+    if (data.purchaseSources && Object.hasOwn(data.purchaseSources, list.id)) {
+      state.purchaseSources[listId] = importedIds.get(data.purchaseSources[list.id]) || null;
+      if (Array.isArray(data.activeListIds) && data.activeListIds.includes(list.id))
+        state.activeListIds.push(listId);
+    }
     operations.push({
       id: uid(),
       type: 'list.create',
@@ -690,6 +764,8 @@ export async function eraseDevice() {
     favorites: [],
     customProducts: [],
     activeListIds: [],
+    purchaseSources: {},
+    purchasesVersion: 1,
     selectedId: null,
     online: false,
     syncing: false,

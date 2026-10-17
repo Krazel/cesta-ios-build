@@ -47,9 +47,12 @@ if (
   'tracking' in changes
 ) {
   const evidence = JSON.parse(
-    fs.readFileSync('artifacts/testflight-20261016/apple-complete.json', 'utf8'),
+    fs.readFileSync(
+      `${input.output || 'artifacts/testflight-20261016'}/apple-complete.json`,
+      'utf8',
+    ),
   );
-  assert.equal(evidence.version, '1.3');
+  assert.equal(evidence.version, changes.version || current.version);
   assert.equal(evidence.buildNumber, '1');
   assert.equal(evidence.build.attributes.processingState, 'VALID');
   assert.equal(evidence.betaDetail.attributes.internalBuildState, 'IN_BETA_TESTING');
@@ -64,11 +67,12 @@ for (const [k, v] of Object.entries(changes)) assert.deepEqual(fresh[k], v);
 for (const [k, v] of Object.entries(current))
   if (!(k in changes) && !['revision', 'updatedAt'].includes(k)) assert.deepEqual(fresh[k], v);
 const output =
-  input.review === 'testflight'
+  input.output ||
+  (input.review === 'testflight'
     ? 'artifacts/testflight-20261016'
     : input.review === 'implementation'
       ? 'artifacts/ui-implementation-20261016'
-      : 'artifacts/ui-review-20261016';
+      : 'artifacts/ui-review-20261016');
 fs.mkdirSync(output, { recursive: true });
 fs.writeFileSync(
   `${output}/library-${Object.keys(changes).length ? 'updated' : 'read'}.json`,

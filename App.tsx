@@ -43,6 +43,8 @@ import {
   setLanguage,
   setListActive,
   reuseList,
+  updateSavedList,
+  visibleLists,
   addProduct,
   addTextProducts,
   clearError,
@@ -138,7 +140,7 @@ function AppContent() {
   const [importTarget, setImportTarget] = useState('new');
   const [importName, setImportName] = useState('');
   const [chooseImportTarget, setChooseImportTarget] = useState(false);
-  const lists = currentLists();
+  const lists = visibleLists();
   const active = lists.find((l) => l.id === state.selectedId);
   const openedList = detail ? lists.find((l) => l.id === openedId) : undefined;
   const purchaseContext =
@@ -319,42 +321,29 @@ function AppContent() {
   }
   function removeFromHome(list: ShoppingList) {
     setListActive(list.id, false);
+    if (!state.cloud[list.id]) enqueue('list.delete', list.id, {});
     setSheet(null);
-    notify(tr('Lista guardada con su progreso. La encontrarás en Listas.'));
+    setDetail(false);
+    setTab('home');
+    notify(tr('Compra retirada de Inicio. Tus listas guardadas siguen intactas.'));
   }
   function activateList(list: ShoppingList) {
-    if (list.items.length && list.items.every((item) => item.checked)) {
-      requestReuse(list);
-      return;
+    try {
+      const purchase = reuseList(list);
+      setSheet(null);
+      openList(purchase);
+    } catch (error) {
+      notify((error as Error).message, 'error');
     }
-    setListActive(list.id, true);
-    setSheet(null);
-    openList(list);
   }
   function requestReuse(list: ShoppingList) {
-    const begin = () => {
-      reuseList(list);
-      setSheet(null);
-      openList(list);
-      notify(tr('Lista preparada para otra compra'));
-    };
-    if (!list.items.some((item) => item.checked || item.oneTime)) {
-      begin();
-      return;
-    }
-    setConfirm({
-      title: tr('¿Empezar otra compra?'),
-      body:
-        list.members.length > 1
-          ? tr(
-              'Se retirarán los productos de solo esta compra y se desmarcarán los habituales para todos los participantes.',
-            )
-          : tr(
-              'Se retirarán los productos de solo esta compra. Tus productos habituales quedarán listos para volver a comprar.',
-            ),
-      label: tr('Empezar de nuevo'),
-      action: begin,
-    });
+    activateList(list);
+  }
+  function requestUpdateSaved() {
+    if (!active) return;
+    updateSavedList(active);
+    setSheet(null);
+    notify(tr('Lista guardada actualizada'));
   }
   function requestDelete(list: ShoppingList) {
     const owner = list.ownerId === state.snapshot.device.id;
@@ -362,7 +351,7 @@ function AppContent() {
       title: owner ? tr('¿Eliminar esta lista?') : tr('¿Salir de la lista?'),
       body: owner
         ? tr(
-            'Se eliminará de Listas y del inicio, también para las personas con las que la compartes. Esta acción no se puede deshacer.',
+            'Se eliminará esta lista para las personas con las que la compartes. Las compras y listas guardadas independientes se conservan. Esta acción no se puede deshacer.',
           )
         : tr('Dejarás de ver esta lista. Los demás podrán seguir utilizándola.'),
       label: owner ? tr('Eliminar lista') : tr('Salir de la lista'),
@@ -486,7 +475,7 @@ function AppContent() {
                 {quantityLabel(item)}
               </Text>
             )}
-            {shopping && item.oneTime && <Text style={a.itemMeta}>{tr('Solo esta compra')}</Text>}
+
             {!!item.note && <Text style={a.itemMeta}>{item.note}</Text>}
           </View>
           {!stackedQuantity && (
@@ -907,12 +896,14 @@ function AppContent() {
                       value={importTarget}
                       options={[
                         { id: 'new', name: tr('Crear nueva lista'), literal: true },
-                        ...lists.map((list) => ({
-                          id: list.id,
-                          name: list.name,
-                          literal: true,
-                          emoji: list.emoji,
-                        })),
+                        ...lists
+                          .filter((list) => state.activeListIds.includes(list.id))
+                          .map((list) => ({
+                            id: list.id,
+                            name: list.name,
+                            literal: true,
+                            emoji: list.emoji,
+                          })),
                       ]}
                       onChange={setImportTarget}
                     />
@@ -946,12 +937,12 @@ function AppContent() {
                       );
                       selectList(id);
                       setOpenedId(id);
-                      setDetailTab('home');
-                      if (chooseImportTarget) setListActive(id, true);
+                      const destination = state.activeListIds.includes(id) ? 'home' : 'lists';
+                      setDetailTab(destination);
                       setSearch('');
                       setGrouped(false);
                       setDetail(true);
-                      setTab('home');
+                      setTab(state.activeListIds.includes(id) ? 'home' : 'lists');
                       setSheet(null);
                       notify(tr('{0} productos añadidos a la lista', items.length));
                     }}
@@ -1008,7 +999,9 @@ function AppContent() {
                       <View style={{ flex: 1 }}>
                         <Text style={s.label}>{tr('Mostrar en el inicio')}</Text>
                         <Text style={a.caption}>
-                          {tr('Siempre se guardará en Listas para volver a usarla.')}
+                          {tr(
+                            'Actívalo para crear una compra independiente. Desactívalo para guardar una lista reutilizable.',
+                          )}
                         </Text>
                       </View>
                     </Pressable>
@@ -1061,9 +1054,6 @@ function AppContent() {
               )}
               {sheet === 'add' && (
                 <>
-                  {purchaseContext && (
-                    <PurchaseScope value={onlyThisPurchase} onChange={setOnlyThisPurchase} />
-                  )}
                   <Text style={s.body}>
                     {tr('Un toque y a la lista. Los básicos, siempre a mano.')}
                   </Text>
@@ -1225,9 +1215,7 @@ function AppContent() {
                       })
                     }
                   />
-                  {(purchaseContext || editingItem?.oneTime) && (
-                    <PurchaseScope value={editOneTime} onChange={setEditOneTime} />
-                  )}
+
                   <Button
                     title={editingItem ? tr('Guardar producto') : tr('Añadir a la lista')}
                     icon="check"
@@ -1645,7 +1633,7 @@ function AppContent() {
                           false,
                         );
                         active.items
-                          .filter((i) => !i.oneTime)
+                          .filter((i) => state.activeListIds.includes(active.id) || !i.oneTime)
                           .forEach((i) => addProduct(id, i, i.quantity, i.note, false));
                         setOpenedId(id);
                         setDetailTab('lists');
@@ -1655,17 +1643,18 @@ function AppContent() {
                         notify(tr('Copia privada creada'));
                       },
                     },
-                    {
-                      order: 2,
-                      section: 'COMPRA',
-                      subtitle:
-                        'Desmarca los habituales y retira los extras de la compra anterior.',
-                      title: tr('Empezar otra compra'),
-                      icon: 'refresh',
-                      fn: () => {
-                        requestReuse(active);
-                      },
-                    },
+                    ...(state.activeListIds.includes(active.id)
+                      ? [
+                          {
+                            order: 2,
+                            section: 'COMPRA',
+                            subtitle: 'Guarda el contenido sin cambiar el progreso de esta compra.',
+                            title: tr('Actualizar lista'),
+                            icon: 'refresh',
+                            fn: requestUpdateSaved,
+                          },
+                        ]
+                      : []),
                     {
                       order: 10,
                       section: 'LIMPIEZA',

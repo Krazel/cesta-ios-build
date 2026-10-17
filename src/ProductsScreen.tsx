@@ -20,6 +20,7 @@ import { categories, products, matchesProductSearch } from './catalog';
 import {
   addProduct,
   currentLists,
+  visibleLists,
   deleteCustomProduct,
   favorite,
   saveCustomProduct,
@@ -50,7 +51,7 @@ export function ProductsScreen({
 }) {
   const state = useCesta(),
     insets = useSafeAreaInsets();
-  const lists = currentLists();
+  const lists = visibleLists();
   const productSize = productSizes[state.productSize];
   const [query, setQuery] = useState(''),
     [filter, setFilter] = useState('all');
@@ -166,7 +167,7 @@ export function ProductsScreen({
             onPress={() => edit()}
           />
         </View>
-        {activeList && purchaseOnly && <PurchaseScope value={oneTime} onChange={onScopeChange} />}
+
         {activeList && (
           <Pressable
             accessibilityRole="button"
@@ -387,7 +388,11 @@ export function ProductsScreen({
                     <Pressable
                       key={list.id}
                       accessibilityRole="checkbox"
-                      accessibilityLabel={t('Lista {0}', list.name)}
+                      accessibilityLabel={
+                        t('Lista {0}', list.name) +
+                        ' · ' +
+                        t(state.activeListIds.includes(list.id) ? 'En compra' : 'Guardada')
+                      }
                       aria-checked={selection.includes(list.id)}
                       accessibilityState={{ checked: selection.includes(list.id) }}
                       onPress={() =>
@@ -400,7 +405,12 @@ export function ProductsScreen({
                       style={[p.row, { padding: 13, gap: 12 }]}
                     >
                       <Text style={{ fontSize: 26 }}>{list.emoji}</Text>
-                      <Text style={[p.name, { flex: 1 }]}>{list.name}</Text>
+                      <View style={{ flex: 1, gap: 3 }}>
+                        <Text style={p.name}>{list.name}</Text>
+                        <Text style={p.caption}>
+                          {t(state.activeListIds.includes(list.id) ? 'En compra' : 'Guardada')}
+                        </Text>
+                      </View>
                       <Icon
                         name={selection.includes(list.id) ? 'check' : 'plus'}
                         color={theme.green}

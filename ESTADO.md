@@ -1,5 +1,16 @@
 # Cesta — estado del producto
 
+## Compras independientes y tutorial conjunto — 2026-10-17
+
+Candidata1.4(1) implementada y autorizada para TestFlight interno. Listas e Inicio
+separados mediante copias privadas con enlaces locales, actualización expresa en
+opciones, retirada rápida y comprados al final incluso por pasillos. Tutorial
+ES/EN explica compra conjunta por invitación. Migración conserva progreso anterior.
+TypeScript,15pruebas de texto/modelo/sync,60capturas con comprobaciones ES/EN,
+3cloud UI,2de aislamiento y1de migración persistente correctas. QA física pendiente.
+D1 PR-016 revisión21 registra preparación; última entrega confirmada1.3(1).
+Detalle store/TESTFLIGHT-2026-10-17.md. No despliegue web ni App Review.
+
 ## TestFlight 1.3 (1) entregado — 2026-10-16
 
 Tutorial y B1–B8 ya están en TestFlight interno. Build

@@ -1,5 +1,20 @@
 # Cesta — cierre de octubre
 
+## Candidata1.5 — Guardar en Listas y monetización — 18/10/2026
+
+Implementados Guardar en Listas/Actualizar lista, banner nativo AdMob de prueba,
+seis suscripciones mensuales equivalentes1,99–24,99€ desde Ajustes, restauración,
+valoración nativa tras uso significativo y recordatorios máximo cada14días con
+opt-out. AdMob propio y mensaje UMP ES/EN publicados; política pública actualizada.
+Productos Apple creados y precios/175territorios verificados, todavíaMISSING_METADATA
+y sin aprobación. Compilación iOS sin firma para simulador correcta CI39075842510;
+19pruebas,62comprobaciones web ES/EN y3cloudUI locales pasan. QA física de
+compras/consentimiento pendiente. Detalle store/MONETIZACION-2026-10-18.md.
+Última distribuida sigue1.4(1) interna; App Store1.2 en preparación, sin nueva
+IPA, TestFlight, externos ni App Review. Web pública sin desplegar estos cambios.
+Biblioteca PR-016 revisión24 guardada y releída, anuncios Planificados
+con integración candidata descrita; distribución y demás tracking conservados.
+
 ## Entrega1.4(1) — 17/10/2026
 
 17/10/2026: **Cesta1.4(1) disponible en TestFlight interno**, Apple VALID e

@@ -6,6 +6,10 @@ esta comprobación. Registrar dispositivo, iOS, idioma, versión/build y fecha.
 
 Usar listas de prueba, nunca borrar listas reales. Exportar primero una copia desde Ajustes si ya hay datos personales. Resultado esperado y evidencia por cada recorrido:
 
+Para la futura1.5, añadir los recorridos de consentimiento, banner, suscripción,
+restauración/caducidad/revocación y recordatorios de
+`MONETIZACION-2026-10-18.md`. Aún no están validados en iPhone físico.
+
 1. Inicio ES/EN: instalación limpia en idioma del dispositivo; solo pide nombre visible. Cambiar el idioma en Ajustes y reabrir. Se mantienen las cuatro listas guardadas sin activarlas todas.
 2. Compra1.4: en Listas guardar dos productos y pulsar Añadir al inicio. Añadir un
 extra y marcar un producto en la compra; la guardada sigue sin extra ni progreso.

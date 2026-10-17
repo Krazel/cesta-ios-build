@@ -44,7 +44,10 @@ if (
   'version' in changes ||
   'build' in changes ||
   'distribution' in changes ||
-  'tracking' in changes
+  (changes.tracking &&
+    ['testflight', 'appStore'].some(
+      (key) => key in changes.tracking && changes.tracking[key] !== current.tracking?.[key],
+    ))
 ) {
   const evidence = JSON.parse(
     fs.readFileSync(
@@ -57,8 +60,8 @@ if (
   assert.equal(evidence.build.attributes.processingState, 'VALID');
   assert.equal(evidence.betaDetail.attributes.internalBuildState, 'IN_BETA_TESTING');
   assert(evidence.membership.some((b) => b.id === evidence.build.id));
-  if (changes.tracking) changes.tracking = { ...current.tracking, ...changes.tracking };
 }
+if (changes.tracking) changes.tracking = { ...current.tracking, ...changes.tracking };
 if (Object.keys(changes).length) {
   await api('PUT', { revision: current.revision, project: { ...current, ...changes } });
 }

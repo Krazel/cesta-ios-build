@@ -317,6 +317,7 @@ function AppContent() {
   ]);
   const open = (next: Sheet) => {
     Keyboard.dismiss();
+    if (next === 'noads') void markPrompt('support').catch(() => {});
     setSheetError('');
     setSheet(next);
   };
@@ -846,6 +847,7 @@ function AppContent() {
           <SettingsScreen
             onNoAds={() => open('noads')}
             onRate={() => {
+              void markPrompt('review').catch(() => {});
               void Linking.openURL(
                 'https://apps.apple.com/app/id6808982515?action=write-review',
               ).catch(() => notify(tr('No se ha podido abrir el enlace.'), 'error'));
@@ -1652,7 +1654,7 @@ function AppContent() {
                   </Text>
                   <Text style={s.body}>
                     {tr(
-                      'No hay anuncios, rastreadores ni acceso a tus contactos. Las invitaciones caducan a los siete días y puedes desactivarlas en cualquier momento.',
+                      'En iPhone, Google AdMob sirve anuncios después del consentimiento aplicable. Puedes revisar sus opciones en Ajustes. Las compras usan Apple y una suscripción activa quita los anuncios. Cesta no envía tus productos, notas ni fotos a AdMob, ni accede a tus contactos. Las invitaciones caducan a los siete días.',
                     )}{' '}
                   </Text>
                   <Text style={s.body}>

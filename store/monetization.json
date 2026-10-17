@@ -30,11 +30,11 @@
     }
   ],
   "admob": {
-    "appId": "",
-    "bannerId": "",
+    "appId": "ca-app-pub-3425091654264901~5160228186",
+    "bannerId": "ca-app-pub-3425091654264901/3118097788",
     "productionReady": false,
-    "privacyPublished": false,
-    "umpReady": false
+    "privacyPublished": true,
+    "umpReady": true
   },
   "adMode": "test",
   "googleMobileAds": "12.14.0",

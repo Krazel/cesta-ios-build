@@ -838,5 +838,6 @@
   "No se pudieron abrir las opciones de privacidad.": "Could not open privacy options.",
   "Suscripciones disponibles en la app para iPhone.": "Subscriptions are available in the iPhone app.",
   "Lo comprado baja a una sección separada. Quita la compra de Inicio con × cuando quieras; tu lista guardada sigue igual. Para conservar una compra nueva, abre ··· → «Guardar en Listas». Si ya tiene una lista guardada, usa «Actualizar lista».": "Bought items move to a separate section below. Remove a shop from Home with × whenever you like; your saved list is unchanged. To keep a new shop, open ··· → “Save to Lists”. If it already has a saved list, use “Update saved list”.",
-  "Anuncio": "Advertisement"
+  "Anuncio": "Advertisement",
+  "En iPhone, Google AdMob sirve anuncios después del consentimiento aplicable. Puedes revisar sus opciones en Ajustes. Las compras usan Apple y una suscripción activa quita los anuncios. Cesta no envía tus productos, notas ni fotos a AdMob, ni accede a tus contactos. Las invitaciones caducan a los siete días.": "On iPhone, Google AdMob serves ads after the applicable consent. Review your choices in Settings. Purchases use Apple and an active subscription removes ads. Cesta does not send your products, notes or photos to AdMob and does not access contacts. Invitations expire after seven days."
 }

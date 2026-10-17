@@ -39,3 +39,19 @@ que explique también compras conjuntas. Responde expresamente «Sí, subir a
 TestFlight» al terminar. Autoriza esta beta1.4(1), firma y grupo interno existentes;
 no App Review, externos ni publicación comercial. Conservar excepción pública
 para CI estándar sin nuevos gastos. No autoriza futuras builds automáticas.
+
+## Guardar compras y monetización — 2026-10-18
+
+El usuario pide «Guardar en Listas» para compras nuevas, banner inferior AdMob
+como Voice Recorder, suscripciones para quitar anuncios desde Ajustes con varios
+importes entre1,99 y25€, petición ocasional de valoración y recordatorio de
+suscripción cada una o dos semanas. Autoriza integración y configuración propia
+de Cesta en AdMob/App Store Connect, reutilizando accesos existentes. Se eligen
+seis importes mensuales1,99/4,99/9,99/14,99/19,99/24,99€, mismo beneficio y apoyo
+adicional opcional, un solo grupo sin suscripciones simultáneas.
+
+La candidata1.5 usa anuncios de prueba hasta comprobar disponibilidad pública y
+aprobación de AdMob. No ampliar a intersticiales, otras apps, gastos, App Review
+ni publicación. Se permite validación de compilación sin firma para simulador;
+esta petición no incluye nueva IPA/TestFlight. Última distribuida1.4(1).
+Detalle verificable: store/MONETIZACION-2026-10-18.md.

@@ -17,6 +17,7 @@ jobs:
     timeout-minutes: 45
     env:
       CESTA_DISTRIBUTION: testflight
+      CESTA_ADS_MODE: test
       EXPO_PUBLIC_API_URL: https://cesta.krazel-zodiac-daily.workers.dev
       EXPO_PUBLIC_SHARE_URL: https://cesta.krazel-zodiac-daily.workers.dev
       ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
@@ -34,15 +35,15 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - run: npm run test:text-import
-      - run: node --test tests/syncEngine.test.mjs tests/purchases.test.mjs
+      - run: node --test tests/syncEngine.test.mjs tests/purchases.test.mjs tests/promptPolicy.test.mjs
       - name: Archive, sign, validate and upload
         run: node scripts/build-testflight.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: Cesta-1.4-build1-TestFlight
+          name: Cesta-1.5-build1-TestFlight
           path: |
-            artifacts/Cesta-1.4-build1-TestFlight.ipa
+            artifacts/Cesta-1.5-build1-TestFlight.ipa
             artifacts/testflight-build.json
           if-no-files-found: ignore
           retention-days: 1

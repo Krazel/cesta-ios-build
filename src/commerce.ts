@@ -92,7 +92,13 @@ async function changeHistory<T>(action: (value: PromptHistory) => T): Promise<T>
   const task = queue.then(async () => {
     if (!history) {
       const raw = await AsyncStorage.getItem(PROMPTS_KEY);
-      const parsed = raw ? JSON.parse(raw) : {};
+      let parsed = {};
+      try {
+        const value = raw ? JSON.parse(raw) : {};
+        if (value && typeof value === 'object' && !Array.isArray(value)) parsed = value;
+      } catch {
+        // A damaged reminder record must not stop shopping or repeat prompts.
+      }
       history = { ...newHistory(Date.now()), ...parsed };
     }
     const result = action(history!);

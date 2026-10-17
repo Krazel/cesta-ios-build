@@ -1,5 +1,11 @@
 # Cesta
 
+Candidata **1.5**: Guardar en Listas/Actualizar lista, banner nativo AdMob de
+prueba, seis suscripciones mensuales para quitar anuncios y recordatorios
+moderados. [Configuración, pruebas y pendientes](store/MONETIZACION-2026-10-18.md).
+Compilación de simulador sin firma verificada; no nueva IPA ni TestFlight.
+QA de esta interfaz: `node scripts/verify-monetization-ui.mjs` tras exportar web.
+
 Última beta entregada: **1.4 (1)** en TestFlight interno, verificada el17/10;
 [recibo de entrega](store/TESTFLIGHT-2026-10-17.md). Compras independientes de las
 listas guardadas, comprados al final y tutorial con compra conjunta. [Estado y

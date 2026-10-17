@@ -1,6 +1,23 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { AdBanner } from './src/AdBanner';
+import { SubscriptionOptions } from './src/SubscriptionOptions';
+import {
+  useCommerce,
+  initializeCommerce,
+  loadStoreProducts,
+  refreshCommerce,
+  prepareAds,
+  openAdPrivacy,
+  noteUsage,
+  noteCompletedShop,
+  nextPrompt,
+  markPrompt,
+  requestRating,
+  resetPromptHistory,
+} from './src/commerce';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
+  AppState,
   Keyboard,
   KeyboardAvoidingView,
   Modal,
@@ -73,6 +90,8 @@ import {
 import { BasketArt, Button, Field, Icon, IconButton, palette, s, theme } from './src/ui';
 
 type Sheet =
+  | 'noads'
+  | 'support-prompt'
   | 'new'
   | 'add'
   | 'text-import'
@@ -100,6 +119,10 @@ const feedback = () => {
 
 function AppContent() {
   const state = useCesta();
+  const commerce = useCommerce();
+  const [adHeight, setAdHeight] = useState(0);
+  const [adBusy, setAdBusy] = useState(false);
+  const adAttempted = useRef(false);
   const [tutorialReplay, setTutorialReplay] = useState(false);
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
@@ -202,6 +225,96 @@ function AppContent() {
       if (Platform.OS === 'web') window.removeEventListener('hashchange', hashChanged);
     };
   }, []);
+  useEffect(() => {
+    if (!state.ready || !state.onboarded) return;
+    void noteUsage().catch(() => {});
+    void initializeCommerce()
+      .then(() => loadStoreProducts())
+      .catch(() => {});
+    const sub = AppState.addEventListener('change', (phase) => {
+      if (phase === 'active') {
+        void noteUsage().catch(() => {});
+        void refreshCommerce().catch(() => {});
+      }
+    });
+    return () => sub.remove();
+  }, [state.ready, state.onboarded]);
+  useEffect(() => {
+    if (
+      !state.onboarded ||
+      !state.tutorialSeen ||
+      tutorialReplay ||
+      tab !== 'home' ||
+      showingList ||
+      sheet ||
+      confirm ||
+      !commerce.initialized ||
+      !commerce.supported ||
+      commerce.adsRemoved ||
+      adAttempted.current
+    )
+      return;
+    adAttempted.current = true;
+    setAdBusy(true);
+    void prepareAds()
+      .catch(() => {})
+      .finally(() => setAdBusy(false));
+  }, [
+    state.onboarded,
+    state.tutorialSeen,
+    tutorialReplay,
+    tab,
+    showingList,
+    sheet,
+    confirm,
+    commerce.initialized,
+    commerce.supported,
+    commerce.adsRemoved,
+  ]);
+  useEffect(() => {
+    if (
+      !state.ready ||
+      !state.onboarded ||
+      tutorialReplay ||
+      tab !== 'home' ||
+      showingList ||
+      sheet ||
+      confirm ||
+      adBusy ||
+      !commerce.initialized
+    )
+      return;
+    let cancelled = false;
+    const timer = setTimeout(() => {
+      if (AppState.currentState !== 'active' || TextInput.State.currentlyFocusedInput()) return;
+      void nextPrompt()
+        .then(async (kind) => {
+          if (cancelled || !kind) return;
+          if (kind === 'review') await requestRating();
+          else {
+            await markPrompt('support');
+            if (!cancelled) setSheet('support-prompt');
+          }
+        })
+        .catch(() => {});
+    }, 120000);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [
+    state.ready,
+    state.onboarded,
+    tutorialReplay,
+    tab,
+    showingList,
+    sheet,
+    confirm,
+    adBusy,
+    commerce.initialized,
+    commerce.products.length,
+    commerce.adsRemoved,
+  ]);
   const open = (next: Sheet) => {
     Keyboard.dismiss();
     setSheetError('');
@@ -320,6 +433,12 @@ function AppContent() {
     feedback();
   }
   function removeFromHome(list: ShoppingList) {
+    if (
+      state.activeListIds.includes(list.id) &&
+      list.items.length &&
+      list.items.every((item) => item.checked)
+    )
+      void noteCompletedShop().catch(() => {});
     setListActive(list.id, false);
     if (!state.cloud[list.id]) enqueue('list.delete', list.id, {});
     setSheet(null);
@@ -341,9 +460,10 @@ function AppContent() {
   }
   function requestUpdateSaved() {
     if (!active) return;
+    const hadSource = !!lists.find((list) => list.id === state.purchaseSources[active.id]);
     updateSavedList(active);
     setSheet(null);
-    notify(tr('Lista guardada actualizada'));
+    notify(tr(hadSource ? 'Lista guardada actualizada' : 'Lista guardada'));
   }
   function requestDelete(list: ShoppingList) {
     const owner = list.ownerId === state.snapshot.device.id;
@@ -498,7 +618,7 @@ function AppContent() {
     <View
       aria-hidden={!!sheet || !!confirm}
       accessibilityElementsHidden={!!sheet || !!confirm}
-      style={[a.nav, { paddingBottom: Math.max(10, insets.bottom) }]}
+      style={[a.nav, { paddingBottom: adHeight ? 10 : Math.max(10, insets.bottom) }]}
     >
       {(
         [
@@ -724,6 +844,24 @@ function AppContent() {
 
         {tab === 'settings' && (
           <SettingsScreen
+            onNoAds={() => open('noads')}
+            onRate={() => {
+              void Linking.openURL(
+                'https://apps.apple.com/app/id6808982515?action=write-review',
+              ).catch(() => notify(tr('No se ha podido abrir el enlace.'), 'error'));
+            }}
+            onAdPrivacy={() => {
+              if (!commerce.supported || !commerce.privacyRequired) {
+                notify(tr('No hay opciones publicitarias pendientes en este dispositivo.'));
+                return;
+              }
+              setAdBusy(true);
+              void openAdPrivacy()
+                .catch(() =>
+                  notify(tr('No se pudieron abrir las opciones de privacidad.'), 'error'),
+                )
+                .finally(() => setAdBusy(false));
+            }}
             onProfile={() => {
               setName(state.snapshot.device.name);
               open('profile');
@@ -753,6 +891,7 @@ function AppContent() {
                 label: tr('Borrar mis datos'),
                 action: async () => {
                   await eraseDevice();
+                  await resetPromptHistory();
                   setTab('home');
                   setDetail(false);
                 },
@@ -791,6 +930,7 @@ function AppContent() {
         </View>
       )}
       {nav()}
+      <AdBanner visible={!sheet && !confirm && !adBusy} onHeight={setAdHeight} />
 
       <Modal
         visible={!!sheet && !confirm}
@@ -817,31 +957,35 @@ function AppContent() {
               ]}
             >
               <Text style={[a.sectionTitle, { flex: 1 }]}>
-                {sheet === 'language'
-                  ? tr('Idioma')
-                  : sheet === 'display'
-                    ? tr('Tamaño de los productos')
-                    : sheet === 'new'
-                      ? editingList
-                        ? tr('Un nuevo aire')
-                        : tr('Una nueva lista')
-                      : sheet === 'text-import'
-                        ? tr('Pegar lista')
-                        : sheet === 'add'
-                          ? tr('¿Qué añadimos?')
-                          : sheet === 'edit'
-                            ? editingItem
-                              ? tr('A tu gusto')
-                              : tr('Tu propio producto')
-                            : sheet === 'share'
-                              ? tr('Compartir {0}', active?.name || '')
-                              : sheet === 'join'
-                                ? tr('La compra, juntos')
-                                : sheet === 'profile'
-                                  ? tr('Así te llamamos')
-                                  : sheet === 'privacy'
-                                    ? tr('Tu privacidad')
-                                    : tr('Opciones de {0}', active?.name || '')}
+                {sheet === 'noads'
+                  ? tr('Quitar anuncios')
+                  : sheet === 'support-prompt'
+                    ? tr('¿Prefieres comprar sin anuncios?')
+                    : sheet === 'language'
+                      ? tr('Idioma')
+                      : sheet === 'display'
+                        ? tr('Tamaño de los productos')
+                        : sheet === 'new'
+                          ? editingList
+                            ? tr('Un nuevo aire')
+                            : tr('Una nueva lista')
+                          : sheet === 'text-import'
+                            ? tr('Pegar lista')
+                            : sheet === 'add'
+                              ? tr('¿Qué añadimos?')
+                              : sheet === 'edit'
+                                ? editingItem
+                                  ? tr('A tu gusto')
+                                  : tr('Tu propio producto')
+                                : sheet === 'share'
+                                  ? tr('Compartir {0}', active?.name || '')
+                                  : sheet === 'join'
+                                    ? tr('La compra, juntos')
+                                    : sheet === 'profile'
+                                      ? tr('Así te llamamos')
+                                      : sheet === 'privacy'
+                                        ? tr('Tu privacidad')
+                                        : tr('Opciones de {0}', active?.name || '')}
               </Text>
               <IconButton
                 name="close"
@@ -887,6 +1031,29 @@ function AppContent() {
                 </View>
               )}
               {sheet === 'display' && <ProductSizeSettings />}
+              {sheet === 'noads' && <SubscriptionOptions />}
+              {sheet === 'support-prompt' && (
+                <>
+                  <Text style={s.body}>
+                    {tr(
+                      'Una suscripción mensual quita los anuncios y ayuda a mantener Cesta. Todas las funciones siguen disponibles sin suscribirte.',
+                    )}
+                  </Text>
+                  <Button title={tr('Ver opciones')} onPress={() => open('noads')} />
+                  <Button secondary title={tr('Ahora no')} onPress={() => setSheet(null)} />
+                  <Button
+                    secondary
+                    title={tr('No volver a preguntar')}
+                    onPress={() => {
+                      void markPrompt('support', true)
+                        .then(() => setSheet(null))
+                        .catch(() =>
+                          setSheetError(tr('No se ha podido guardar. Inténtalo de nuevo.')),
+                        );
+                    }}
+                  />
+                </>
+              )}
               {sheet === 'text-import' && (
                 <>
                   {chooseImportTarget && (
@@ -1623,9 +1790,19 @@ function AppContent() {
                       order: 6,
                       section: 'ORGANIZAR',
                       subtitle: '',
-                      title: tr('Duplicar lista'),
-                      icon: 'copy',
+                      title: state.activeListIds.includes(active.id)
+                        ? tr(
+                            lists.some((list) => list.id === state.purchaseSources[active.id])
+                              ? 'Actualizar lista'
+                              : 'Guardar en Listas',
+                          )
+                        : tr('Duplicar lista'),
+                      icon: state.activeListIds.includes(active.id) ? 'download' : 'copy',
                       fn: () => {
+                        if (state.activeListIds.includes(active.id)) {
+                          requestUpdateSaved();
+                          return;
+                        }
                         const id = createList(
                           tr('{0} · copia', active.name.slice(0, 50)),
                           active.emoji,
@@ -1643,18 +1820,6 @@ function AppContent() {
                         notify(tr('Copia privada creada'));
                       },
                     },
-                    ...(state.activeListIds.includes(active.id)
-                      ? [
-                          {
-                            order: 2,
-                            section: 'COMPRA',
-                            subtitle: 'Guarda el contenido sin cambiar el progreso de esta compra.',
-                            title: tr('Actualizar lista'),
-                            icon: 'refresh',
-                            fn: requestUpdateSaved,
-                          },
-                        ]
-                      : []),
                     {
                       order: 10,
                       section: 'LIMPIEZA',

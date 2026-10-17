@@ -1,3 +1,4 @@
+import { useCommerce } from './commerce';
 import React from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Constants from 'expo-constants';
@@ -11,6 +12,9 @@ export function SettingsScreen({
   onLanguage,
   onSize,
   onTutorial,
+  onNoAds,
+  onRate,
+  onAdPrivacy,
   onExport,
   onImport,
   onJoin,
@@ -22,6 +26,9 @@ export function SettingsScreen({
   onLanguage: () => void;
   onSize: () => void;
   onTutorial: () => void;
+  onNoAds: () => void;
+  onRate: () => void;
+  onAdPrivacy: () => void;
   onExport: () => void;
   onImport: () => void;
   onJoin: () => void;
@@ -30,6 +37,7 @@ export function SettingsScreen({
   onErase: () => void;
 }) {
   const state = useCesta();
+  const commerce = useCommerce();
   const groups = [
     {
       title: 'PREFERENCIAS',
@@ -49,8 +57,23 @@ export function SettingsScreen({
       ],
     },
     {
+      title: 'CESTA SIN ANUNCIOS',
+      rows: [
+        {
+          name: commerce.adsRemoved ? 'Suscripción activa' : 'Quitar anuncios',
+          icon: 'heart',
+          value: '',
+          action: onNoAds,
+        },
+        { name: 'Privacidad de los anuncios', icon: 'settings', value: '', action: onAdPrivacy },
+      ],
+    },
+    {
       title: 'AYUDA',
-      rows: [{ name: 'Ver tutorial', icon: 'lists', value: '', action: onTutorial }],
+      rows: [
+        { name: 'Ver tutorial', icon: 'lists', value: '', action: onTutorial },
+        { name: 'Valorar Cesta', icon: 'star', value: '', action: onRate },
+      ],
     },
     {
       title: 'TUS DATOS',

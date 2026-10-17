@@ -1,5 +1,6 @@
 {
   "ios": {
-    "NSPhotoLibraryUsageDescription": "Elige una foto para identificar tus productos."
+    "NSPhotoLibraryUsageDescription": "Elige una foto para identificar tus productos.",
+    "NSUserTrackingUsageDescription": "Tu permiso permite que Google muestre anuncios personalizados. Puedes rechazarlo y seguir usando Cesta."
   }
 }

@@ -24,7 +24,7 @@ const steps = [
   {
     icon: 'check',
     title: 'Lo de hoy y lo de siempre.',
-    body: 'Lo comprado baja a una sección separada. Quita la compra de Inicio con × cuando quieras; tu lista guardada sigue igual. Para conservar cambios, abre las opciones ··· y pulsa «Actualizar lista».',
+    body: 'Lo comprado baja a una sección separada. Quita la compra de Inicio con × cuando quieras; tu lista guardada sigue igual. Para conservar una compra nueva, abre ··· → «Guardar en Listas». Si ya tiene una lista guardada, usa «Actualizar lista».',
     label: 'Compra semanal',
     rows: ['✓  Pan', '🥑  Aguacate'],
     hint: 'Compra independiente · Actualizar lista',

@@ -1,0 +1,40 @@
+name: Validate Cesta native monetization (simulator only)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  simulator:
+    if: github.actor == github.repository_owner && github.ref == 'refs/heads/main' && github.event.repository.private == false
+    runs-on: macos-26
+    timeout-minutes: 45
+    env:
+      CESTA_DISTRIBUTION: testflight
+      CESTA_ADS_MODE: test
+      EXPO_NO_TELEMETRY: '1'
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - run: npm ci
+      - run: npm run typecheck
+      - run: node --test tests/promptPolicy.test.mjs tests/purchases.test.mjs tests/textImport.test.mjs tests/syncEngine.test.mjs
+      - run: npx expo prebuild --platform ios --no-install
+      - run: pod install --project-directory=ios
+      - name: Compile iOS simulator without signing or IPA
+        run: |
+          mkdir -p artifacts
+          set +e
+          xcodebuild -workspace ios/Cesta.xcworkspace -scheme Cesta -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath artifacts/DerivedData CODE_SIGNING_ALLOWED=NO build > artifacts/native-simulator-build.log 2>&1
+          result=$?
+          grep -E 'error:|BUILD SUCCEEDED|BUILD FAILED' artifacts/native-simulator-build.log | tail -60 || true
+          exit $result
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Cesta-monetization-simulator-validation
+          path: artifacts/native-simulator-build.log
+          retention-days: 1
+          if-no-files-found: ignore

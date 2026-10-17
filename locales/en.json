@@ -1,5 +1,6 @@
 {
   "ios": {
-    "NSPhotoLibraryUsageDescription": "Choose a photo to recognise your products."
+    "NSPhotoLibraryUsageDescription": "Choose a photo to recognise your products.",
+    "NSUserTrackingUsageDescription": "Your permission lets Google show personalized ads. You can decline and keep using Cesta."
   }
 }

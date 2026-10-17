@@ -3,7 +3,7 @@
     "name": "Cesta",
     "slug": "cesta",
     "scheme": "cesta",
-    "version": "1.4",
+    "version": "1.5",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -46,7 +46,8 @@
           "cameraPermission": false,
           "microphonePermission": false
         }
-      ]
+      ],
+      "./scripts/with-cesta-commerce.cjs"
     ],
     "locales": {
       "es": "./locales/es.json",

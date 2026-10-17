@@ -1,0 +1,42 @@
+{
+  "appId": "6808982515",
+  "groupReferenceName": "Cesta sin anuncios mensual",
+  "duration": "ONE_MONTH",
+  "groupLevel": 1,
+  "products": [
+    {
+      "id": "com.dmkr.cesta.noads.monthly.199",
+      "eur": "1.99"
+    },
+    {
+      "id": "com.dmkr.cesta.noads.monthly.499",
+      "eur": "4.99"
+    },
+    {
+      "id": "com.dmkr.cesta.noads.monthly.999",
+      "eur": "9.99"
+    },
+    {
+      "id": "com.dmkr.cesta.noads.monthly.1499",
+      "eur": "14.99"
+    },
+    {
+      "id": "com.dmkr.cesta.noads.monthly.1999",
+      "eur": "19.99"
+    },
+    {
+      "id": "com.dmkr.cesta.noads.monthly.2499",
+      "eur": "24.99"
+    }
+  ],
+  "admob": {
+    "appId": "",
+    "bannerId": "",
+    "productionReady": false,
+    "privacyPublished": false,
+    "umpReady": false
+  },
+  "adMode": "test",
+  "googleMobileAds": "12.14.0",
+  "googleUMP": "3.1.0"
+}

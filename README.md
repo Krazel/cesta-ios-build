@@ -1,21 +1,18 @@
 # Cesta
 
-Candidata **1.5**: Guardar en Listas/Actualizar lista, banner nativo AdMob de
-prueba, seis suscripciones mensuales para quitar anuncios y recordatorios
-moderados. [Configuración, pruebas y pendientes](store/MONETIZACION-2026-10-18.md).
-Compilación de simulador sin firma verificada; no nueva IPA ni TestFlight.
-QA de esta interfaz: `node scripts/verify-monetization-ui.mjs` tras exportar web.
-
-Última beta entregada: **1.4 (1)** en TestFlight interno, verificada el17/10;
-[recibo de entrega](store/TESTFLIGHT-2026-10-17.md). Compras independientes de las
-listas guardadas, comprados al final y tutorial con compra conjunta. [Estado y
-pendientes](CIERRE-OCTUBRE.md), [prueba física pendiente](store/QA-IPHONE-OCTUBRE.md).
-QA de interfaz local: `node scripts/verify-purchases-ui.mjs` tras `npm run build:web`.
-No sustituye iPhone ni los tests cloud. Vista local: `node scripts/preview-local.mjs`.
+Última beta entregada: **1.5 (1)** en TestFlight interno, verificada el19/10.
+[Entrega](store/TESTFLIGHT-2026-10-19.md): Guardar en Listas/Actualizar lista,
+banner nativo AdMob de prueba, consentimiento ES/EN, seis suscripciones mensuales
+para quitar anuncios y recordatorios moderados. Suscripciones sin aprobación
+comercial; QA de compras/consentimiento en iPhone físico pendiente.
+[Configuración y privacidad](store/MONETIZACION-2026-10-18.md),
+[prueba física](store/QA-IPHONE-OCTUBRE.md). No anuncios reales ni App Review.
+QA de interfaz: `node scripts/verify-monetization-ui.mjs` tras `npm run build:web`.
+La vista web no valida StoreKit ni anuncios de iPhone.
 
 Aplicación de listas de la compra para iPhone y web, en castellano e inglés.
 
-Web: https://cesta.krazel-zodiac-daily.workers.dev. `npm run preview` abre esta dirección pública. TestFlight interno1.4(1), con Internet, del2026-10-17; las pruebas físicas de esta beta siguen pendientes. No nueva publicación web por esta subida.
+Web: https://cesta.krazel-zodiac-daily.workers.dev. `npm run preview` abre esta dirección pública. TestFlight interno1.5(1), con Internet, del2026-10-19; las pruebas físicas de esta beta siguen pendientes. No nueva publicación web por esta subida.
 
 El usuario ordenó el 13/10 volver público Krazel/cesta-ios-build antes de esta build, para usar Actions estándar gratuitas; visibilidad PUBLIC releída por API. Esta excepción sustituye para Cesta la preferencia privada del 12/10. Soporte público: https://krazel.github.io/cesta/support/. Privacidad pública: https://krazel.github.io/cesta/privacy/. Se conservan los secretos en app-store-production, restringido a main. La CI de TestFlight sigue exigiendo propietario y main; si se vuelve a privado, requiere comprobación de cuota/entorno antes de su input manual. No se activan planes ni gastos.
 

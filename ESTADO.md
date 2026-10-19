@@ -1,5 +1,31 @@
 # Cesta — estado del producto
 
+## Entrega1.5(1) — 19/10/2026
+
+**Cesta1.5(1) disponible en TestFlight interno**, Apple VALID e IN_BETA_TESTING.
+Build3ec761bf-f65a-4807-9668-de4f84c1d4ff, notas ES/EN y grupo interno
+existente releídos por API. CI39269946511 correcta, fuente3c3581894cc7237fe10dc4b2736d8a1b59629f89.
+Incluye Guardar en Listas/Actualizar lista, AdMob con banner oficial de prueba,
+consentimiento Google ES/EN, seis suscripciones opcionales y recordatorios
+moderados. Archivo/firma/exportación/subida correctos, entrega COMPLETE sin
+errores ni avisos. IPA12683074bytes, SHA256c921a6f24dd38b9f9790133e6d762e04b63b18e3c926f5802013590e53d85d8e.
+ZIP/arm64/identidad/HTTPS/permisos/perfil/13manifiestos y configuración test
+verificados independientemente. Servicio online responde200/protocolo2.
+QA física de consentimiento, banner y StoreKit pendiente; productos todavía
+sin aprobación comercial. Sin anuncios reales, externos ni App Review; App Store1.2
+sigue PREPARE_FOR_SUBMISSION. Web pública sin nuevo despliegue. D1 PR-016 revisión26 verificada. Detalle
+store/TESTFLIGHT-2026-10-19.md y artifacts/testflight-20261019/.
+
+## TestFlight1.5(1) solicitado — 19/10/2026
+
+Usuario pide «pues sube a testflight». CI39269946511 iniciada desde
+3c3581894cc7237fe10dc4b2736d8a1b59629f89, repo PUBLIC y firma protegida
+existente verificados. Incluye guardar compras en Listas, banner AdMob test,
+suscripciones StoreKit y recordatorios. Sin externos, anuncios reales ni
+App Review; App Store1.2 permanece en preparación. Última beta disponible sigue
+1.4(1) hasta procesado y grupo verificados. D1 PR-016 revisión25 guardada y
+releída. Detalle store/TESTFLIGHT-2026-10-19.md y artifacts/testflight-20261019/.
+
 ## Candidata1.5 — Guardar en Listas y monetización — 18/10/2026
 
 Implementados Guardar en Listas/Actualizar lista, banner nativo AdMob de prueba,

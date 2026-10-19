@@ -1,12 +1,12 @@
 # Cesta — comprobación física antes de entregar
 
-Estado: pendiente en dispositivo físico. Última beta confirmada1.4(1), interna y disponible
-el17/10. Chrome y el inventario del IPA no sustituyen
+Estado: pendiente en dispositivo físico. Última beta confirmada1.5(1), interna y disponible
+el19/10. Chrome y el inventario del IPA no sustituyen
 esta comprobación. Registrar dispositivo, iOS, idioma, versión/build y fecha.
 
 Usar listas de prueba, nunca borrar listas reales. Exportar primero una copia desde Ajustes si ya hay datos personales. Resultado esperado y evidencia por cada recorrido:
 
-Para la futura1.5, añadir los recorridos de consentimiento, banner, suscripción,
+Para1.5, añadir los recorridos de consentimiento, banner, suscripción,
 restauración/caducidad/revocación y recordatorios de
 `MONETIZACION-2026-10-18.md`. Aún no están validados en iPhone físico.
 

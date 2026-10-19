@@ -64,3 +64,7 @@ Incluye Guardar en Listas, banner AdMob en modo test, suscripciones StoreKit y
 recordatorios. Conservar excepción pública de Cesta para CI estándar sin nuevos
 gastos. No autoriza App Review, testers externos ni anuncios reales. Comprobar
 procesado y pertenencia al grupo antes de declarar disponible la beta.
+
+Entrega19/10/2026 completada: Cesta1.5(1) VALID/IN_BETA_TESTING, grupo interno y
+notas ES/EN verificados. No App Review ni externos; futuras builds requieren
+petición expresa. Registro store/TESTFLIGHT-2026-10-19.md.

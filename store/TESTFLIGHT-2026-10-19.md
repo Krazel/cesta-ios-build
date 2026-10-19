@@ -38,3 +38,32 @@ las comprobaciones de navegador o inventario del IPA.
 Fuentes actuales comprobadas: [subidas Apple](https://developer.apple.com/help/app-store-connect/manage-builds/upload-builds/),
 [compras en TestFlight](https://developer.apple.com/help/app-store-connect/test-a-beta-version/testing-subscriptions-and-in-app-purchases-in-testflight)
 y [CI estándar pública](https://docs.github.com/en/billing/concepts/product-billing/github-actions).
+
+## Ejecución iniciada
+
+CI39269946511, commit3c3581894cc7237fe10dc4b2736d8a1b59629f89,
+19/10/2026. Biblioteca PR-016 revisión25 guardada y releída antes de dispatch.
+Última distribuida1.4(1) hasta comprobar la nueva por API.
+
+## Entrega1.5(1) — 19/10/2026
+
+**Cesta1.5(1) disponible en TestFlight interno**, Apple VALID e IN_BETA_TESTING.
+Build3ec761bf-f65a-4807-9668-de4f84c1d4ff, notas ES/EN y grupo interno
+existente releídos por API. CI39269946511 correcta, fuente3c3581894cc7237fe10dc4b2736d8a1b59629f89.
+Incluye Guardar en Listas/Actualizar lista, AdMob con banner oficial de prueba,
+consentimiento Google ES/EN, seis suscripciones opcionales y recordatorios
+moderados. Archivo/firma/exportación/subida correctos, entrega COMPLETE sin
+errores ni avisos. IPA12683074bytes, SHA256c921a6f24dd38b9f9790133e6d762e04b63b18e3c926f5802013590e53d85d8e.
+ZIP/arm64/identidad/HTTPS/permisos/perfil/13manifiestos y configuración test
+verificados independientemente. Servicio online responde200/protocolo2.
+QA física de consentimiento, banner y StoreKit pendiente; productos todavía
+sin aprobación comercial. Sin anuncios reales, externos ni App Review; App Store1.2
+sigue PREPARE_FOR_SUBMISSION. Web pública sin nuevo despliegue. Detalle
+store/TESTFLIGHT-2026-10-19.md y artifacts/testflight-20261019/.
+
+IPA local: `artifacts/testflight-39269946511/Cesta-1.5-build1-TestFlight.ipa`.
+Recibos: apple-complete.json, apple-delivery-final.json, ci-complete.json,
+public-health.json y la auditoría ipa-verification.json junto al IPA.
+
+Biblioteca PR-016 revisión26 guardada y releída con versión1.5,
+build1, TestFlight Interno y anuncios Integrados en pruebas; demás campos conservados.

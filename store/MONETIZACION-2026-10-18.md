@@ -1,5 +1,10 @@
 # Cesta1.5 — Guardar en Listas y monetización
 
+**Actualización19/10:** Cesta1.5(1) ya está en TestFlight interno, VALID y
+IN_BETA_TESTING. Entrega autorizada después de esta preparación; ver
+[recibo](TESTFLIGHT-2026-10-19.md). Anuncios test, QA física pendiente.
+Los apartados siguientes registran la preparación del18/10.
+
 Encargo humano del18/10/2026: guardar en Listas una compra hecha desde cero,
 banner inferior AdMob como Voice Recorder, varios importes de suscripción para
 quitar anuncios entre1,99 y25€, valoración nativa ocasional y recordatorio de

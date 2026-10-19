@@ -55,3 +55,12 @@ aprobación de AdMob. No ampliar a intersticiales, otras apps, gastos, App Revie
 ni publicación. Se permite validación de compilación sin firma para simulador;
 esta petición no incluye nueva IPA/TestFlight. Última distribuida1.4(1).
 Detalle verificable: store/MONETIZACION-2026-10-18.md.
+
+## Subida autorizada — 2026-10-19
+
+El usuario pide expresamente «pues sube a testflight». Autoriza compilar, firmar,
+subir y distribuir internamente Cesta1.5(1), reutilizando firma y grupo actuales.
+Incluye Guardar en Listas, banner AdMob en modo test, suscripciones StoreKit y
+recordatorios. Conservar excepción pública de Cesta para CI estándar sin nuevos
+gastos. No autoriza App Review, testers externos ni anuncios reales. Comprobar
+procesado y pertenencia al grupo antes de declarar disponible la beta.

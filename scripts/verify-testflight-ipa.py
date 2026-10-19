@@ -49,6 +49,16 @@ with zipfile.ZipFile(ipa) as archive:
     if expected_version == '1.4':
         for marker in [b'purchaseSources', b'Update saved list', b'Finish shop', b'Bought', b'You can shop together']:
             assert marker in js or marker.decode().encode('utf-16le') in js, marker
+    if expected_version == '1.5':
+        for marker in [b'Save to Lists', b'Update saved list', b'Restore purchases', b'CestaCommerce']:
+            assert marker in js or marker.decode().encode('utf-16le') in js, marker
+        assert info['GADApplicationIdentifier'] == 'ca-app-pub-3425091654264901~5160228186'
+        assert info['CestaAdMobBannerID'] == 'ca-app-pub-3940256099942544/2435281174'
+        assert info.get('GADDelayAppMeasurementInit') is True
+        assert info.get('NSUserTrackingUsageDescription')
+        assert len(info.get('SKAdNetworkItems', [])) >= 49
+        assert any('/GoogleMobileAdsResources.bundle/' in p for p in names)
+        assert any('/UserMessagingPlatformResources.bundle/' in p for p in names)
     profile = archive.read(app + '/embedded.mobileprovision')
     start = profile.index(b'<?xml')
     end = profile.index(b'</plist>', start) + len(b'</plist>')
@@ -59,8 +69,19 @@ with zipfile.ZipFile(ipa) as archive:
     assert not provisioning['Entitlements'].get('get-task-allow', False)
     assert provisioning['ExpirationDate'] > datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
     privacy = [p for p in names if p.endswith('/PrivacyInfo.xcprivacy')]
-    for filename in privacy:
-        assert not plistlib.loads(archive.read(filename)).get('NSPrivacyTracking', False)
+    privacy_inventory = [
+        {'path': filename, 'tracking': plistlib.loads(archive.read(filename)).get('NSPrivacyTracking', False)}
+        for filename in privacy
+    ]
+    if expected_version == '1.5':
+        own = [p for p in privacy_inventory if '/CestaCommercePrivacy.bundle/' in p['path']]
+        assert len(own) == 1 and own[0]['tracking'] is False
+        # Google SDKs declare their own collection/tracking. Preserve and inventory
+        # their manifests; never assert that the entire ad-enabled app is tracker-free.
+        assert any('/GoogleMobileAdsResources.bundle/' in p['path'] for p in privacy_inventory)
+        assert any('/UserMessagingPlatformResources.bundle/' in p['path'] for p in privacy_inventory)
+    else:
+        assert not any(p['tracking'] for p in privacy_inventory)
     receipt = {
         'checkedAt': datetime.datetime.now(datetime.timezone.utc).isoformat(),
         'version': expected_version, 'build': expected_build, 'sha256': digest, 'bytes': ipa.stat().st_size,
@@ -69,6 +90,8 @@ with zipfile.ZipFile(ipa) as archive:
         'minimumOS': info['MinimumOSVersion'], 'Xcode': info['DTXcode'], 'SDK': info['DTSDKName'],
         'unusedPermissionsAbsent': True, 'profileIdentityAndExpiryVerified': True,
         'privacyManifestCount': len(privacy), 'codesignVerifiedInCI': True,
+        'privacyInventory': privacy_inventory,
+        'testAdsVerified': expected_version == '1.5',
         'nativePhysicalQA': False,
     }
 (folder / 'ipa-verification.json').write_text(json.dumps(receipt, indent=2), encoding='utf-8')

@@ -1,5 +1,32 @@
 # Cesta — estado del producto
 
+## Preparación App Review1.5.1 — en curso,21/10/2026
+
+Usuario pide dejarlo definitivo para subir a revisión; no autoriza el envío final
+ni publicación. Borrador Apple a3c47237-d259-4f39-8174-f7f332c67324 actualizado
+a1.5.1/PREPARE_FOR_SUBMISSION, releaseMANUAL. Títulos y descripciones ES/EN,
+categorías, edad, notas, soporte/política/EULA y contacto de revisión verificados
+por API. Descarga gratuita/174territorios/China no disponible, sin expansión
+automática, autorizados expresamente y releídos. Acuerdos vigentes comprobados.
+Privacidad12tipos corregida/publicada con autorización humana específica y aviso
+Apple confirmado. Diagnósticos no vinculados y solo IDdispositivo con seguimiento;
+detalle store/APP-PRIVACY-2026-10-21.md. Política pública de Cesta actualizada.
+
+Se ha endurecido consentimiento TCF/ATT/GPP, NPA/RDP y clasificación publicitaria.
+19pruebas de lógica y19aserciones Swift pasan. Primera QA nativa mostró un problema
+de teclado corregido; segundo recorrido confirma entrada en ES/EN y páginas Listas
+y Productos en iPhone17ProMax/iPadPro13M5, pero se detiene por selectores del test
+(etiqueta estática en vez de campo y «Paste list» en vez de «Paste a list»).
+Corregidos en4fe2c90; CI39508129634 en curso con configuración comercial y runtime26.2.
+No declarar aún compras/restauración ni capturas finales aprobadas.
+
+Pendientes: completar QA nativa, capturas ES/EN iPhone+iPad y6screenshots de revisión
+de suscripciones; subir/validar candidata1.5.1(2), seleccionarla y preparar borrador
+con los6productos. Candidata(1) cancelada durante QA; no es una entrega definitiva.
+Última distribuida sigue1.5(1) interna. AdMob integrado pero aprobación de Google
+pendiente de listado público. QA física Sandbox/UMP sigue pendiente; no inventarla.
+Biblioteca PR-016 revisión27 registró el inicio; conciliación final pendiente.
+
 ## Entrega1.5(1) — 19/10/2026
 
 **Cesta1.5(1) disponible en TestFlight interno**, Apple VALID e IN_BETA_TESTING.

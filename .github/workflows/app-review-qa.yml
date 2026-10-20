@@ -5,7 +5,7 @@ on:
       device:
         type: choice
         default: both
-        options: [both, phone, tablet]
+        options: [both, phone, phone-medium, tablet]
 permissions:
   contents: read
 jobs:
@@ -25,7 +25,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        device: ${{ fromJSON(inputs.device == 'phone' && '["phone"]' || inputs.device == 'tablet' && '["tablet"]' || '["phone","tablet"]') }}
+        device: ${{ fromJSON(inputs.device == 'phone' && '["phone"]' || inputs.device == 'phone-medium' && '["phone-medium"]' || inputs.device == 'tablet' && '["tablet"]' || '["phone","tablet"]') }}
     timeout-minutes: 60
     env:
       CESTA_DISTRIBUTION: testflight

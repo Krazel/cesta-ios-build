@@ -14,7 +14,8 @@ fs.writeFileSync(`${out}/devices.json`, JSON.stringify(devices, null, 2));
 const runtime = devices.devices['com.apple.CoreSimulator.SimRuntime.iOS-26-2'];
 if (!runtime) throw Error('iOS26.2 runtime is required for reliable StoreKitTest on this runner');
 const available = runtime;
-const phone = available.find(d => /iPhone.*Pro Max/.test(d.name));
+const mediumPhone = process.env.CESTA_QA_DEVICE === 'phone-medium';
+const phone = available.find(d => mediumPhone ? d.name === 'iPhone 17 Pro' : /iPhone.*Pro Max/.test(d.name));
 const tablet = available.find(d => /iPad Pro.*13-inch/.test(d.name));
 if (!phone || !tablet) throw Error('Largest iPhone and 13-inch iPad simulators required');
 const arch = process.arch === 'arm64' ? 'arm64' : 'x86_64';
@@ -29,7 +30,7 @@ const xcode = (args, name) => {
 };
 if (!xcode([...common,'-destination',`platform=iOS Simulator,id=${phone.udid}`,'build-for-testing'], 'build')) process.exit(1);
 const results = [];
-for (const [kind, device] of [['phone',phone],['tablet',tablet]]) {
+for (const [kind, device] of [[mediumPhone?'phone-medium':'phone',phone],['tablet',tablet]]) {
   if (process.env.CESTA_QA_DEVICE && process.env.CESTA_QA_DEVICE !== kind) continue;
   if (device.state !== 'Booted') run('xcrun',['simctl','boot',device.udid]);
   run('xcrun',['simctl','bootstatus',device.udid,'-b']);

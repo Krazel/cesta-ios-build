@@ -155,10 +155,13 @@ export function IconButton({
 }
 export function Field(props: TextInputProps & { label?: string }) {
   const { label, ...rest } = props;
+  // defaultValue is an initial buffer, not an echo of each onChangeText event.
+  // Controlled fields continue to use their explicit value prop unchanged.
+  const initialDefaultValue = React.useRef(props.defaultValue).current;
   return (
     <View style={{ gap: 8 }}>
       {label && <Text style={s.label}>{label}</Text>}
-      <TextInput placeholderTextColor="#959B91" {...rest} style={[s.input, rest.style]} />
+      <TextInput placeholderTextColor="#959B91" {...rest} defaultValue={initialDefaultValue} style={[s.input, rest.style]} />
     </View>
   );
 }

@@ -716,7 +716,7 @@ function AppContent() {
               accessibilityLabel={tr('Tu nombre')}
               label={tr('Tu nombre, para reconocerte en las listas')}
               placeholder={tr('Por ejemplo, Dani')}
-              value={introName}
+              defaultValue={introName}
               onChangeText={setIntroName}
               maxLength={30}
             />
@@ -1083,7 +1083,7 @@ function AppContent() {
                         <Field
                           label={tr('Nombre de la lista')}
                           accessibilityLabel={tr('Nombre de la lista')}
-                          value={importName}
+                          defaultValue={importName}
                           onChangeText={setImportName}
                           maxLength={80}
                         />

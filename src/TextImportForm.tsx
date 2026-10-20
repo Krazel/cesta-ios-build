@@ -58,7 +58,9 @@ export function TextImportForm({
         placeholder={t(
           '2 litros de leche, espaguetis y 6 huevos\n500 g de tomates\nMi pan favorito (sin cortar)',
         )}
-        value={text}
+        // This form never replaces text programmatically. Let the native editor
+        // own its buffer so rapid typing/paste isn't overwritten by a stale render.
+        defaultValue=""
         onChangeText={(value) => {
           setText(value);
           setPreview(null);

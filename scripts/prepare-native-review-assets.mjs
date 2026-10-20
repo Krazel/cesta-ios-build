@@ -48,5 +48,5 @@ const products=JSON.parse(fs.readFileSync('artifacts/app-review-20261020/apple-a
 assert.equal(products.length,6);
 const subscriptions=products.map((p,i)=>({id:p.id,productId:p.productId,file:i<3?review.top:review.bottom}));
 fs.writeFileSync('artifacts/app-review-20261020/assets-manifest.json',JSON.stringify({appId:'6808982515',gallery,subscriptions},null,2));
-fs.writeFileSync(`${output}/provenance.json`,JSON.stringify({createdAt:new Date().toISOString(),version:'1.5.1',build:'2',galleryState:'Verified StoreKit test entitlement active; the real app removes its banner. No pixels edited.',provenance},null,2));
+fs.writeFileSync(`${output}/provenance.json`,JSON.stringify({createdAt:new Date().toISOString(),version:'1.5.1',build:JSON.parse(fs.readFileSync('store/app-review.json','utf8')).buildNumber,galleryState:'Verified StoreKit test entitlement active; the real app removes its banner. No pixels edited.',provenance},null,2));
 console.log(JSON.stringify({files:provenance.length,gallery:gallery.map(g=>({locale:g.locale,type:g.type,count:g.files.length})),review:subscriptions}));

@@ -11,7 +11,7 @@ const get=async p=>(await asc('GET',p)).data;
 const appId='6808982515',groupId='22489005';
 const receipt=JSON.parse(fs.readFileSync('artifacts/app-review-20261020/candidate-apple.json','utf8'));
 assert.equal(receipt.version,'1.5.1');
-assert.equal(receipt.buildNumber,'2');
+assert.equal(receipt.buildNumber,JSON.parse(fs.readFileSync('store/app-review.json','utf8')).buildNumber);
 assert.equal(receipt.selectedBuild,receipt.build.id);
 const version=await get(`/v1/appStoreVersions/${receipt.draft.id}`);
 assert(['PREPARE_FOR_SUBMISSION','READY_FOR_REVIEW'].includes(version.attributes.appStoreState));

@@ -16,6 +16,9 @@ final class CestaUITests: XCTestCase {
         e.tap()
     }
     private func capture(_ name: String) {
+        // XCTest's idle check can precede React Native's final layout frame.
+        // Let the real sheet/tab transition finish before keeping store artwork.
+        Thread.sleep(forTimeInterval: 1.5)
         let a = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         a.name = "store-\(en ? "en" : "es")-\(name)"
         a.lifetime = .keepAlways

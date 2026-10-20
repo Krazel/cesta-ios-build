@@ -1,4 +1,8 @@
 module.exports = ({ config }) => {
+  config = {
+    ...config,
+    ios: { ...config.ios, privacyManifests: require('./store/app-privacy-manifest.json') },
+  };
   if (process.env.CESTA_DISTRIBUTION !== 'testflight') return config;
   const infoPlist = {...config.ios.infoPlist};
   delete infoPlist.NSLocalNetworkUsageDescription;

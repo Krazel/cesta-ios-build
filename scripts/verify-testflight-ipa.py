@@ -15,7 +15,8 @@ assert manifest['version'] == expected_version and str(manifest['build']) == exp
 assert manifest['commit'] == expected_commit
 assert str(manifest['run']) == expected_run
 assert manifest['signatureVerified'] and manifest['uploadAccepted']
-ipa = folder / f'Cesta-{expected_version}-build{expected_build}-TestFlight.ipa'
+artifact_label = 'AppReview' if expected_version == '1.5.1' else 'TestFlight'
+ipa = folder / f'Cesta-{expected_version}-build{expected_build}-{artifact_label}.ipa'
 digest = hashlib.sha256(ipa.read_bytes()).hexdigest()
 assert digest == manifest['sha256'] and ipa.stat().st_size == manifest['bytes']
 with zipfile.ZipFile(ipa) as archive:
@@ -49,11 +50,12 @@ with zipfile.ZipFile(ipa) as archive:
     if expected_version == '1.4':
         for marker in [b'purchaseSources', b'Update saved list', b'Finish shop', b'Bought', b'You can shop together']:
             assert marker in js or marker.decode().encode('utf-16le') in js, marker
-    if expected_version == '1.5':
+    if expected_version in ['1.5', '1.5.1']:
         for marker in [b'Save to Lists', b'Update saved list', b'Restore purchases', b'CestaCommerce']:
             assert marker in js or marker.decode().encode('utf-16le') in js, marker
         assert info['GADApplicationIdentifier'] == 'ca-app-pub-3425091654264901~5160228186'
-        assert info['CestaAdMobBannerID'] == 'ca-app-pub-3940256099942544/2435281174'
+        expected_ad_id = 'ca-app-pub-3425091654264901/3118097788' if expected_version == '1.5.1' else 'ca-app-pub-3940256099942544/2435281174'
+        assert info['CestaAdMobBannerID'] == expected_ad_id
         assert info.get('GADDelayAppMeasurementInit') is True
         assert info.get('NSUserTrackingUsageDescription')
         assert len(info.get('SKAdNetworkItems', [])) >= 49
@@ -73,13 +75,19 @@ with zipfile.ZipFile(ipa) as archive:
         {'path': filename, 'tracking': plistlib.loads(archive.read(filename)).get('NSPrivacyTracking', False)}
         for filename in privacy
     ]
-    if expected_version == '1.5':
+    if expected_version in ['1.5', '1.5.1']:
         own = [p for p in privacy_inventory if '/CestaCommercePrivacy.bundle/' in p['path']]
         assert len(own) == 1 and own[0]['tracking'] is False
         # Google SDKs declare their own collection/tracking. Preserve and inventory
         # their manifests; never assert that the entire ad-enabled app is tracker-free.
         assert any('/GoogleMobileAdsResources.bundle/' in p['path'] for p in privacy_inventory)
         assert any('/UserMessagingPlatformResources.bundle/' in p['path'] for p in privacy_inventory)
+        if expected_version == '1.5.1':
+            app_privacy = plistlib.loads(archive.read(app + '/PrivacyInfo.xcprivacy'))
+            expected_privacy = json.loads((pathlib.Path(__file__).resolve().parents[1] / 'store/app-privacy-manifest.json').read_text())
+            for key, value in expected_privacy.items():
+                assert app_privacy[key] == value, key
+            assert not any('CestaStoreKitQA' in p or 'CestaUITests' in p for p in names)
     else:
         assert not any(p['tracking'] for p in privacy_inventory)
     receipt = {

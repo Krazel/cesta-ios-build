@@ -21,6 +21,12 @@ final class CestaUITests: XCTestCase {
         a.lifetime = .keepAlways
         add(a)
     }
+    private func typeKeys(_ value: String, into field: XCUIElement) {
+        // Bulk typeText drops all but the first character on this CLI simulator,
+        // including the uncontrolled native-buffer form. Deliver individual keys
+        // through the same public API and keep all full-value assertions.
+        for character in value { field.typeText(String(character)) }
+    }
     override func setUpWithError() throws {
         continueAfterFailure = false
         session = try SKTestSession(configurationFileNamed: "CestaStoreKitQA")
@@ -47,8 +53,9 @@ final class CestaUITests: XCTestCase {
         XCTAssertTrue(name.waitForExistence(timeout: 15))
         name.tap()
         XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 5))
-        name.typeText("Alex")
+        typeKeys("Alex", into: name)
         XCTAssertEqual(name.value as? String, "Alex", "Text must remain intact before the first continue tap")
+        capture("00-name-entry")
         tap("Empezar mi cesta", "Start my basket")
         // UMP remains the real SDK flow. Dismiss only explicit reject options if present.
         for text in ["Rechazar todo", "Rechazar", "Reject all", "Do not consent"] {
@@ -65,15 +72,15 @@ final class CestaUITests: XCTestCase {
         if title.exists {
             title.tap()
             let length = (title.value as? String)?.count ?? 0
-            title.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: length))
-            title.typeText(label("Compra del finde", "Weekend shop"))
+            typeKeys(String(repeating: XCUIKeyboardKey.delete.rawValue, count: length), into: title)
+            typeKeys(label("Compra del finde", "Weekend shop"), into: title)
             XCTAssertEqual(title.value as? String, label("Compra del finde", "Weekend shop"))
         }
         // iOS combines a multiline field's accessibility label and placeholder.
         // This sheet has exactly one actual multiline editor, not its static label.
         let text = app.textViews.firstMatch
         XCTAssertTrue(text.waitForExistence(timeout: 10)); text.tap()
-        text.typeText(label("2 litros de leche, espaguetis y 6 huevos\n500 g de tomates\nPan, yogur y fruta", "2 litres of milk, spaghetti and 6 eggs\n500 g tomatoes\nBread, yogurt and fruit"))
+        typeKeys(label("2 litros de leche, espaguetis y 6 huevos\n500 g de tomates\nPan, yogur y fruta", "2 litres of milk, spaghetti and 6 eggs\n500 g tomatoes\nBread, yogurt and fruit"), into: text)
         XCTAssertTrue((text.value as? String)?.contains(label("espaguetis", "spaghetti")) == true)
         tap("Preparar lista", "Prepare list")
         capture("04-paste")

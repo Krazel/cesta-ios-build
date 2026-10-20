@@ -1,0 +1,182 @@
+{
+  "identifier": "3E25CCBA-3C04-4C90-89E3-C0A1CE57A602",
+  "nonRenewingSubscriptions": [],
+  "products": [],
+  "settings": {
+    "_applicationInternalID": "6808982515",
+    "_developerTeamID": "B2X6D3A9J9",
+    "_failTransactionsEnabled": false,
+    "_locale": "es_ES",
+    "_storefront": "ESP",
+    "_storeKitErrors": []
+  },
+  "subscriptionGroups": [
+    {
+      "id": "22489005",
+      "localizations": [],
+      "name": "Cesta sin anuncios mensual",
+      "subscriptions": [
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "1.99",
+          "familyShareable": false,
+          "groupNumber": 1,
+          "internalID": "6824077121",
+          "introductoryOffer": null,
+          "localizations": [
+            {
+              "description": "Quita anuncios mientras la suscripción está activa.",
+              "displayName": "Cesta sin anuncios",
+              "locale": "es_ES"
+            },
+            {
+              "description": "Remove ads while your subscription is active.",
+              "displayName": "Cesta without ads",
+              "locale": "en_US"
+            }
+          ],
+          "recurringSubscriptionPeriod": "P1M",
+          "referenceName": "Cesta 1.99",
+          "subscriptionGroupID": "22489005",
+          "type": "RecurringSubscription",
+          "productID": "com.dmkr.cesta.noads.monthly.199"
+        },
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "4.99",
+          "familyShareable": false,
+          "groupNumber": 1,
+          "internalID": "6824077122",
+          "introductoryOffer": null,
+          "localizations": [
+            {
+              "description": "Quita anuncios mientras la suscripción está activa.",
+              "displayName": "Cesta sin anuncios",
+              "locale": "es_ES"
+            },
+            {
+              "description": "Remove ads while your subscription is active.",
+              "displayName": "Cesta without ads",
+              "locale": "en_US"
+            }
+          ],
+          "recurringSubscriptionPeriod": "P1M",
+          "referenceName": "Cesta 4.99",
+          "subscriptionGroupID": "22489005",
+          "type": "RecurringSubscription",
+          "productID": "com.dmkr.cesta.noads.monthly.499"
+        },
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "9.99",
+          "familyShareable": false,
+          "groupNumber": 1,
+          "internalID": "6824077123",
+          "introductoryOffer": null,
+          "localizations": [
+            {
+              "description": "Quita anuncios mientras la suscripción está activa.",
+              "displayName": "Cesta sin anuncios",
+              "locale": "es_ES"
+            },
+            {
+              "description": "Remove ads while your subscription is active.",
+              "displayName": "Cesta without ads",
+              "locale": "en_US"
+            }
+          ],
+          "recurringSubscriptionPeriod": "P1M",
+          "referenceName": "Cesta 9.99",
+          "subscriptionGroupID": "22489005",
+          "type": "RecurringSubscription",
+          "productID": "com.dmkr.cesta.noads.monthly.999"
+        },
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "14.99",
+          "familyShareable": false,
+          "groupNumber": 1,
+          "internalID": "6824077124",
+          "introductoryOffer": null,
+          "localizations": [
+            {
+              "description": "Quita anuncios mientras la suscripción está activa.",
+              "displayName": "Cesta sin anuncios",
+              "locale": "es_ES"
+            },
+            {
+              "description": "Remove ads while your subscription is active.",
+              "displayName": "Cesta without ads",
+              "locale": "en_US"
+            }
+          ],
+          "recurringSubscriptionPeriod": "P1M",
+          "referenceName": "Cesta 14.99",
+          "subscriptionGroupID": "22489005",
+          "type": "RecurringSubscription",
+          "productID": "com.dmkr.cesta.noads.monthly.1499"
+        },
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "19.99",
+          "familyShareable": false,
+          "groupNumber": 1,
+          "internalID": "6824077125",
+          "introductoryOffer": null,
+          "localizations": [
+            {
+              "description": "Quita anuncios mientras la suscripción está activa.",
+              "displayName": "Cesta sin anuncios",
+              "locale": "es_ES"
+            },
+            {
+              "description": "Remove ads while your subscription is active.",
+              "displayName": "Cesta without ads",
+              "locale": "en_US"
+            }
+          ],
+          "recurringSubscriptionPeriod": "P1M",
+          "referenceName": "Cesta 19.99",
+          "subscriptionGroupID": "22489005",
+          "type": "RecurringSubscription",
+          "productID": "com.dmkr.cesta.noads.monthly.1999"
+        },
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "24.99",
+          "familyShareable": false,
+          "groupNumber": 1,
+          "internalID": "6824077126",
+          "introductoryOffer": null,
+          "localizations": [
+            {
+              "description": "Quita anuncios mientras la suscripción está activa.",
+              "displayName": "Cesta sin anuncios",
+              "locale": "es_ES"
+            },
+            {
+              "description": "Remove ads while your subscription is active.",
+              "displayName": "Cesta without ads",
+              "locale": "en_US"
+            }
+          ],
+          "recurringSubscriptionPeriod": "P1M",
+          "referenceName": "Cesta 24.99",
+          "subscriptionGroupID": "22489005",
+          "type": "RecurringSubscription",
+          "productID": "com.dmkr.cesta.noads.monthly.2499"
+        }
+      ]
+    }
+  ],
+  "version": {
+    "major": 3,
+    "minor": 0
+  }
+}

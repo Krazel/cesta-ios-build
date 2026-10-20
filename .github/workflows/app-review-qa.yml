@@ -1,0 +1,40 @@
+name: Cesta native App Review QA and screenshots
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native:
+    if: github.actor == github.repository_owner && github.ref == 'refs/heads/main' && github.event.repository.private == false
+    runs-on: macos-26
+    timeout-minutes: 60
+    env:
+      CESTA_DISTRIBUTION: testflight
+      CESTA_ADS_MODE: test
+      EXPO_NO_TELEMETRY: '1'
+      EXPO_PUBLIC_API_URL: https://cesta.krazel-zodiac-daily.workers.dev
+      EXPO_PUBLIC_SHARE_URL: https://cesta.krazel-zodiac-daily.workers.dev
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - run: npm ci
+      - run: npm run typecheck
+      - run: node --test tests/promptPolicy.test.mjs tests/purchases.test.mjs tests/textImport.test.mjs tests/syncEngine.test.mjs
+      - run: npx expo prebuild --platform ios --no-install
+      - run: node scripts/setup-native-qa.cjs
+      - run: pod install --project-directory=ios
+      - name: Build native release test runner and capture iPhone and iPad
+        run: node scripts/run-native-qa.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Cesta-native-review-QA
+          path: |
+            artifacts/native-qa/*.log
+            artifacts/native-qa/*.json
+            artifacts/native-qa/captures/
+          retention-days: 1
+          if-no-files-found: ignore

@@ -10,7 +10,8 @@ final class CestaUITests: XCTestCase {
         app.descendants(matching: .any).matching(identifier: value).firstMatch
     }
     private func tap(_ es: String, _ english: String) {
-        let e = element(label(es, english))
+        let button = app.buttons.matching(identifier: label(es, english)).firstMatch
+        let e = button.exists ? button : element(label(es, english))
         XCTAssertTrue(e.waitForExistence(timeout: 15), "Missing \(e)\n\(app.debugDescription)")
         e.tap()
     }
@@ -45,7 +46,8 @@ final class CestaUITests: XCTestCase {
         let name = element(label("Tu nombre", "Your name"))
         XCTAssertTrue(name.waitForExistence(timeout: 15))
         name.tap()
-        for character in "Alex" { name.typeText(String(character)) }
+        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 5))
+        name.typeText("Alex")
         XCTAssertEqual(name.value as? String, "Alex", "Text must remain intact before the first continue tap")
         tap("Empezar mi cesta", "Start my basket")
         // UMP remains the real SDK flow. Dismiss only explicit reject options if present.
@@ -58,15 +60,21 @@ final class CestaUITests: XCTestCase {
         tap("Productos", "Products")
         capture("03-products")
         tap("Inicio", "Home")
-        tap("Pegar lista", "Paste list")
-        let title = element(label("Nombre de la lista", "List name"))
+        tap("Pegar lista", "Paste a list")
+        let title = app.textFields.matching(identifier: label("Nombre de la lista", "List name")).firstMatch
         if title.exists {
             title.tap()
-            title.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: 80) + label("Compra del finde", "Weekend shop"))
+            let length = (title.value as? String)?.count ?? 0
+            title.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: length))
+            title.typeText(label("Compra del finde", "Weekend shop"))
+            XCTAssertEqual(title.value as? String, label("Compra del finde", "Weekend shop"))
         }
-        let text = app.textViews.matching(identifier: label("Texto de la compra", "Shopping text")).firstMatch
+        // iOS combines a multiline field's accessibility label and placeholder.
+        // This sheet has exactly one actual multiline editor, not its static label.
+        let text = app.textViews.firstMatch
         XCTAssertTrue(text.waitForExistence(timeout: 10)); text.tap()
         text.typeText(label("2 litros de leche, espaguetis y 6 huevos\n500 g de tomates\nPan, yogur y fruta", "2 litres of milk, spaghetti and 6 eggs\n500 g tomatoes\nBread, yogurt and fruit"))
+        XCTAssertTrue((text.value as? String)?.contains(label("espaguetis", "spaghetti")) == true)
         tap("Preparar lista", "Prepare list")
         capture("04-paste")
         let add = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@ AND label ENDSWITH %@", label("Añadir ", "Add "), label(" productos", " products"))).firstMatch
@@ -112,6 +120,17 @@ final class CestaUITests: XCTestCase {
         tap("Restaurar compras", "Restore purchases")
         XCTAssertTrue(element(label("Compras restauradas. Anuncios quitados.", "Purchases restored. Ads removed.")).waitForExistence(timeout: 15), app.debugDescription)
         capture("11-restored")
+        // Store gallery: real app with a verified local StoreKit entitlement.
+        // The subscription removes the banner; no ad image is painted over.
+        tap("Cerrar ventana", "Close window")
+        tap("Listas", "Lists")
+        capture("20-gallery-lists")
+        tap("Productos", "Products")
+        capture("21-gallery-products")
+        tap("Inicio", "Home")
+        capture("22-gallery-home")
+        tap("Abrir Compra del finde", "Open Weekend shop")
+        capture("23-gallery-shop")
     }
     func testConsentFailsClosed() {
         let empty = TrackingConsentSignals(gdprApplies: nil, purposeConsents: nil, purposeLegitimateInterests: nil, vendorConsents: nil, vendorLegitimateInterests: nil)

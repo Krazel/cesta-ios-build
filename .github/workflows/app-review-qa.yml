@@ -24,7 +24,8 @@ jobs:
     timeout-minutes: 60
     env:
       CESTA_DISTRIBUTION: testflight
-      CESTA_ADS_MODE: test
+      CESTA_ADS_MODE: production
+      CESTA_RELEASE_CONFIG: store/app-review.json
       CESTA_QA_DEVICE: ${{ matrix.device }}
       EXPO_NO_TELEMETRY: '1'
       EXPO_PUBLIC_API_URL: https://cesta.krazel-zodiac-daily.workers.dev

@@ -20,6 +20,7 @@ if (!phone || !tablet) throw Error('Largest iPhone and 13-inch iPad simulators r
 const arch = process.arch === 'arm64' ? 'arm64' : 'x86_64';
 const common = ['-workspace','ios/Cesta.xcworkspace','-scheme','Cesta','-configuration','Release','-sdk','iphonesimulator','-derivedDataPath',`${out}/DerivedData`,'CODE_SIGNING_ALLOWED=NO',`ARCHS=${arch}`,'ONLY_ACTIVE_ARCH=YES','-parallel-testing-enabled','NO'];
 const xcode = (args, name) => {
+  console.log(`Starting native stage: ${name}`);
   const fd = fs.openSync(`${out}/${name}.log`, 'w');
   const r = spawnSync('xcodebuild', args, { stdio: ['ignore', fd, fd] });
   fs.closeSync(fd);

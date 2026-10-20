@@ -27,6 +27,18 @@ final class CestaUITests: XCTestCase {
         // through the same public API and keep all full-value assertions.
         for character in value { field.typeText(String(character)) }
     }
+    private func openSettings() {
+        // The real banner can arrive after launch and move the tab bar between
+        // XCTest's coordinate resolution and touch. Confirm navigation, never
+        // interpret a missed tab tap as an entitlement/expiration failure.
+        let profile = app.buttons.matching(identifier: label("Cambiar nombre", "Change name")).firstMatch
+        for _ in 0..<3 {
+            if profile.exists { return }
+            tap("Ajustes", "Settings")
+            if profile.waitForExistence(timeout: 5) { return }
+        }
+        XCTAssertTrue(profile.exists, "Settings must be open before checking commerce state\n\(app.debugDescription)")
+    }
     override func setUpWithError() throws {
         continueAfterFailure = false
         session = try SKTestSession(configurationFileNamed: "CestaStoreKitQA")
@@ -95,7 +107,7 @@ final class CestaUITests: XCTestCase {
         capture("01-shop")
         tap("Inicio", "Home")
         capture("05-home")
-        tap("Ajustes", "Settings")
+        openSettings()
         capture("06-settings")
         tap("Quitar anuncios", "Remove ads")
         let offers = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", label("Suscribirme por ", "Subscribe for ")))
@@ -111,17 +123,17 @@ final class CestaUITests: XCTestCase {
         XCTAssertTrue(active.waitForExistence(timeout: 20), app.debugDescription)
         capture("09-purchase-success")
         app.terminate(); app.launch()
-        tap("Ajustes", "Settings")
+        openSettings()
         XCTAssertTrue(element(label("Suscripción activa", "Active subscription")).waitForExistence(timeout: 15))
         // A verified entitlement survives restart, then expiration must remove it.
         try session.expireSubscription(productIdentifier: "com.dmkr.cesta.noads.monthly.199")
         app.terminate(); app.launch()
-        tap("Ajustes", "Settings")
+        openSettings()
         XCTAssertTrue(element(label("Quitar anuncios", "Remove ads")).waitForExistence(timeout: 15))
         capture("10-expired")
         try session.buyProduct(productIdentifier: "com.dmkr.cesta.noads.monthly.199")
         app.terminate(); app.launch()
-        tap("Ajustes", "Settings")
+        openSettings()
         tap("Suscripción activa", "Active subscription")
         for _ in 0..<3 where !element(label("Restaurar compras", "Restore purchases")).isHittable { app.swipeUp() }
         tap("Restaurar compras", "Restore purchases")

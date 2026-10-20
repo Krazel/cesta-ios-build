@@ -1,6 +1,11 @@
 name: Cesta native App Review QA and screenshots
 on:
   workflow_dispatch:
+    inputs:
+      device:
+        type: choice
+        default: both
+        options: [both, phone, tablet]
 permissions:
   contents: read
 jobs:
@@ -20,7 +25,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        device: [phone, tablet]
+        device: ${{ fromJSON(inputs.device == 'phone' && '["phone"]' || inputs.device == 'tablet' && '["tablet"]' || '["phone","tablet"]') }}
     timeout-minutes: 60
     env:
       CESTA_DISTRIBUTION: testflight

@@ -1,0 +1,13 @@
+{
+  "name": "Cesta: Lista de la compra",
+  "bundleId": "com.dmkr.cesta.B2X6D3A9J9",
+  "teamId": "B2X6D3A9J9",
+  "marketingVersion": "1.5.1",
+  "buildNumber": "1",
+  "purpose": "App Review candidate, not submitted",
+  "artifactLabel": "AppReview",
+  "appId": "6808982515",
+  "apiUrl": "https://cesta.krazel-zodiac-daily.workers.dev",
+  "adsMode": "production",
+  "distribution": "upload-only, no tester-group mutation or review submission"
+}

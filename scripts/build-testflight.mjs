@@ -4,7 +4,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import xcode from 'xcode';
 import plist from 'plist';
-const cfg = JSON.parse(fs.readFileSync('store/testflight.json'));
+const cfg = JSON.parse(fs.readFileSync(process.env.CESTA_RELEASE_CONFIG || 'store/testflight.json'));
 if (process.platform !== 'darwin' || process.env.CESTA_DISTRIBUTION !== 'testflight') throw new Error('TestFlight requires the explicit macOS distribution environment');
 const temp=process.env.RUNNER_TEMP;
 if(!temp) throw new Error('RUNNER_TEMP is required');
@@ -59,10 +59,17 @@ try {
   const archive=path.join(temp,'Cesta.xcarchive');
   run('xcodebuild',['archive','-workspace','ios/Cesta.xcworkspace','-scheme','Cesta','-configuration','Release','-destination','generic/platform=iOS','-archivePath',archive,'ARCHS=arm64','ONLY_ACTIVE_ARCH=NO']);
   const app=path.join(archive,'Products','Applications','Cesta.app');
+  if(fs.existsSync(path.join(app,'CestaStoreKitQA.storekit')) || fs.existsSync(path.join(app,'CestaUITests.xctest')))
+    throw new Error('Test-only resources must never be included in a distribution archive');
   const archivedInfoPath=path.join(temp,'archived-info.plist');
   run('plutil',['-convert','xml1','-o',archivedInfoPath,path.join(app,'Info.plist')]);
   const archivedInfo=plist.parse(fs.readFileSync(archivedInfoPath,'utf8'));
   if(archivedInfo.CFBundleIdentifier!==cfg.bundleId || archivedInfo.CFBundleShortVersionString!==cfg.marketingVersion || String(archivedInfo.CFBundleVersion)!==String(cfg.buildNumber))throw new Error('Archived app identity/version does not match the TestFlight release');
+  if(cfg.adsMode==='production') {
+    const ads=JSON.parse(fs.readFileSync('store/monetization.json')).admob;
+    if(archivedInfo.CestaAdMobBannerID!==ads.bannerId || archivedInfo.GADApplicationIdentifier!==ads.appId || !archivedInfo.GADDelayAppMeasurementInit)
+      throw new Error('Production archive ad identity or delayed initialization mismatch');
+  }
   run('codesign',['--verify','--deep','--strict',app]);
   const options=path.join(temp,'ExportOptions.plist');
   fs.writeFileSync(options,plist.build({method:'app-store-connect',destination:'export',teamID:cfg.teamId,signingStyle:'manual',signingCertificate:'Apple Distribution',provisioningProfiles:{[cfg.bundleId]:provision.Name},manageAppVersionAndBuildNumber:false,uploadSymbols:true,stripSwiftSymbols:true}));
@@ -70,9 +77,9 @@ try {
   run('xcodebuild',['-exportArchive','-archivePath',archive,'-exportOptionsPlist',options,'-exportPath',output]);
   const ipa=path.join(output,fs.readdirSync(output).find(name=>name.endsWith('.ipa')));
   fs.mkdirSync('artifacts',{recursive:true});
-  const artifact=`artifacts/Cesta-${cfg.marketingVersion}-build${cfg.buildNumber}-TestFlight.ipa`;
+  const artifact=`artifacts/Cesta-${cfg.marketingVersion}-build${cfg.buildNumber}-${cfg.artifactLabel || 'TestFlight'}.ipa`;
   fs.copyFileSync(ipa,artifact);
-  const manifest={app:'Cesta',purpose:'TestFlight',version:cfg.marketingVersion,build:cfg.buildNumber,bundleId:cfg.bundleId,appId:cfg.appId,commit:process.env.GITHUB_SHA,run:process.env.GITHUB_RUN_ID,sha256:crypto.createHash('sha256').update(fs.readFileSync(artifact)).digest('hex'),bytes:fs.statSync(artifact).size,apiUrl:api.href,profileId:provision.UUID,signatureVerified:true};
+  const manifest={app:'Cesta',purpose:cfg.purpose || 'TestFlight',adsMode:process.env.CESTA_ADS_MODE || 'test',version:cfg.marketingVersion,build:cfg.buildNumber,bundleId:cfg.bundleId,appId:cfg.appId,commit:process.env.GITHUB_SHA,run:process.env.GITHUB_RUN_ID,sha256:crypto.createHash('sha256').update(fs.readFileSync(artifact)).digest('hex'),bytes:fs.statSync(artifact).size,apiUrl:api.href,profileId:provision.UUID,signatureVerified:true};
   fs.writeFileSync('artifacts/testflight-build.json',JSON.stringify(manifest,null,2)+'\n');
   run('xcrun',['altool','--validate-app','--type','ios','--file',artifact,'--apiKey',process.env.ASC_KEY_ID,'--apiIssuer',process.env.ASC_ISSUER_ID]);
   run('xcrun',['altool','--upload-app','--type','ios','--file',artifact,'--apiKey',process.env.ASC_KEY_ID,'--apiIssuer',process.env.ASC_ISSUER_ID]);

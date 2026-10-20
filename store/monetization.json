@@ -33,6 +33,9 @@
     "appId": "ca-app-pub-3425091654264901~5160228186",
     "bannerId": "ca-app-pub-3425091654264901/3118097788",
     "productionReady": false,
+    "configurationReady": true,
+    "storeListingLinked": false,
+    "googleAppApproved": false,
     "privacyPublished": true,
     "umpReady": true
   },

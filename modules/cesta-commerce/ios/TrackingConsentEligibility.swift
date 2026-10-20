@@ -6,6 +6,8 @@ struct TrackingConsentSignals {
     let purposeLegitimateInterests: String?
     let vendorConsents: String?
     let vendorLegitimateInterests: String?
+    var applicableGppSections: String? = nil
+    var usPrivacy: String? = nil
 }
 
 enum TrackingConsentEligibility {
@@ -30,7 +32,9 @@ enum TrackingConsentEligibility {
                 vendorConsents: userDefaults.string(forKey: "IABTCF_VendorConsents"),
                 vendorLegitimateInterests: userDefaults.string(
                     forKey: "IABTCF_VendorLegitimateInterests"
-                )
+                ),
+                applicableGppSections: userDefaults.string(forKey: "IABGPP_GppSID"),
+                usPrivacy: userDefaults.string(forKey: "IABUSPrivacy_String")
             )
         )
     }
@@ -40,11 +44,22 @@ enum TrackingConsentEligibility {
         _ signals: TrackingConsentSignals
     ) -> Bool {
         guard canRequestAds else { return false }
-
-        if signals.gdprApplies == 0 {
-            return true
+        // UMP's permission to request contextual ads is not permission to track.
+        // For non-TCF GPP regions, keep ATT off rather than infer permission from
+        // a missing GDPR flag. UMP/Google still apply the relevant regional choices.
+        if let sections = signals.applicableGppSections, !sections.isEmpty {
+            let values = sections.split(separator: "_", omittingEmptySubsequences: false)
+            guard !values.isEmpty, values.allSatisfy({ $0 == "2" }) else { return false }
+        }
+        if let privacy = signals.usPrivacy, !privacy.isEmpty {
+            let chars = Array(privacy)
+            guard chars.count == 4, chars[0] == "1",
+                  chars[2] == "N" || chars[2] == "-" else { return false }
         }
 
+        // Cesta only enables personalization with an explicit, complete TCF grant.
+        // Other regions use non-personalized/RDP ads; GDPR not applying is not a
+        // user consent. This also avoids depending on a US CMP opt-out to track.
         guard signals.gdprApplies == 1,
               personalizedConsentPurposes.allSatisfy({
                   bit($0, isEnabledIn: signals.purposeConsents)

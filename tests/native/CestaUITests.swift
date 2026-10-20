@@ -58,7 +58,10 @@ final class CestaUITests: XCTestCase {
         tap("Inicio", "Home")
         tap("Pegar lista", "Paste list")
         let title = element(label("Nombre de la lista", "List name"))
-        if title.exists { title.tap(); title.typeText(label("Compra del finde", "Weekend shop")) }
+        if title.exists {
+            title.tap()
+            title.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: 80) + label("Compra del finde", "Weekend shop"))
+        }
         let text = app.textViews.matching(identifier: label("Texto de la compra", "Shopping text")).firstMatch
         XCTAssertTrue(text.waitForExistence(timeout: 10)); text.tap()
         text.typeText(label("2 litros de leche, espaguetis y 6 huevos\n500 g de tomates\nPan, yogur y fruta", "2 litres of milk, spaghetti and 6 eggs\n500 g tomatoes\nBread, yogurt and fruit"))
@@ -99,14 +102,32 @@ final class CestaUITests: XCTestCase {
         tap("Ajustes", "Settings")
         XCTAssertTrue(element(label("Quitar anuncios", "Remove ads")).waitForExistence(timeout: 15))
         capture("10-expired")
+        try session.buyProduct(productIdentifier: "com.dmkr.cesta.noads.monthly.199")
+        app.terminate(); app.launch()
+        tap("Ajustes", "Settings")
+        tap("Suscripción activa", "Active subscription")
+        for _ in 0..<3 where !element(label("Restaurar compras", "Restore purchases")).isHittable { app.swipeUp() }
+        tap("Restaurar compras", "Restore purchases")
+        XCTAssertTrue(element(label("Compras restauradas. Anuncios quitados.", "Purchases restored. Ads removed.")).waitForExistence(timeout: 15), app.debugDescription)
+        capture("11-restored")
     }
     func testConsentFailsClosed() {
         let empty = TrackingConsentSignals(gdprApplies: nil, purposeConsents: nil, purposeLegitimateInterests: nil, vendorConsents: nil, vendorLegitimateInterests: nil)
         XCTAssertFalse(TrackingConsentEligibility.isATTRequestAllowed(canRequestAds: true, empty))
         let outside = TrackingConsentSignals(gdprApplies: 0, purposeConsents: nil, purposeLegitimateInterests: nil, vendorConsents: nil, vendorLegitimateInterests: nil)
         XCTAssertFalse(TrackingConsentEligibility.isATTRequestAllowed(canRequestAds: false, outside))
-        XCTAssertTrue(TrackingConsentEligibility.isATTRequestAllowed(canRequestAds: true, outside))
+        XCTAssertFalse(TrackingConsentEligibility.isATTRequestAllowed(canRequestAds: true, outside))
+        var us = outside
+        us.applicableGppSections = "7_8"
+        XCTAssertFalse(TrackingConsentEligibility.isATTRequestAllowed(canRequestAds: true, us))
+        us.applicableGppSections = "2_"
+        XCTAssertFalse(TrackingConsentEligibility.isATTRequestAllowed(canRequestAds: true, us))
+        us.applicableGppSections = nil
+        us.usPrivacy = "1YYN"
+        XCTAssertFalse(TrackingConsentEligibility.isATTRequestAllowed(canRequestAds: true, us))
         let declined = TrackingConsentSignals(gdprApplies: 1, purposeConsents: String(repeating: "0", count: 10), purposeLegitimateInterests: String(repeating: "1", count: 10), vendorConsents: String(repeating: "1", count: 755), vendorLegitimateInterests: String(repeating: "1", count: 755))
         XCTAssertFalse(TrackingConsentEligibility.isATTRequestAllowed(canRequestAds: true, declined))
+        let accepted = TrackingConsentSignals(gdprApplies: 1, purposeConsents: String(repeating: "1", count: 10), purposeLegitimateInterests: String(repeating: "1", count: 10), vendorConsents: String(repeating: "1", count: 755), vendorLegitimateInterests: String(repeating: "1", count: 755))
+        XCTAssertTrue(TrackingConsentEligibility.isATTRequestAllowed(canRequestAds: true, accepted))
     }
 }

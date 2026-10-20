@@ -5,14 +5,14 @@ module.exports = function withCestaCommerce(config) {
     const production = process.env.CESTA_ADS_MODE === 'production';
     if (
       production &&
-      (!cfg.admob.productionReady ||
+      (!cfg.admob.configurationReady ||
         !cfg.admob.privacyPublished ||
         !cfg.admob.umpReady ||
         !/^ca-app-pub-\d+~\d+$/.test(cfg.admob.appId) ||
         !/^ca-app-pub-\d+\/\d+$/.test(cfg.admob.bannerId))
     )
       throw Error(
-        'Cesta production AdMob is not verified. Use test ads until its app, privacy and consent setup are ready.',
+        'Cesta production ad configuration is not verified. App readiness approval after public store listing is tracked separately.',
       );
     current.modResults.GADApplicationIdentifier =
       cfg.admob.appId || 'ca-app-pub-3940256099942544~1458002511';

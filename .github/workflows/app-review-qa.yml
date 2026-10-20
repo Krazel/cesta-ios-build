@@ -4,6 +4,16 @@ on:
 permissions:
   contents: read
 jobs:
+  privacy:
+    if: github.actor == github.repository_owner && github.ref == 'refs/heads/main' && github.event.repository.private == false
+    runs-on: macos-26
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Test the shipping consent policy directly in Swift
+        run: |
+          xcrun swiftc modules/cesta-commerce/ios/TrackingConsentEligibility.swift tests/native/main.swift -o "$RUNNER_TEMP/cesta-consent-tests"
+          "$RUNNER_TEMP/cesta-consent-tests"
   native:
     if: github.actor == github.repository_owner && github.ref == 'refs/heads/main' && github.event.repository.private == false
     runs-on: macos-26

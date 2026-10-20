@@ -1,5 +1,21 @@
 # Expo HAS CHANGED
 
+## Preparación definitiva autorizada — 20/10/2026
+
+El usuario pide que quede todo definitivo para poder subir a revisión. Autoriza
+cerrar la app y su ficha, QA nativa, capturas reales, privacidad, productos y
+preparar una candidata comercial1.5.1(1) con firma/subida oficial existentes.
+No implica enviar a App Review, distribuir a externos ni publicar. Se conserva
+1.5(1) interna con anuncios de prueba. La candidata comercial usa el bloque propio
+de Cesta; distinguir configuración de IDs/consentimiento de la aprobación de
+Google, que exige listado público. Fuera de TCF verificable no se personalizan
+anuncios. El usuario confirmó expresamente descarga gratuita en174territorios,
+con China continental no disponible y sin expansión automática a nuevos mercados.
+También autorizó guardar/publicar la declaración concreta de privacidad detallada
+en la pregunta20/10: datos compartidos solo para función; datos Google para anuncios
+y análisis, seguimiento consentido limitado a ubicación aproximada, IDdispositivo,
+interacciones y publicidad; diagnósticos sin seguimiento. No publicar la app.
+
 Read the exact versioned docs at https://docs.expo.dev/versions/v57.0.0/ before writing any code.
 
 ## Distribución — instrucción del usuario del 2026-09-05

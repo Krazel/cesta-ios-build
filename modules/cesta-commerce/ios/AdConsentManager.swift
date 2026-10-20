@@ -16,6 +16,7 @@ final class AdConsentManager: ObservableObject {
     private var didRequestConsentInformation = false
     private var didRequestTrackingAuthorization = false
     private var isMobileAdsStarting = false
+    private var hasFreshConsentChoices = false
 
     func prepareForAds() async {
         guard !didRequestConsentInformation else { return }
@@ -42,6 +43,7 @@ final class AdConsentManager: ObservableObject {
         }
 
         refreshConsentState()
+        hasFreshConsentChoices = true
         await requestTrackingAuthorizationIfEligible()
         await startMobileAdsIfAllowed()
     }
@@ -49,16 +51,19 @@ final class AdConsentManager: ObservableObject {
     func presentPrivacyOptions() async {
         guard isPrivacyOptionsRequired, !isPresentingPrivacyOptions else { return }
         isPresentingPrivacyOptions = true
+        hasFreshConsentChoices = false
         defer { isPresentingPrivacyOptions = false }
 
         do {
             try await ConsentForm.presentPrivacyOptionsForm(from: nil)
             refreshConsentState()
+            hasFreshConsentChoices = true
             // Do not follow a privacy-choice change with ATT in the same flow.
             // A later launch can request ATT if the stored choices are eligible.
             await startMobileAdsIfAllowed()
         } catch {
             privacyOptionsErrorMessage = "No se pudieron abrir las opciones de privacidad."
+            await startMobileAdsIfAllowed()
         }
     }
 
@@ -73,7 +78,7 @@ final class AdConsentManager: ObservableObject {
     }
 
     private func requestTrackingAuthorizationIfEligible() async {
-        guard !didRequestTrackingAuthorization,
+        guard hasFreshConsentChoices, !didRequestTrackingAuthorization,
               TrackingConsentEligibility.isATTRequestAllowed(
                   canRequestAds: canRequestAds
               )
@@ -101,6 +106,14 @@ final class AdConsentManager: ObservableObject {
     }
 
     private func startMobileAdsIfAllowed() async {
+        // Apply the stricter of regional consent and Apple's permission, including
+        // after a privacy-choice change. An ad-serving choice never grants tracking.
+        let personalized = hasFreshConsentChoices
+            && TrackingConsentEligibility.isATTRequestAllowed(canRequestAds: canRequestAds)
+            && ATTrackingManager.trackingAuthorizationStatus == .authorized
+        MobileAds.shared.requestConfiguration.maxAdContentRating = GADMaxAdContentRating.general
+        MobileAds.shared.requestConfiguration.publisherPrivacyPersonalizationState = personalized ? .enabled : .disabled
+        UserDefaults.standard.set(!personalized, forKey: "gad_rdp")
         guard canRequestAds, !isMobileAdsStarted, !isMobileAdsStarting else { return }
         isMobileAdsStarting = true
         _ = await MobileAds.shared.start()

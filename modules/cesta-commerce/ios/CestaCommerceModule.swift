@@ -2,6 +2,7 @@ import ExpoModulesCore
 import StoreKit
 import GoogleMobileAds
 import UIKit
+import AppTrackingTransparency
 
 @MainActor
 final class CestaCommerceController {
@@ -150,7 +151,14 @@ final class CestaAdBannerView: ExpoView, BannerViewDelegate {
       view.rootViewController = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.flatMap { $0.windows }.first(where: { $0.isKeyWindow })?.rootViewController
       view.delegate = self
       addSubview(view); banner = view
-      view.load(Request())
+      let request = Request()
+      if !TrackingConsentEligibility.isATTRequestAllowed(canRequestAds: CestaCommerceController.shared.consent.canRequestAds)
+          || ATTrackingManager.trackingAuthorizationStatus != .authorized {
+        let extras = Extras()
+        extras.additionalParameters = ["npa": "1", "rdp": "1"]
+        request.register(extras)
+      }
+      view.load(request)
     }
     if let banner { banner.frame = CGRect(x: max(0, (bounds.width - banner.adSize.size.width)/2), y: 0, width: banner.adSize.size.width, height: banner.adSize.size.height) }
   }

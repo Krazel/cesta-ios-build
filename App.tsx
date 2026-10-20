@@ -943,7 +943,7 @@ function AppContent() {
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           style={a.modalOverlay}
-          onStartShouldSetResponderCapture={dismissOutsideInput}
+          onTouchEnd={dismissOutsideInput}
         >
           <Pressable
             accessibilityLabel={tr('Cerrar ventana')}

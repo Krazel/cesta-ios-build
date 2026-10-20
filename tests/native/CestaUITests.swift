@@ -44,7 +44,9 @@ final class CestaUITests: XCTestCase {
         tap("Omitir tutorial", "Skip tutorial")
         let name = element(label("Tu nombre", "Your name"))
         XCTAssertTrue(name.waitForExistence(timeout: 15))
-        name.tap(); name.typeText("Alex")
+        name.tap()
+        for character in "Alex" { name.typeText(String(character)) }
+        XCTAssertEqual(name.value as? String, "Alex", "Text must remain intact before the first continue tap")
         tap("Empezar mi cesta", "Start my basket")
         // UMP remains the real SDK flow. Dismiss only explicit reject options if present.
         for text in ["Rechazar todo", "Rechazar", "Reject all", "Do not consent"] {

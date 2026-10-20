@@ -345,7 +345,7 @@ export function ProductsScreen({
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           style={p.overlay}
-          onStartShouldSetResponderCapture={dismissOutsideInput}
+          onTouchEnd={dismissOutsideInput}
         >
           <View style={[p.sheet, { paddingBottom: Math.max(20, insets.bottom) }]}>
             <View

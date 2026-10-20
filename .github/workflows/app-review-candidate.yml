@@ -36,9 +36,9 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: Cesta-1.5.1-build1-AppReview
+          name: Cesta-1.5.1-build2-AppReview
           path: |
-            artifacts/Cesta-1.5.1-build1-AppReview.ipa
+            artifacts/Cesta-1.5.1-build2-AppReview.ipa
             artifacts/testflight-build.json
           retention-days: 1
           if-no-files-found: ignore

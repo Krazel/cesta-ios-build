@@ -8,7 +8,9 @@ module.exports = ({ config }) => {
     ios: {
       ...config.ios,
       bundleIdentifier: 'com.dmkr.cesta.B2X6D3A9J9',
-      buildNumber: '1',
+      buildNumber: process.env.CESTA_RELEASE_CONFIG
+        ? require('./' + process.env.CESTA_RELEASE_CONFIG).buildNumber
+        : '1',
       appleTeamId: 'B2X6D3A9J9',
       infoPlist,
     },

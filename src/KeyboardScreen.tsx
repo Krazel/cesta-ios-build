@@ -8,7 +8,8 @@ import {
   type ViewProps,
 } from 'react-native';
 
-// Capture without claiming the responder, so buttons still work on the first tap.
+// Dismiss after the touch finishes. Dismissing during responder capture moves
+// KeyboardAvoidingView before the finger is released and can cancel button taps.
 export function dismissOutsideInput(event: GestureResponderEvent) {
   if (Platform.OS === 'web') return false;
   const focused = TextInput.State.currentlyFocusedInput();
@@ -49,7 +50,7 @@ export function KeyboardScreen({ children, style, ...props }: ViewProps) {
     <KeyboardAvoidingView
       {...props}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      onStartShouldSetResponderCapture={dismissOutsideInput}
+      onTouchEnd={dismissOutsideInput}
       style={[
         style,
         viewport && {

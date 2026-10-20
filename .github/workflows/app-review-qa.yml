@@ -17,10 +17,15 @@ jobs:
   native:
     if: github.actor == github.repository_owner && github.ref == 'refs/heads/main' && github.event.repository.private == false
     runs-on: macos-26
+    strategy:
+      fail-fast: false
+      matrix:
+        device: [phone, tablet]
     timeout-minutes: 60
     env:
       CESTA_DISTRIBUTION: testflight
       CESTA_ADS_MODE: test
+      CESTA_QA_DEVICE: ${{ matrix.device }}
       EXPO_NO_TELEMETRY: '1'
       EXPO_PUBLIC_API_URL: https://cesta.krazel-zodiac-daily.workers.dev
       EXPO_PUBLIC_SHARE_URL: https://cesta.krazel-zodiac-daily.workers.dev
@@ -41,7 +46,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: Cesta-native-review-QA
+          name: Cesta-native-review-QA-${{ matrix.device }}
           path: |
             artifacts/native-qa/*.log
             artifacts/native-qa/*.json

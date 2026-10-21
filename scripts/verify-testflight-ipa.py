@@ -90,6 +90,9 @@ with zipfile.ZipFile(ipa) as archive:
             sdk_privacy = next(p for p in privacy if '/GoogleMobileAdsResources.bundle/' in p)
             sdk_expected = json.loads((pathlib.Path(__file__).resolve().parents[1] / 'store/google-mobile-ads-12.14.0-privacy.json').read_text())
             assert plistlib.loads(archive.read(sdk_privacy)) == sdk_expected, 'Pinned SDK privacy declarations changed'
+            ump_privacy = next(p for p in privacy if '/UserMessagingPlatformResources.bundle/' in p)
+            ump_expected = json.loads((pathlib.Path(__file__).resolve().parents[1] / 'store/google-ump-3.1.0-privacy.json').read_text())
+            assert plistlib.loads(archive.read(ump_privacy)) == ump_expected, 'Pinned UMP privacy declarations changed'
             assert not any('CestaStoreKitQA' in p or 'CestaUITests' in p for p in names)
     else:
         assert not any(p['tracking'] for p in privacy_inventory)

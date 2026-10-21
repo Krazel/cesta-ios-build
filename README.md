@@ -1,5 +1,15 @@
 # Cesta
 
+Candidata comercial **1.5.1(3)** validada y seleccionada. Borrador de revisión
+preparado con24capturas ES/EN y las seis suscripciones; no enviado ni publicado.
+Pasan los seis recorridos de simulador en dos iPhone e iPad, incluidos compra
+local, persistencia, caducidad y restauración. La comprobación física de iPhone,
+consentimiento y Sandbox sigue pendiente antes del envío real.
+[Informe de preparación](store/APP-REVIEW-2026-10-21.md) ·
+[evidencia nativa](store/NATIVE-QA-2026-10-21.md) ·
+[coherencia de candidata y ficha](store/release-evidence/1.5.1-build3.json).
+AdMob necesita vincular/verificar el listado público cuando exista.
+
 Última beta entregada: **1.5 (1)** en TestFlight interno, verificada el19/10.
 [Entrega](store/TESTFLIGHT-2026-10-19.md): Guardar en Listas/Actualizar lista,
 banner nativo AdMob de prueba, consentimiento ES/EN, seis suscripciones mensuales

@@ -1,5 +1,17 @@
 # Cesta — cierre de octubre
 
+## Preparación digital1.5.1(3) —21/10/2026
+
+Candidata VALID/entrega COMPLETE sin avisos y seleccionada en versión manual.
+Borrador c698d1c3-99bc-4083-849e-4d8c2bda35fe READY_FOR_REVIEW con8elementos:
+app, grupo y6suscripciones.24capturas nativas de galería ES/EN en tres tamaños y
+6recursos de revisión de suscripciones COMPLETE. Privacidad12tipos publicada con
+las autorizaciones específicas, política pública exacta y descarga gratuita en
+174territorios verificados.6recorridos nativos de simulador correctos; fuente
+comercial equivalente comprobada. No enviado ni publicado; QA física pendiente.
+Última beta distribuida1.5(1) interna. Detalle APP-REVIEW-2026-10-21.md,
+NATIVE-QA-2026-10-21.md y store/release-evidence/1.5.1-build3.json.
+
 ## Entrega1.5(1) — 19/10/2026
 
 **Cesta1.5(1) disponible en TestFlight interno**, Apple VALID e IN_BETA_TESTING.

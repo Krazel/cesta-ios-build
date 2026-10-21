@@ -39,7 +39,13 @@ for(const set of cfg.gallery || []) {
     const dimensions=await sharp(file).metadata();
     assert(dimensions.width && dimensions.height && !dimensions.hasAlpha,'Use opaque, real simulator captures');
     const name=path.basename(file);
-    if(existing.some(e=>e.attributes.fileName===name && e.attributes.assetDeliveryState?.state==='COMPLETE'))continue;
+    const complete=existing.find(e=>e.attributes.fileName===name && e.attributes.assetDeliveryState?.state==='COMPLETE');
+    if(complete) {
+      const bytes=fs.readFileSync(file);
+      assert.equal(complete.attributes.fileSize,bytes.length,'Existing screenshot differs; inspect before replacing');
+      if(complete.attributes.sourceFileChecksum) assert.equal(complete.attributes.sourceFileChecksum,crypto.createHash('md5').update(bytes).digest('hex'));
+      continue;
+    }
     assert(!existing.some(e=>e.attributes.fileName===name),'Existing incomplete asset must be diagnosed, not duplicated');
     receipts.push({resourceType:'appScreenshots',locale:set.locale,type:set.type,...await upload('appScreenshots','appScreenshotSet','appScreenshotSets',resource.id,file)});
     save();

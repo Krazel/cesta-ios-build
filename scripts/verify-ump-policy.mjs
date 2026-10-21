@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+import crypto from 'node:crypto';
+import assert from 'node:assert/strict';
+const file='artifacts/app-review-20261020/privacy-ump-public.json';
+const receipt=JSON.parse(fs.readFileSync(file,'utf8'));
+const response=await fetch('https://krazel.github.io/cesta/privacy/',{cache:'no-store'});
+assert(response.ok);
+const text=await response.text();
+assert.equal(crypto.createHash('sha256').update(text).digest('hex'),receipt.sha256);
+assert(text.includes('this UMP data')&&text.includes('esos datos de UMP'));
+receipt.publicVerified=true;receipt.publicCheckedAt=new Date().toISOString();
+fs.writeFileSync(file,JSON.stringify(receipt,null,2));console.log(JSON.stringify(receipt));

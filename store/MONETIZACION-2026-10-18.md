@@ -1,5 +1,13 @@
 # Cesta1.5 — Guardar en Listas y monetización
 
+**Actualización21/10:** candidata comercial1.5.1(3) validada, con grupo y6productos
+en borrador conjunto READY_FOR_REVIEW, sin enviar. Productos READY_TO_SUBMIT y
+sus6recursos de revisión COMPLETE; privacidad GMA/UMP corregida y publicada con
+aprobación humana. Compra local/persistencia/caducidad/restauración pasan en
+simulador ES/EN, iPhone17Pro/ProMax e iPad13. QA física pendiente. AdMob requiere
+listado público para vinculación/verificación; no declarar anuncios activos.
+Estado vigente: [preparación](APP-REVIEW-2026-10-21.md).
+
 **Actualización19/10:** Cesta1.5(1) ya está en TestFlight interno, VALID y
 IN_BETA_TESTING. Entrega autorizada después de esta preparación; ver
 [recibo](TESTFLIGHT-2026-10-19.md). Anuncios test, QA física pendiente.

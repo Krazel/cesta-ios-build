@@ -4,6 +4,16 @@ Estado: pendiente en dispositivo físico. Última beta confirmada1.5(1), interna
 el19/10. Chrome y el inventario del IPA no sustituyen
 esta comprobación. Registrar dispositivo, iOS, idioma, versión/build y fecha.
 
+Candidata comercial preparada: **1.5.1(3)**, build Apple
+`99810cf0-04e7-4a7a-bb72-0ecba5bf5e74`, seleccionada en borrador manual.
+No está distribuida a un grupo: no confundirla con la beta1.5(1) ya instalada.
+La candidata incluye cambios de teclado/consentimiento y bloque publicitario
+propio; la verificación física previa de otra build no la valida automáticamente.
+La QA de simulador y su procedencia constan en APP-REVIEW-2026-10-21.md.
+Antes del envío real, probar además cancelación de la hoja de compra, gestión de
+suscripción, falta de conexión/productos no disponibles y restauración Sandbox.
+No se ejecutan cargos reales para validar esta hoja.
+
 Usar listas de prueba, nunca borrar listas reales. Exportar primero una copia desde Ajustes si ya hay datos personales. Resultado esperado y evidencia por cada recorrido:
 
 Para1.5, añadir los recorridos de consentimiento, banner, suscripción,

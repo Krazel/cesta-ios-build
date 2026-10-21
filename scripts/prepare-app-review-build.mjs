@@ -20,7 +20,11 @@ if(!build||build.attributes.processingState!=='VALID') {
   process.exit(2);
 }
 assert.equal(build.attributes.expired,false);
-const delivery=uploads.find(u=>u.relationships.build?.data?.id===build.id);
+// buildUploads does not expose a build relationship. Match the exact uploaded
+// marketing/build tuple already used to find the VALID pre-release build.
+const matchingUploads=uploads.filter(u=>u.attributes.cfBundleShortVersionString===cfg.marketingVersion&&u.attributes.cfBundleVersion===cfg.buildNumber);
+assert.equal(matchingUploads.length,1,'Expected one exact candidate delivery');
+const delivery=matchingUploads[0];
 assert.equal(delivery?.attributes.state.state,'COMPLETE');
 assert.equal(delivery.attributes.state.errors?.length||0,0);
 if(process.argv.includes('--select')) {
@@ -35,7 +39,7 @@ if(process.argv.includes('--select')) {
 const selected=await get(`/v1/appStoreVersions/${draft.id}/build`);
 const freshDraft=await get(`/v1/appStoreVersions/${draft.id}`);
 const betaDetail=await get(`/v1/builds/${build.id}/buildBetaDetail`);
-const groups=await get(`/v1/builds/${build.id}/betaGroups`);
+const groups=await get(`/v1/betaGroups?filter[builds]=${build.id}&limit=200`);
 if(process.argv.includes('--select')) assert.equal(selected.id,build.id);
 assert.equal(freshDraft.attributes.releaseType,'MANUAL');
 const evidence={checkedAt:new Date().toISOString(),version:cfg.marketingVersion,buildNumber:cfg.buildNumber,build,delivery,draft:freshDraft,selectedBuild:selected?.id||null,betaDetail,betaGroups:groups.map(g=>({id:g.id,name:g.attributes.name,isInternalGroup:g.attributes.isInternalGroup})),submitted:false,physicalSandboxQA:false};

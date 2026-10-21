@@ -1,0 +1,80 @@
+{
+  "checkedAt": "2026-10-20T23:58:24.855Z",
+  "appId": "6808982515",
+  "version": "1.5.1",
+  "build": "3",
+  "candidateBuild": "99810cf0-04e7-4a7a-bb72-0ecba5bf5e74",
+  "candidateCommit": "dba5c2219dd6b437d3cb0b3f6b541cd1987f8cbd",
+  "ipaSHA256": "02753352a6829f630e804f5e2de9d809d511f7091afd86fb712a7a8a499d6fe7",
+  "reviewDraft": "c698d1c3-99bc-4083-849e-4d8c2bda35fe",
+  "reviewState": "READY_FOR_REVIEW",
+  "reviewItems": 8,
+  "submitted": false,
+  "releaseType": "MANUAL",
+  "galleryScreenshots": 24,
+  "subscriptionProducts": 6,
+  "privacyTypes": 12,
+  "privacyManifestCount": 13,
+  "freeDownload": true,
+  "availableTerritories": 174,
+  "autoNewTerritories": false,
+  "privacyPolicySHA256": "f2128e1af2d50c20a5fa88e8b969e2f652317f47a26075f8f6a4dadfdbfbd715",
+  "nativeSimulatorQA": {
+    "runs": {
+      "phone": "39515832517",
+      "phone-medium": "39516687846",
+      "tablet": "39512770525"
+    },
+    "results": [
+      {
+        "kind": "phone",
+        "language": "Spanish",
+        "device": "iPhone 17 Pro Max",
+        "ok": true
+      },
+      {
+        "kind": "phone",
+        "language": "English",
+        "device": "iPhone 17 Pro Max",
+        "ok": true
+      },
+      {
+        "kind": "phone-medium",
+        "language": "Spanish",
+        "device": "iPhone 17 Pro",
+        "ok": true
+      },
+      {
+        "kind": "phone-medium",
+        "language": "English",
+        "device": "iPhone 17 Pro",
+        "ok": true
+      },
+      {
+        "kind": "tablet",
+        "language": "Spanish",
+        "device": "iPad Pro 13-inch (M5)",
+        "ok": true
+      },
+      {
+        "kind": "tablet",
+        "language": "English",
+        "device": "iPad Pro 13-inch (M5)",
+        "ok": true
+      }
+    ],
+    "storeKitLocalPurchasePersistenceExpiryRestore": true
+  },
+  "physicalDeviceQA": false,
+  "physicalSandboxQA": false,
+  "googleAppApproved": false,
+  "lastDistributedBeta": "1.5(1) internal",
+  "pendingBeforeRealSubmission": [
+    "Physical iPhone: keyboard and consent including refusal",
+    "Physical Sandbox/TestFlight: purchase, cancellation, restore, offline and unavailable products",
+    "Native cross-network sharing and reconnect on physical device"
+  ],
+  "pendingAfterPublicListing": [
+    "Link and verify App Store listing in AdMob; verify app readiness and real banner delivery"
+  ]
+}

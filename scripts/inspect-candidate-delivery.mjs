@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {asc} from './asc-client.mjs';
+const keys=path.resolve('../APIs/IOS');
+process.env.ASC_KEY_ID=fs.readFileSync(path.join(keys,'Key ID.txt'),'utf8').trim();
+process.env.ASC_ISSUER_ID=fs.readFileSync(path.join(keys,'Issuer ID.txt'),'utf8').trim();
+process.env.ASC_PRIVATE_KEY_PATH=path.join(keys,'Coder Metadata App Manager.p8');
+const result=await asc('GET','/v1/apps/6808982515/buildUploads?filter[cfBundleShortVersionString]=1.5.1&filter[cfBundleVersion]=3');
+fs.writeFileSync('artifacts/app-review-20261020/candidate-delivery-raw.json',JSON.stringify(result,null,2));
+console.log(JSON.stringify(result));

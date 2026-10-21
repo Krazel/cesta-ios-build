@@ -17,8 +17,14 @@ y análisis. Tras contrastar el manifiesto de Google Mobile Ads12.14.0, el usuar
 autorizó expresamente corregir y publicar: añadir Otros datos de diagnóstico,
 diagnósticos sin vinculación personal ni seguimiento y seguimiento limitado al
 ID del dispositivo. Aceptó el aviso Apple de precisión, cumplimiento y actualización
-para esta corrección. No publicar la app. La candidata1.5.1(1) se canceló durante
-QA; se reserva1.5.1(2) para la corrección de teclado y privacidad final.
+para esta corrección. Autorizó después añadir Funcionalidad de la app a ubicación
+aproximada, interacción y rendimiento por UMP3.1.0 y publicar con el mismo aviso;
+no cambia tipos ni vinculación ni seguimiento. Publicado y releído21/10.
+No publicar la app. Las candidatas1.5.1(1) y(2) se cancelaron
+durante QA.1.5.1(3) está firmada/subida/VALID y seleccionada en borrador
+READY_FOR_REVIEW con app+grupo+6productos, sin enviar.24capturas reales y seis
+recorridos ES/EN de simulador verificados; QA física pendiente antes del envío.
+Detalles en store/APP-REVIEW-2026-10-21.md.
 
 Read the exact versioned docs at https://docs.expo.dev/versions/v57.0.0/ before writing any code.
 

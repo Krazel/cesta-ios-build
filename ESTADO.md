@@ -1,31 +1,55 @@
 # Cesta — estado del producto
 
-## Preparación App Review1.5.1 — en curso,21/10/2026
+## Preparación digital App Review1.5.1 — completada,21/10/2026
 
-Usuario pide dejarlo definitivo para subir a revisión; no autoriza el envío final
-ni publicación. Borrador Apple a3c47237-d259-4f39-8174-f7f332c67324 actualizado
-a1.5.1/PREPARE_FOR_SUBMISSION, releaseMANUAL. Títulos y descripciones ES/EN,
-categorías, edad, notas, soporte/política/EULA y contacto de revisión verificados
-por API. Descarga gratuita/174territorios/China no disponible, sin expansión
-automática, autorizados expresamente y releídos. Acuerdos vigentes comprobados.
-Privacidad12tipos corregida/publicada con autorización humana específica y aviso
-Apple confirmado. Diagnósticos no vinculados y solo IDdispositivo con seguimiento;
-detalle store/APP-PRIVACY-2026-10-21.md. Política pública de Cesta actualizada.
+Encargo: dejar app y ficha definitivas para poder enviar a revisión. No autoriza
+el envío final ni publicación. App6808982515, borrador
+a3c47237-d259-4f39-8174-f7f332c67324,1.5.1/READY_FOR_REVIEW/MANUAL.
+Títulos, descripción, notas, EULA, contacto privado, edad y categorías ES/EN
+verificados por API. Descarga gratuita en174territorios, China continental fuera,
+sin expansión automática; autorización humana y relectura comprobadas.
 
-Se ha endurecido consentimiento TCF/ATT/GPP, NPA/RDP y clasificación publicitaria.
-19pruebas de lógica y19aserciones Swift pasan. Primera QA nativa mostró un problema
-de teclado corregido; segundo recorrido confirma entrada en ES/EN y páginas Listas
-y Productos en iPhone17ProMax/iPadPro13M5, pero se detiene por selectores del test
-(etiqueta estática en vez de campo y «Paste list» en vez de «Paste a list»).
-Corregidos en4fe2c90; CI39508129634 en curso con configuración comercial y runtime26.2.
-No declarar aún compras/restauración ni capturas finales aprobadas.
+Candidata1.5.1(3) VALID/entrega COMPLETE sin errores ni avisos, seleccionada en
+el borrador manual. Build99810cf0-04e7-4a7a-bb72-0ecba5bf5e74; CI39511438120,
+fuente dba5c2219dd6b437d3cb0b3f6b541cd1987f8cbd. IPA12687010bytes,
+SHA25602753352a6829f630e804f5e2de9d809d511f7091afd86fb712a7a8a499d6fe7.
+Firma/arm64/ZIP/HTTPS/permisos/perfil/13manifiestos comprobados; GMA12.14.0 y
+UMP3.1.0 exactos. Candidatas(1)/(2) canceladas;3sin grupos beta. Última beta
+distribuida sigue1.5(1) interna. No se ha enviado AppReview ni publicado.
 
-Pendientes: completar QA nativa, capturas ES/EN iPhone+iPad y6screenshots de revisión
-de suscripciones; subir/validar candidata1.5.1(2), seleccionarla y preparar borrador
-con los6productos. Candidata(1) cancelada durante QA; no es una entrega definitiva.
-Última distribuida sigue1.5(1) interna. AdMob integrado pero aprobación de Google
-pendiente de listado público. QA física Sandbox/UMP sigue pendiente; no inventarla.
-Biblioteca PR-016 revisión27 registró el inicio; conciliación final pendiente.
+Privacidad12tipos publicada y releída tras aprobación humana específica del aviso
+Apple. Diagnósticos sin vinculación/seguimiento; solo IDdispositivo con seguimiento.
+Incluye Funcionalidad en ubicación/interacción/rendimiento por UMP. Política pública
+bilingüe exacta verificada, commite87f999fe72adc6ed06ef5bbb8dfa61bfd7982df.
+Detalles store/APP-PRIVACY-2026-10-21.md y store/APP-REVIEW-2026-10-21.md.
+AdMob integrado con IDpropio, NPA/RDP/TCF/ATT y contenido general; aprobación Google
+pendiente de vincular/verificar listado público. Servicio online200/protocolo2.
+
+Seis suscripciones mensuales READY_TO_SUBMIT, ES/EN, precios de España
+1,99/4,99/9,99/14,99/19,99/24,99€, mismo beneficio. Sus6recursos de revisión
+COMPLETE usan una captura nativa iPad con todos los importes y condiciones.
+24capturas de galería COMPLETE:4por idioma y tamaño, iPhone grande, mediano
+Dynamic Island requerido por Apple e iPad13. Copias nativas sin alterar píxeles.
+
+19pruebas de lógica y19aserciones Swift pasan. QAweb ES/EN de formularios correcta.
+CI39512770525: iPad ES/EN e iPhone EN pasan compra local, persistencia, caducidad
+y restauración. iPhone ES falla porque no llegó a abrir Ajustes al aparecer el
+banner durante el toque; no acredita un fallo de caducidad. Test confirma ahora
+la navegación y espera transiciones para capturar. CI39515832517 iPhone grande
+y39516687846 iPhone mediano pasan ES/EN, como iPad CI39512770525:6recorridos
+correctos con compra local/persistencia/caducidad/restauración. Solo diferencias de harness respecto al
+runtime comercial. La inyección masiva de XCTest trunca texto incluso con buffer
+nativo; se usan pulsaciones individuales conservando aserciones del valor completo.
+No atribuir ese límite de simulador a un defecto demostrado de app ni fingir QA física.
+
+Borrador reversible c698d1c3-99bc-4083-849e-4d8c2bda35fe READY_FOR_REVIEW,
+8elementos: app+grupo+6versiones de suscripción. Sin submittedDate ni envío.
+Comprobación cruzada correcta: store/release-evidence/1.5.1-build3.json.
+Siguiente: QA física antes de un eventual encargo de envío real.
+Antes del envío real: prueba física de teclado/consentimiento, compras Sandbox y
+sincronización entre redes. Esta sesión no controla un iPhone físico.
+Biblioteca PR-016 revisión31 guardada y releída, tracking conservado.
+La misma ficha de la web de proyectos refleja el cierre digital y las pruebas físicas pendientes.
 
 ## Entrega1.5(1) — 19/10/2026
 

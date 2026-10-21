@@ -29,7 +29,7 @@ const locales=await get(`/v1/appStoreVersions/${version.id}/appStoreVersionLocal
 assert.deepEqual(locales.map(l=>l.attributes.locale).sort(),['en-US','es-ES']);
 for(const locale of locales) {
   const sets=await get(`/v1/appStoreVersionLocalizations/${locale.id}/appScreenshotSets`);
-  for(const kind of ['APP_IPHONE_67','APP_IPAD_PRO_3GEN_129']) {
+  for(const kind of ['APP_IPHONE_67','APP_IPHONE_61','APP_IPAD_PRO_3GEN_129']) {
     const set=sets.find(s=>s.attributes.screenshotDisplayType===kind);assert(set);
     const images=await get(`/v1/appScreenshotSets/${set.id}/appScreenshots`);
     assert(images.length>=4&&images.every(i=>i.attributes.assetDeliveryState.state==='COMPLETE'));
